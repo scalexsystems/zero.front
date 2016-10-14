@@ -1,0 +1,31 @@
+/*
+ |
+ | Bootstrap v4.0.0-alpha.4 configuration.
+ |
+ */
+
+$font-size-root: 14px !default;
+
+$brand-primary: #21303E !default;
+$brand-success: #6bb719 !default;
+$brand-info: #5bc0de !default;
+$brand-warning: #f0ad4e !default;
+$brand-danger: #d0021b !default;
+
+$gray-light: #b3b3b3 !default;
+$gray-lighter: #f7f7f7 !default;
+
+$border-color: #e7e7e7 !default;
+$input-border-color: $border-color !default;
+$card-border-color: $border-color !default;
+
+@import '../../node_modules/bootstrap/scss/variables';
+
+/*
+ |
+ | Font Awesome configuration.
+ |
+ */
+$fa-font-path: '/static/fonts' !default;
+
+$navbar-height: 54px;

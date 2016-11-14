@@ -15,7 +15,8 @@
     </div>
     <div class="navbar-brand">{{ title }}</div>
     <div class="navbar-user">
-      {{ name }} <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
+      <span class="hidden-sm-down">{{ name }}</span>
+      <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
     </div>
   </div>
 </nav>
@@ -60,12 +61,16 @@ body {
 }
 
 .navbar-brand {
-  flex: 1;
+  flex: 0 1 auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .navbar-user {
+  flex: 1 1 auto;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  text-align: right;
 }
 
 .navbar-user-photo {

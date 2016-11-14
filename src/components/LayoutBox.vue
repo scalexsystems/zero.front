@@ -5,7 +5,7 @@
       <slot name="context"></slot>
       <div class="layout-box-actions-container">
         <slot name="actions">
-          <action-menu></action-menu>
+          <action-menu :actions="actions" @option-click="onOptionClick"></action-menu>
         </slot>
       </div>
     </slot>
@@ -25,32 +25,22 @@ import ActionMenu from './ActionMenu.vue';
 
 export default {
   props: {
-    type: {
-      type: String,
-      default: 'user',
-    },
-    title: String,
-    subtitle: String,
     disableFooter: {
       default: false,
     },
+    ...ActionMenu.props,
   },
   components: { ActionMenu },
   computed: {
-    typeClass() {
-      const type = this.type;
-
-      switch (type) {
-        case 'user':
-          return 'photo-square';
-        default:
-          return 'photo-round';
-      }
-    },
     isFooterDisabled() {
       const disableFooter = this.disableFooter;
 
       return bool(disableFooter);
+    },
+  },
+  methods: {
+    onOptionClick(...args) {
+      this.$emit('option-click', ...args);
     },
   },
 };
@@ -61,7 +51,6 @@ export default {
 @import '../styles/mixins';
 
 $layout-box-bg: white !default;
-$layout-box-subtitle-color: #9b9b9b !default;
 $layout-box-actions-color: #9b9b9b !default;
 
 .layout-box {
@@ -79,48 +68,29 @@ $layout-box-actions-color: #9b9b9b !default;
   flex-direction: row;
   padding: 1rem 1.714rem;
   border-bottom: 1px solid $border-color;
+
+  box-shadow: 0 2px rgba(0, 0, 0, 0.1);
 }
 
 .layout-box-body {
   flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .layout-box-footer {
   border-top: 1px solid $border-color;
 }
 
-.layout-box-photo {
-  width: rem(42px);
-  height: rem(42px);
-
-  &.photo-square {
-    border-radius: $border-radius-sm;
-  }
-
-  &.photo-round {
-    border-radius: 100%;
-  }
-}
-
-.layout-box-title-container {
-  flex: 1;
-  margin: -1px 1rem; // Top and bottom margin -1px to make height 70px.
-}
-
-.layout-box-title {
-  font-size: 1.28571rem;
-}
-
-.layout-box-subtitle {
-  color: $layout-box-subtitle-color;
-  font-size: 0.85714rem;
-}
-
 .layout-box-actions-container {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   align-self: center;
   color: $layout-box-actions-color;
 
-  * {
+  .action-menu-action {
     color: inherit;
   }
 }

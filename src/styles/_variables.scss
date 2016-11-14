@@ -4,20 +4,38 @@
  |
  */
 
+$grid-gutter-width: 20px !default;
+
+$enable-flex: true !default;
+$enable-rounded: true !default;
+$enable-shadows: false !default;
+$enable-gradients: false !default;
+$enable-transitions: false !default;
+$enable-hover-media-query: false !default;
+$enable-grid-classes: true !default;
+$enable-print-styles: true !default;
+
 $font-size-root: 14px !default;
 
 $brand-primary: #21303E !default;
 $brand-success: #6bb719 !default;
-$brand-info: #5bc0de !default;
+$brand-info: #20a0ff !default;
 $brand-warning: #f0ad4e !default;
 $brand-danger: #d0021b !default;
 
+$gray: #9b9b9b !default;
 $gray-light: #b3b3b3 !default;
 $gray-lighter: #f7f7f7 !default;
 
 $border-color: #e7e7e7 !default;
 $input-border-color: $border-color !default;
 $card-border-color: $border-color !default;
+
+$btn-primary-color: #ffffff;
+$btn-primary-bg: #20a0ff;
+$btn-primary-border: $btn-primary-bg;
+
+$input-color: #333;
 
 @import '../../node_modules/bootstrap/scss/variables';
 

@@ -1,0 +1,76 @@
+<template>
+<div class="message-input-wrapper">
+  <textarea class="message-input" name="message" :value="value" ref="input"
+            placeholder="Start discussing..." autofocus @input="onInput"
+            @keydown.enter="onEnter" :disabled="disabled" rows='1'
+            autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
+</div>
+</template>
+
+<script lang="babel">
+import resize from 'autosize';
+
+export default {
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    value: {
+      type: String,
+      required: true,
+    },
+  },
+  methods: {
+    resize() {
+      const event = window.document.createEvent('Event');
+      event.initEvent('autosize:destroy', false, true);
+      this.$refs.input.dispatchEvent(event);
+      this.$nextTick(() => {
+        resize(this.$refs.input);
+      });
+    },
+    focus() {
+      setTimeout(() => this.$refs.input.focus(), 0);
+    },
+    onInput(event) {
+      this.$emit('input', event.target.value);
+    },
+    onEnter(event) {
+      if (event.shiftKey !== true) {
+        event.preventDefault();
+        this.$emit('send', event);
+      }
+    },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      resize(this.$refs.input);
+    });
+  },
+};
+</script>
+
+
+<style lang="scss">
+@import '../styles/variables';
+
+.message-input-wrapper {
+  padding: 0 1.8714rem;
+  border-top: 1px solid $border-color;
+}
+
+.message-input {
+  border: none;
+  resize: none;
+  width: 100%;
+  min-height: 21px;
+  max-height: 300px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  padding: 1.45rem 0;
+  &:active, &:focus {
+    outline: none;
+  }
+}
+</style>

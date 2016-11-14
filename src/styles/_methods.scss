@@ -1,4 +1,4 @@
-@import './_variables';
+@import './variables';
 
 @function strip-unit($number) {
   @if type-of($number) == 'number' and not unitless($number) {

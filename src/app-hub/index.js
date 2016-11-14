@@ -1,0 +1,33 @@
+import Hub from './Hub.vue';
+
+import GroupCreate from './GroupCreate.vue';
+import GroupDirectory from './GroupDirectory.vue';
+import GroupMessages from './GroupMessages.vue';
+import GroupPreview from './GroupPreview.vue';
+
+import UserDirectory from './UserDirectory.vue';
+import UserMessages from './UserMessages.vue';
+import UserPreview from './UserPreview.vue';
+
+import hubStore from './vuex/store';
+
+export default function (Vue, { store, routes }) {
+  store.registerModule('hub', hubStore);
+  routes.push(...[
+    {
+      name: 'hub',
+      path: '/hub',
+      component: Hub,
+      children: [
+        { name: 'hub.group-create', path: 'groups/create', component: GroupCreate },
+        { name: 'hub.group-preview', path: 'groups/:group/preview', component: GroupPreview },
+        { name: 'hub.group', path: 'groups/:group', component: GroupMessages },
+        { name: 'hub.groups', path: 'groups', component: GroupDirectory },
+        { name: 'hub.user-preview', path: 'people/:user/preview', component: UserPreview },
+        { name: 'hub.users', path: 'people', component: UserDirectory },
+        { name: 'hub.user', path: 'people/:user', component: UserMessages },
+      ],
+    },
+    { path: '/', redirect: '/hub' },
+  ]);
+}

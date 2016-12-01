@@ -1,11 +1,15 @@
 <template>
 <directory title="Campus Groups"
            subtitle="You can join any of these groups."
-           v-bind="{ items: groups }"
+           v-bind="{ items: groups, enableTopbar: true }"
            @close="onClose"
            @search="onSearch"
            @load-more="onInfinite"
            @item="onGroupSelected">
+  <template slot="actions">
+  <router-link :to="{ name: 'hub.group-create' }" class="btn btn-secondary">
+    <i class="fa fa-plus fa-fw"></i> Create New Group</router-link>
+  </template>
 </directory>
 </template>
 
@@ -13,20 +17,24 @@
 import throttle from 'lodash/throttle';
 import { mapActions, mapGetters } from 'vuex';
 
+import { httpThen } from '../util';
+import { getters, actions } from '../vuex/meta';
 import Directory from '../components/Directory.vue';
 
 export default {
   name: 'GroupDirectory',
   components: { Directory },
   computed: {
-    ...mapGetters(['groups']),
+    ...mapGetters({
+      groups: getters.groups,
+    }),
   },
   data() {
     return { q: '', page: 0 };
   },
   methods: {
     onClose() {
-      window.history.back();
+      this.$router.go(-1);
     },
     onGroupSelected(group) {
       const name = group.is_member === true ? 'hub.group' : 'hub.group-preview';
@@ -40,11 +48,7 @@ export default {
     }, 500),
     onInfinite({ done, end, error }) {
       this.getGroups({ q: this.q, page: this.page + 1 })
-              .then((response) => {
-                if ('ok' in response) throw response;
-
-                return response;
-              })
+              .then(httpThen)
               .then((result) => {
                 this.page = result._meta.pagination.current_page;
 
@@ -52,7 +56,9 @@ export default {
               })
               .catch(() => error());
     },
-    ...mapActions(['getGroups']),
+    ...mapActions({
+      getGroups: actions.getGroups,
+    }),
   },
 };
 </script>

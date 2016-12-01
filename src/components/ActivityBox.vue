@@ -6,16 +6,19 @@
       <img src="../assets/cross.svg">
     </a>
     <div class="activity-box-title-container">
-      <div class="activity-box-title">
+      <div class="activity-box-title" @click="$emit('openTitle')">
         <slot name="title">{{ title }}</slot>
       </div>
-      <div class="activity-box-subtitle">
+      <div class="activity-box-subtitle" @click="$emit('openSubtitle')">
         <slot name="subtitle">{{ subtitle }}</slot>
       </div>
     </div>
     </template>
-    <template slot="actions" v-if="enableTopbar">
-      <slot name="topbar"></slot>
+
+    <template slot="actions">
+    <slot name="actions">
+      <action-menu :actions="actions" @option-click="onOptionClick"></action-menu>
+    </slot>
     </template>
 
     <slot></slot>
@@ -25,12 +28,13 @@
 
 <script lang="babel">
 import LayoutBox from './LayoutBox.vue';
+import ActionMenu from './ActionMenu.vue';
 
 export default {
   props: {
     show: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     title: String,
     subtitle: String,
@@ -40,7 +44,7 @@ export default {
     },
     ...LayoutBox.props,
   },
-  components: { LayoutBox },
+  components: { LayoutBox, ActionMenu },
   methods: {
     onOptionClick: LayoutBox.methods.onOptionClick,
   },
@@ -53,10 +57,17 @@ export default {
 $border-radius-sm: 0.2rem !default;
 $activity-box-subtitle-color: #9b9b9b !default;
 
-.activity-box-enter {}
-.activity-box-enter-active {}
-.activity-box-leave {}
-.activity-box-leave-active {}
+.activity-box-enter {
+}
+
+.activity-box-enter-active {
+}
+
+.activity-box-leave {
+}
+
+.activity-box-leave-active {
+}
 
 .activity-box-dismiss {
   width: rem(42px);

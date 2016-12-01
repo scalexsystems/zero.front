@@ -3,12 +3,16 @@
   <message-box v-if="context"
                :title="context.name"
                :subtitle="context.bio"
-               :photo="context.photo">
-    <message-list :messages="context.messages" :loading="loading" :all-loaded="allLoaded"
-                  @load-more="loadMore()" @seen="markMessagesSeen"></message-list>
+               :photo="context.photo"
+               type="group"
+               @openPhoto="openTitle"
+               @openTitle="openTitle">
+    <message-list :messages="context.messages"
+                  @load-more="loadMore"
+                  @seen="markMessagesSeen"></message-list>
 
-    <message-editor slot="footer" ref="input" v-model="message" :disabled="disabled" @send="send"
-                    @focused="markMessagesSeen"></message-editor>
+    <message-editor slot="footer" ref="input" v-model="message"
+                    @send="send" @focused="markMessagesSeen"></message-editor>
   </message-box>
 
   <loading-placeholder v-else></loading-placeholder>
@@ -16,14 +20,14 @@
 </template>
 
 <script lang="babel">
-import first from 'lodash/first';
+import last from 'lodash/last';
 import each from 'lodash/each';
-import isNull from 'lodash/isNull';
 import int from 'lodash/toInteger';
 import { mapActions, mapGetters } from 'vuex';
+
+import { httpThen } from '../util';
 import { MessageBox, MessageEditor, LoadingPlaceholder } from '../components';
-import { GET_GROUP_MESSAGES, SEND_GROUP_MESSAGE_READ_RECEIPT, GET_GROUPS } from './vuex/action-types';
-import { ADD_GROUP_MESSAGE } from './vuex/mutation-types';
+import { getters, actions } from './vuex/meta';
 import MessageList from './components/MessagePane.vue';
 
 export default {
@@ -46,11 +50,9 @@ export default {
 
       return group;
     },
-    groupMap() {
-      return this.$store.state.hub.groupMap;
-    },
     ...mapGetters({
-      groups: 'hubGroups',
+      groups: getters.groups,
+      groupMap: getters.groupMap,
     }),
   },
   created() {
@@ -59,65 +61,66 @@ export default {
   data() {
     return {
       message: '',
-      disabled: false,
-      loading: false,
-      allLoaded: false,
     };
   },
   methods: {
     send() {
-      this.disabled = true;
-      this.$http.post(`groups/${this.context.id}/messages`, { content: this.message })
-              .then(response => response.json())
-              .then((result) => {
-                this.message = '';
-                this.disabled = false;
-                this.$store.commit(ADD_GROUP_MESSAGE, {
-                  group: this.context.id,
-                  messages: [result],
-                  prepend: false,
-                });
-                this.$refs.input.resize();
-                this.$refs.input.focus();
-              })
-              .catch(() => {
-                this.disabled = false;
-              });
+      this.sendMessage({ groupId: this.context.id, content: this.message });
+      this.message = '';
+      this.$refs.input.resize();
+      this.$refs.input.focus();
+    },
+    openTitle() {
+      this.$router.push({ name: 'hub.group-preview' });
     },
     findGroup() {
       const id = int(this.$route.params.group);
 
       if (!(id in this.groupMap)) {
-        this.$debug('GETTING IT BITCH');
         this.getGroups({ q: id });
       }
     },
-    loadMore() {
-      this.loading = true;
-      this.getMessages({ group: this.context.id, params: {} }).then((result) => {
-        this.loading = false;
+    loadMore(loader) {
+      if (!this.context) {
+        loader.done();
+        return;
+      }
+      this.getMessages({ groupId: this.context.id, params: {} })
+              .then(httpThen)
+              .then((result) => {
+                const paginator = result._meta.pagination;
 
-        if (result.data.length) {
-          this.$nextTick(() => {
-            const message = first(this.context.messages);
+                if (paginator.current_page < paginator.total_pages) {
+                  const message = last(result.data);
 
-            if (message && isNull(message.read_at)) {
-              this.loadMore();
-            }
-          });
-        }
-      });
+                  if (message && message.unread === true) {
+                    this.loadMore(loader);
+                    return;
+                  }
+                }
+
+                if (paginator.current_page < paginator.total_pages) {
+                  loader.done();
+                } else {
+                  loader.end();
+                }
+              })
+              .catch(response => response);
     },
-    markMessagesSeen() {
-      window.setTimeout(() => {
-        const messages = this.context.messages.filter(message => message.unread);
-        each(messages, message => this.readMessage({ group: this.context.id, message }));
-      }, 1000);
+    markMessagesSeen(payload = null) {
+      if (payload !== null) {
+        this.readMessage({ groupId: this.context.id, message: payload });
+        return;
+      }
+
+      const messages = this.context.messages.filter(message => message.unread);
+      each(messages, message => this.readMessage({ groupId: this.context.id, message }));
     },
     ...mapActions({
-      getGroups: GET_GROUPS,
-      readMessage: SEND_GROUP_MESSAGE_READ_RECEIPT,
-      getMessages: GET_GROUP_MESSAGES,
+      getGroups: actions.getGroups,
+      getMessages: actions.getMessagesFromGroup,
+      readMessage: actions.sendMessageReadReceiptForGroup,
+      sendMessage: actions.sendMessageToGroup,
     }),
   },
   watch: {

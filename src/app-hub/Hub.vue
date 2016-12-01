@@ -1,11 +1,16 @@
 <template>
 <div class="container hub-container">
   <div class="row hub-body">
-    <div class="col-xs-2 hub-sidebar-left" ref="sidebarLeft">
-      <group-list></group-list>
-      <user-list></user-list>
+    <div class="col-xs-12 col-lg-2 hub-sidebar-left" ref="sidebarLeft">
+      <div class="btn-group my-1">
+        <a class="btn btn-outline-secondary" :class="{active: browseUsers}" href="#" @click.stop.prevent="browseUsers = true">Private</a>
+        <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" href="#" @click.stop.prevent="browseUsers = false">Groups</a>
+      </div>
+
+      <group-list v-show="!browseUsers"></group-list>
+      <user-list v-show="browseUsers"></user-list>
     </div>
-    <div class="col-xs-10 hub-content">
+    <div class="col-xs-12 col-lg-10 hub-content">
       <router-view></router-view>
     </div>
   </div>
@@ -14,7 +19,11 @@
 
 <script lang="babel">
 import scrollbar from 'perfect-scrollbar';
+import { mapActions, mapGetters } from 'vuex';
+
 import * as components from './components';
+import { actions } from './vuex/meta';
+import { getters as rootGetters } from '../vuex/meta';
 
 export default {
   name: 'Hub',
@@ -22,12 +31,24 @@ export default {
   beforeDestroy() {
     scrollbar.destroy(this.$refs.sidebarLeft);
   },
+  computed: { ...mapGetters({ user: rootGetters.user }) },
+  data() {
+    return {
+      browseUsers: false,
+    };
+  },
+  methods: { ...mapActions({ onMessage: actions.onNewMessageToUser }) },
   mounted() {
     this.$nextTick(() => {
       scrollbar.initialize(this.$refs.sidebarLeft, {
         suppressScrollX: true,
       });
     });
+  },
+  created() {
+    this.$echo
+            .private(this.user.channel)
+            .listen('NewMessage', message => this.onMessage({ message }));
   },
 };
 </script>
@@ -39,6 +60,12 @@ export default {
 
 .hub-container {
   @include match-parent();
+
+  .btn-outline-secondary.active {
+    background: white;
+    color: inherit;
+    border-color: $btn-secondary-border;
+  }
 }
 
 .hub-body, .hub-content {
@@ -49,10 +76,10 @@ export default {
   height: 100%;
   overflow-y: auto;
   overflow-x: visible;
-  padding-right: 20px;
-}
 
-.hub-content {
-  padding-left: 0;
+  @include media-breakpoint-up(lg) {
+    margin-right: -15px;
+    margin-left: 15/2px;
+  }
 }
 </style>

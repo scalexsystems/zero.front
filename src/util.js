@@ -43,7 +43,9 @@ export const pushIf = (target, items, mappings = {}) => {
   items.forEach((item) => {
     if (item.id in mappings) return;
 
-    Object.defineProperty(mappings, item.id, { value: target.length });
+    /* eslint-disable */
+    mappings[item.id] = target.length;
+    /* eslint-enable */
     target.push(item);
   });
 
@@ -62,4 +64,16 @@ export const normalizeValidationErrors = (errors) => {
     transformed[key] = (_.isArray(value) ? value.join(' ') : value);
   });
   return transformed;
+};
+
+export const httpThen = (response) => {
+  if ('ok' in response) {
+    if (response.ok === true) {
+      return response.json();
+    }
+
+    throw response;
+  }
+
+  return response;
 };

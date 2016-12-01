@@ -4,7 +4,7 @@
                :title="context.name"
                :subtitle="context.bio"
                :photo="context.photo">
-    <message-list :messages="context.messages" :loading="loading" :all-loaded="allLoaded"
+    <message-list ref="list" :messages="context.messages" :loading="loading" :all-loaded="allLoaded"
                   @load-more="loadMore" @seen="markMessagesSeen"></message-list>
 
     <message-editor slot="footer" ref="input" v-model="message" :disabled="disabled" @send="send"
@@ -18,13 +18,13 @@
 <script lang="babel">
 import first from 'lodash/first';
 import each from 'lodash/each';
-import isNull from 'lodash/isNull';
 import int from 'lodash/toInteger';
 import { mapActions, mapGetters } from 'vuex';
 
 import { MessageBox, MessageEditor, LoadingPlaceholder } from '../components';
-import { GET_USER_MESSAGES, SEND_USER_MESSAGE_READ_RECEIPT, GET_USERS } from './vuex/action-types';
-import { ADD_USER_MESSAGE } from './vuex/mutation-types';
+import { httpThen } from '../util';
+import { actions as rootActions } from '../vuex/meta';
+import { getters, actions, types as mutations } from './vuex/meta';
 import MessageList from './components/MessagePane.vue';
 
 export default {
@@ -49,10 +49,10 @@ export default {
 
       return user;
     },
-    userMap() {
-      return this.$store.state.hub.userMap;
-    },
-    ...mapGetters({ users: 'hubUsers' }),
+    ...mapGetters({
+      users: getters.users,
+      userMap: getters.userMap,
+    }),
   },
   data() {
     return {
@@ -64,38 +64,28 @@ export default {
   },
   methods: {
     send() {
-      this.$http.post(`me/messages/users/${this.context.id}`, { content: this.message })
-              .then(response => response.json())
-              .then((result) => {
-                this.$store.commit(ADD_USER_MESSAGE, {
-                  user: this.context.id,
-                  messages: [result],
-                  prepend: false,
-                });
-                this.$refs.input.resize();
-                this.$refs.input.focus();
-              })
-              .catch(response => response);
+      this.sendMessage({ userId: this.context.id, content: this.message });
+      this.$nextTick(() => {
+        this.$refs.list.$emit('scrollToLast');
+        this.$refs.input.resize();
+        this.$refs.input.focus();
+      });
       this.message = '';
     },
     loadMore(loader) {
-      this.getMessages({ user: this.context.id, params: {} })
-              .then((response) => {
-                if ('ok' in response) throw response;
-
-                return response;
-              })
+      this.getMessages({ userId: this.context.id, params: {} })
+              .then(httpThen)
               .then((result) => {
-                if (result.data.length) {
+                const paginator = result._meta.pagination;
+
+                if (paginator.current_page < paginator.total_pages) {
                   const message = first(this.context.messages);
 
-                  if (message && isNull(message.read_at)) {
+                  if (message && message.unread === true) {
                     this.loadMore(loader);
                     return;
                   }
                 }
-
-                const paginator = result._meta.pagination;
 
                 if (paginator.current_page < paginator.total_pages) {
                   loader.done();
@@ -108,18 +98,23 @@ export default {
     markMessagesSeen() {
       window.setTimeout(() => {
         const messages = this.context.messages.filter(message => message.unread);
-        each(messages, message => this.readMessage({ user: this.context.id, message }));
+        each(messages, message => this.readMessage({ userId: this.context.id, message }));
       }, 1000);
     },
     findUser() {
       if (!(this.$route.params.user in this.userMap)) {
-        this.getUsers({ id: this.$route.params.user, ignore: true });
+        this.findUsers({ id: this.$route.params.user })
+                .then(httpThen)
+                .then((result) => {
+                  this.$store.commit(mutations.ADD_USER, result.data);
+                });
       }
     },
     ...mapActions({
-      getUsers: GET_USERS,
-      readMessage: SEND_USER_MESSAGE_READ_RECEIPT,
-      getMessages: GET_USER_MESSAGES,
+      findUsers: rootActions.getUsers,
+      readMessage: actions.sendMessageReadReceipt,
+      sendMessage: actions.sendMessageToUser,
+      getMessages: actions.getMessagesFromUser,
     }),
   },
   watch: {

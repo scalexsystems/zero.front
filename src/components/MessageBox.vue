@@ -1,19 +1,20 @@
 <template>
 <layout-box v-bind="{ actions, disableFooter }">
   <template slot="context">
-  <img class="message-box-photo" src="../assets/person.jpg" :src="photo" :class="[typeClass]">
+  <img class="message-box-photo" src="../assets/person.jpg" :src="photo" :class="[typeClass]"
+       @click="$emit('openPhoto')">
   <div class="message-box-title-container">
-    <div class="message-box-title">
+    <div class="message-box-title" @click="$emit('openTitle')">
       <slot name="title">{{ title }}</slot>
     </div>
-    <div class="message-box-subtitle">
+    <div class="message-box-subtitle" @click="$emit('openSubtitle')">
       <slot name="subtitle">{{ subtitle }}</slot>
     </div>
   </div>
   </template>
 
   <template slot="footer">
-    <slot name="footer"></slot>
+  <slot name="footer"></slot>
   </template>
 
   <slot></slot>
@@ -61,6 +62,8 @@ $border-radius-sm: .2rem;
   width: rem(42px);
   height: rem(42px);
 
+  cursor: pointer;
+
   &.photo-square {
     border-radius: $border-radius-sm;
   }
@@ -76,7 +79,9 @@ $border-radius-sm: .2rem;
 }
 
 .message-box-title {
+  cursor: pointer;
   font-size: 1.28571rem;
+  user-select: none;
 }
 
 .message-box-subtitle {

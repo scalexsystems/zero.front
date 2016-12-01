@@ -1,6 +1,6 @@
 <template>
-<activity-box title="Add new group" subtitle="Make group to coverse better." :enable-topbar="true" :show="true">
-  <template slot="topbar">
+<activity-box title="Add new group" subtitle="Make group to coverse better." :show="true" @close="$router.go(-1)">
+  <template slot="actions">
   <a class="btn btn-primary" href="#" @click.prevent.stop="createGroup" ref="action">
     Create Group
   </a>
@@ -20,6 +20,20 @@
       <div class="col-xs-6 col-lg-8 offset-lg-2">
         <input-textarea title="Description" v-model="group.description" :feedback="errors.description"></input-textarea>
       </div>
+      <div class="col-xs-6 col-lg-8 offset-lg-2">
+        <input-search title="Members" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
+                      @select="onSelect"></input-search>
+
+        <div class="row">
+          <div class="col-xs-12 col-lg-6" v-for="(member, key) in members" :key="key">
+            <person-card :item="member">
+              <a slot="actions" class="text-muted" href="#" v-tooltip="Remove"
+                 @click.stop.prevent="removeMember(member)"
+              ><i class="fa fa-fw fa-trash-o"></i></a>
+            </person-card>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </activity-box>
@@ -27,20 +41,27 @@
 
 <script lang="babel">
 import Validator from 'Validator';
+import throttle from 'lodash/throttle';
+import { mapGetters, mapActions } from 'vuex';
 
-import { ActivityBox } from '../components';
+import { ActivityBox, PersonCard } from '../components';
+import { types as mutations } from './vuex/meta';
+import { types as rootMutations, getters, actions } from '../vuex/meta';
 import { isValidationException, normalizeValidationErrors as normalize } from '../util';
 
 export default {
   name: 'GroupCreate',
-  components: { ActivityBox },
+  components: { ActivityBox, PersonCard },
   data() {
     return {
       group: {
         name: '',
         type: 'public',
         description: '',
+        member_ids: [],
       },
+      query: '',
+      members: [],
       errors: {},
     };
   },
@@ -51,6 +72,7 @@ export default {
         private: 'Private',
       };
     },
+    ...mapGetters({ suggestions: getters.users }),
   },
   methods: {
     createGroup() {
@@ -63,6 +85,8 @@ export default {
               .then(response => response.json())
               .then((result) => {
                 this.$refs.action.classList.remove('disabled');
+                this.$store.commit(mutations.ADD_GROUP, result);
+                this.$store.commit(rootMutations.ADD_GROUP, result);
                 this.$router.push({ name: 'hub.group', params: { group: result.id } });
 
                 return result;
@@ -93,6 +117,27 @@ export default {
 
       return true;
     },
+    onSuggest: throttle(function onSuggest({ value, start, end }) {
+      start();
+      this.findMembers({ q: value }).then(end);
+    }, 400),
+    onSelect(member) {
+      if (this.group.member_ids.indexOf(member.id) < 0) {
+        this.group.member_ids.push(member.id);
+        this.members.push(member);
+      }
+    },
+    removeMember(member) {
+      const index = this.group.member_ids.indexOf(member.id);
+      if (index > -1) {
+        this.group.member_ids.splice(index, 1);
+        this.members.splice(index, 1);
+      }
+    },
+    ...mapActions({ findMembers: actions.getUsers }),
+  },
+  created() {
+    if (!this.suggestions.length) this.findMembers();
   },
 };
 </script>

@@ -15,17 +15,52 @@
     </div>
     <div class="navbar-brand">{{ title }}</div>
     <div class="navbar-user">
-      <span class="hidden-sm-down">{{ name }}</span>
-      <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
+      <div class="dropdown">
+        <a class="user-menu-toggler text-white"
+           role="button" href="#"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">
+          <span class="hidden-sm-down">{{ name }}</span>
+          <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-toggler">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" href="#">
+            <form method="POST" action="/logout">
+              <input type="hidden" name="_token" :value="token">
+              <input type="submit" class="user-logout-button" value="Logout">
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
 </template>
 
-<script>
+<script lang="babel">
+import { mapGetters } from 'vuex';
+import { getters } from '../vuex/meta';
+
 export default {
-  data() {
-    return { title: 'Zero | School Name Here', name: 'User Name Here' };
+  computed: {
+    title() {
+      return 'Name of the School';
+    },
+    name() {
+      const user = this.user;
+
+      if ('name' in user) return user.name;
+
+      return '';
+    },
+    token() {
+      return window.Laravel.csrfToken;
+    },
+    ...mapGetters({ user: getters.user }),
   },
 };
 </script>
@@ -55,6 +90,11 @@ body {
   }
 }
 
+.navbar-dark .navbar-toggler {
+  background-image: none;
+  border-color: transparent;
+}
+
 .navbar-container {
   display: flex;
   flex-direction: row;
@@ -77,5 +117,19 @@ body {
   margin: -1px 0 -1px .5rem;
   border-radius: 100%;
   border: solid 0.0714rem white;
+}
+
+.user-menu-toggler {
+  &:hover, &:focus, &:active {
+    text-decoration: none;
+  }
+}
+
+.user-logout-button {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
 }
 </style>

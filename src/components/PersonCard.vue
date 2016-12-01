@@ -1,14 +1,17 @@
 <template>
 <div class="card person-card" @click.prevent="$emit('open')">
   <div class="card-block person-card-block">
-    <img src="../assets/person.jpg" :src="person.photo" class="person-card-img">
+    <img src="../assets/person.jpg" :src="item.photo" class="person-card-img" :class="[item._type]">
     <div class="person-card-info-container">
-      <div class="person-card-name">{{ person.name }}</div>
+      <div class="person-card-name">{{ item.name }}</div>
       <div class="person-card-meta-container">
         <slot>
-          <div class="person-card-bio">{{ person.bio }}</div>
+          <div class="person-card-bio">{{ item.bio }}</div>
         </slot>
       </div>
+    </div>
+    <div class="person-card-actions">
+      <slot name="actions"></slot>
     </div>
   </div>
 </div>
@@ -17,7 +20,7 @@
 <script lang="babel">
 export default {
   props: {
-    person: {
+    item: {
       required: true,
     },
   },
@@ -43,6 +46,14 @@ export default {
   width: rem(48px);
   height: rem(48px);
   margin-right: rem(10px);
+
+  &.user {
+    border-radius: $border-radius-sm;
+  }
+
+  &.group {
+    border-radius: 100%;
+  }
 }
 
 .person-card-info-container {

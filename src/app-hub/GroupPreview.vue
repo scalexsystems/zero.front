@@ -1,8 +1,10 @@
 <template>
 <activity-box v-if="group"
               v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
-              @close="close">
-
+              @close="$router.go(-1)">
+  <template slot="actions">
+    <a v-if="group.is_admin" href="#" class="btn btn-primary">Edit</a>
+  </template>
   <div class="container py-2">
     <div class="text-xs-center">
       <img class="group-preview-photo my-2" :src="group.photo">
@@ -13,7 +15,9 @@
       </div>
 
       <h2>{{ group.name }}</h2>
-      <p><small class="text-muted">{{ group.bio }}</small></p>
+      <p>
+        <small class="text-muted">{{ group.bio }}</small>
+      </p>
     </div>
 
     <div class="row">
@@ -28,11 +32,11 @@
       <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
         <div class="row">
           <div class="col-xs-12 col-lg-6" v-for="(member, index) of members">
-            <item-card :person="member"
+            <item-card :item="member"
                        @open="openMemberProfile(member, index)"></item-card>
           </div>
-          <infinite-scroll class="col-xs-12"
-                           :on-infinite="onInfinite" ref="infinite"></infinite-scroll>
+          <infinite-scroll class="col-xs-12" :on-infinite="onInfinite"
+                           ref="infinite"></infinite-scroll>
         </div>
       </div>
     </div>
@@ -42,27 +46,17 @@
 </template>
 
 <script lang="babel">
-import Vue from 'vue';
+import int from 'lodash/toInteger';
+import { mapGetters, mapActions } from 'vuex';
 import throttle from 'lodash/throttle';
 import InfiniteScroll from 'vue-infinite-loading';
 
 import { pushIf } from '../util';
+import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
 import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard } from '../components';
 
 export default {
   name: 'GroupPreview',
-  beforeRouteEnter(to, from, next) {
-    Vue.http.get(`groups/${to.params.group}`)
-            .then(response => response.json())
-            .then((result) => {
-              next((vm) => {
-                Vue.set(vm, 'group', result);
-              });
-            })
-            .catch(() => {
-              // TODO: Redirect to 404!
-            });
-  },
   components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll },
   computed: {
     title() {
@@ -75,10 +69,24 @@ export default {
 
       return group ? group.bio : '';
     },
+    group() {
+      const route = this.$route;
+      const groupMap = this.groupMap;
+      const groups = this.groups;
+
+      const id = int(route.params.group);
+      const index = groupMap[id];
+      const group = groups[index];
+
+      return group;
+    },
+    ...mapGetters({ groups: rootGetters.groups, groupMap: rootGetters.groupMap }),
+  },
+  created() {
+    this.findGroup();
   },
   data() {
     return {
-      group: null,
       ids: {},
       members: [],
       q: '',
@@ -86,9 +94,6 @@ export default {
     };
   },
   methods: {
-    close() {
-      window.history.back();
-    },
     search: throttle(function search() {
       this.page = 0;
       this.onInfinite();
@@ -106,6 +111,19 @@ export default {
                 }
               })
               .catch(() => this.$refs.infinite.$emit('$InfiniteLoading:loaded'));
+    },
+    findGroup() {
+      const id = int(this.$route.params.group);
+
+      if (!(id in this.groupMap)) {
+        this.getGroup({ id });
+      }
+    },
+    ...mapActions({ getGroup: rootActions.getGroups }),
+  },
+  watch: {
+    $route() {
+      this.findGroup();
     },
   },
 };

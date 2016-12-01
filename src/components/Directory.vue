@@ -3,6 +3,9 @@
         v-bind="{ title, subtitle, show: true, actions, disableFooter: true }"
         @close="$emit('close')"
         @option-click="onOptionClick">
+
+  <template slot="actions"><slot name="actions"></slot></template>
+
   <div class="directory-header row">
     <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
       <div class="input-group input-group-lg">
@@ -19,10 +22,10 @@
       </div>
       <div class="row">
         <div v-for="(item, index) of filtered" class="col-xs-12 col-md-6">
-          <item-card :person="item" @open="$emit('item', item, index)"></item-card>
+          <div :is="component" :item="item" @open="$emit('item', item, index)"></div>
         </div>
 
-        <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" ref="infinite"></infinite-scroll>
+        <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" spinner="waveDots" ref="infinite"></infinite-scroll>
       </div>
     </div>
   </div>
@@ -42,7 +45,11 @@ export default {
     items: {
       required: true,
     },
-    ...mapObject(ActivityBox.props, ['title', 'subtitle', 'actions']),
+    component: {
+      default: 'item-card',
+      type: String,
+    },
+    ...mapObject(ActivityBox.props, ['title', 'subtitle', 'actions', 'enableTopbar']),
   },
   components: { ActivityBox, ItemCard, InfiniteScroll },
   computed: {
@@ -71,8 +78,13 @@ export default {
   methods: {
     onOptionClick: ActivityBox.methods.onOptionClick,
     onInfinite() {
-      const end = () => this.$refs.infinite.$emit('$InfiniteLoading:complete');
-      const done = () => this.$refs.infinite.$emit('$InfiniteLoading:loaded');
+      const emit = (e) => {
+        if (this.$refs.infinite) {
+          this.$refs.infinite.$emit(e);
+        }
+      };
+      const end = () => emit('$InfiniteLoading:complete');
+      const done = () => emit('$InfiniteLoading:loaded');
 
       this.$emit('load-more', {
         done,

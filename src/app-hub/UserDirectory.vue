@@ -13,6 +13,8 @@
 import { mapGetters, mapActions } from 'vuex';
 import throttle from 'lodash/throttle';
 
+import { httpThen } from '../util';
+import { getters, actions } from '../vuex/meta';
 import Directory from '../components/Directory.vue';
 
 export default {
@@ -22,7 +24,9 @@ export default {
   },
   components: { Directory },
   computed: {
-    ...mapGetters(['users']),
+    ...mapGetters({
+      users: getters.users,
+    }),
   },
   data() {
     return { q: '', page: 0 };
@@ -41,21 +45,19 @@ export default {
     }, 500),
     onInfinite({ done }) {
       this.getPeople({ q: this.q, page: this.page + 1 })
-              .then((response) => {
-                if ('ok' in response) throw response;
-
-                return response;
-              })
+              .then(httpThen)
               .then((result) => {
                 this.page = result._meta.pagination.current_page;
+
                 done();
               })
               .catch(() => done());
     },
-    ...mapActions(['getPeople']),
+    ...mapActions({
+      getPeople: actions.getUsers,
+    }),
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

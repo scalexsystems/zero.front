@@ -1,11 +1,18 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 
+var projectPath = process.env.PROJECT
+    ? path.resolve(process.env.PROJECT)
+    : path.resolve(__dirname, '../../../webappnext');
+
+console.log('  Project Path: ' + projectPath);
+
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    index: path.resolve(projectPath, 'resources/views/app/vue.blade.php'),
+    template: path.resolve(projectPath, 'resources/views/app/vue.template.blade.php'),
+    assetsRoot: path.resolve(projectPath, 'public'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     productionSourceMap: true,
@@ -22,7 +29,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': 'http://zero.institute.dev/api',
+      '/api': {
+        target: 'http://zero.institute.app/',
+        changeOrigin: true,
+      }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

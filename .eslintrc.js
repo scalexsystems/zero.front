@@ -11,6 +11,7 @@ module.exports = {
   ],
   globals: {
     window: true,
+    document: true,
   },
   // check if imports actually resolve
   'settings': {
@@ -27,6 +28,7 @@ module.exports = {
       'js': 'never',
     }],
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'no-underscore-dangle': 'off',
   }
 };

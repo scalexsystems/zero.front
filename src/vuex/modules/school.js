@@ -1,13 +1,13 @@
-import each from 'lodash/each';
 import map from 'lodash/map';
+import group from 'lodash/groupBy';
 import first from 'lodash/first';
 import Vue from 'vue';
-import { ADD_USER, ADD_STUDENT, ADD_TEACHER, ADD_EMPLOYEE, ADD_GROUP } from '../mutation-types';
+import { types, getters, actions } from '../meta';
 import { pushIf } from '../../util';
 
 const commitUsers = (result, commit) => {
   if ('user' in first(result.data)) {
-    commit(ADD_USER, map(result.data, person => ({ person, ...person.user })));
+    commit(types.ADD_USER, map(result.data, person => ({ person, ...person.user })));
   }
 };
 
@@ -27,110 +27,97 @@ export default {
     disciplines: [],
   },
   getters: {
-    employees(state) {
+    [getters.employees](state) {
       return state.employees;
     },
-    groups(state) {
+    [getters.groups](state) {
       return state.groups;
     },
-    students(state) {
+    [getters.groupMap](state) {
+      return state.groupMap;
+    },
+    [getters.students](state) {
       return state.students;
     },
-    teachers(state) {
+    [getters.teachers](state) {
       return state.teachers;
     },
-    users(state) {
+    [getters.users](state) {
       return state.users;
     },
   },
   mutations: {
-    [ADD_USER](state, users) {
+    [types.ADD_USER](state, users) {
       pushIf(state.users, users, state.userMap);
     },
-    [ADD_STUDENT](state, students) {
+    [types.ADD_STUDENT](state, students) {
       pushIf(state.students, students, state.studentMap);
     },
-    [ADD_TEACHER](state, teachers) {
+    [types.ADD_TEACHER](state, teachers) {
       pushIf(state.teachers, teachers, state.teacherMap);
     },
-    [ADD_EMPLOYEE](state, employees) {
+    [types.ADD_EMPLOYEE](state, employees) {
       pushIf(state.employees, employees, state.employeeMap);
     },
-    [ADD_GROUP](state, groups) {
+    [types.ADD_GROUP](state, groups) {
       pushIf(state.groups, groups, state.groupMap);
     },
   },
   actions: {
-    getStudents({ commit }, params = {}) {
+    [actions.getStudents]({ commit }, params = {}) {
       return Vue.http.get('people/students', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(ADD_STUDENT, result.data);
+            commit(types.ADD_STUDENT, result.data);
             commitUsers(result, commit);
 
             return result;
           })
           .catch(response => response);
     },
-    getEmployees({ commit }, params = {}) {
+    [actions.getEmployees]({ commit }, params = {}) {
       return Vue.http.get('people/employees', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(ADD_EMPLOYEE, result.data);
+            commit(types.ADD_EMPLOYEE, result.data);
             commitUsers(result, commit);
+
             return result;
           })
-          .catch(response => response);// FIXME: Unhandled exception.
+          .catch(response => response);
     },
-    getTeachers({ commit }, params = {}) {
+    [actions.getTeachers]({ commit }, params = {}) {
       return Vue.http.get('people/teachers', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(ADD_TEACHER, result.data);
+            commit(types.ADD_TEACHER, result.data);
             commitUsers(result, commit);
 
             return result;
           })
           .catch(response => response);
     },
-    getGroups({ commit }, params = {}) {
+    [actions.getGroups]({ commit }, params = {}) {
       return Vue.http.get('groups', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(ADD_GROUP, result.data);
+            commit(types.ADD_GROUP, result.data);
 
             return result;
           })
           .catch(response => response);
     },
-    getPeople({ commit }, params = {}) {
+    [actions.getUsers]({ commit }, params = {}) {
       return Vue.http.get('people', { params })
           .then(response => response.json())
           .then((result) => {
-            const employees = [];
-            const students = [];
-            const teachers = [];
+            const groups = group(result.data, 'person_type');
 
-            each(result.data, (user) => {
-              switch (user.person_type) {
-                case 'student':
-                  students.push(user.person);
-                  break;
-                case 'teacher':
-                  teachers.push(user.person);
-                  break;
-                case 'employee':
-                  employees.push(user.person);
-                  break;
-                default:
-                  break;
-              }
-            });
+            commit(types.ADD_USER, result.data);
 
-            commit(ADD_USER, result.data);
-            commit(ADD_STUDENT, students);
-            commit(ADD_EMPLOYEE, employees);
-            commit(ADD_TEACHER, teachers);
+            if ('student' in groups) commit(types.ADD_STUDENT, groups.student);
+            if ('employee' in groups) commit(types.ADD_EMPLOYEE, groups.employee);
+            if ('teacher' in groups) commit(types.ADD_TEACHER, groups.teacher);
 
             return result;
           })

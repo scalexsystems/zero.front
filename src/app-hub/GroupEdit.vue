@@ -3,41 +3,37 @@
               v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
               @close="$router.go(-1)">
   <template slot="actions">
-    <router-link v-if="group.is_admin" :to="{name: 'hub.group-edit', params: { group: group.id } }"
-                 class="btn btn-primary">Edit</router-link>
+  <a class="btn btn-primary" href="#" @click.prevent.stop="createGroup" ref="action">
+    Create Group
+  </a>
   </template>
-  <div class="container py-2">
-    <div class="text-xs-center">
-      <img class="group-preview-photo my-2" :src="group.photo">
 
-      <div class="my-2">
-        <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
-        <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
-      </div>
-
-      <h2>{{ group.name }}</h2>
-      <p>
-        <small class="text-muted">{{ group.bio }}</small>
-      </p>
+  <div class="container py-1">
+    <div class="my-2 text-xs-center">
     </div>
-
     <div class="row">
-      <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
-        <div class="input-group input-group-lg">
-          <span class="input-group-addon"><i class="fa fa-search"></i></span>
-          <input class="form-control"
-                 type="search" v-model="q"
-                 @keyup="search">
-        </div>
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
+        <input-text title="Name of the group" required v-model="group.name" :feedback="errors.name"></input-text>
       </div>
-      <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
+      <div class="col-xs-6 col-lg-8 offset-lg-2">
+        <input-radio title="Group Type" required v-model="group.type" :options="groupTypes"
+                     :feedback="errors.type"></input-radio>
+      </div>
+      <div class="col-xs-6 col-lg-8 offset-lg-2">
+        <input-textarea title="Description" v-model="group.description" :feedback="errors.description"></input-textarea>
+      </div>
+      <div class="col-xs-6 col-lg-8 offset-lg-2">
+        <input-search title="Members" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
+                      @select="onSelect"></input-search>
+
         <div class="row">
-          <div class="col-xs-12 col-lg-6" v-for="(member, index) of members">
-            <item-card :item="member"
-                       @open="openMemberProfile(member, index)"></item-card>
+          <div class="col-xs-12 col-lg-6" v-for="(member, key) in members" :key="key">
+            <person-card :item="member">
+              <a slot="actions" class="text-muted" href="#" v-tooltip="Remove"
+                 @click.stop.prevent="removeMember(member)"
+              ><i class="fa fa-fw fa-trash-o"></i></a>
+            </person-card>
           </div>
-          <infinite-scroll class="col-xs-12" :on-infinite="onInfinite"
-                           ref="infinite"></infinite-scroll>
         </div>
       </div>
     </div>
@@ -57,7 +53,7 @@ import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
 import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard } from '../components';
 
 export default {
-  name: 'GroupPreview',
+  name: 'GroupEdit',
   components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll },
   computed: {
     title() {
@@ -70,7 +66,13 @@ export default {
 
       return group ? group.bio : '';
     },
-    group() {
+    groupTypes() {
+      return {
+        public: 'Public',
+        private: 'Private',
+      };
+    },
+    original() {
       const route = this.$route;
       const groupMap = this.groupMap;
       const groups = this.groups;
@@ -88,6 +90,8 @@ export default {
   },
   data() {
     return {
+      group: null,
+      errors: {},
       ids: {},
       members: [],
       q: '',
@@ -125,6 +129,8 @@ export default {
   watch: {
     $route() {
       this.findGroup();
+    },
+    original() {
     },
   },
 };

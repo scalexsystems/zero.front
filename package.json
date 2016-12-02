@@ -95,6 +95,7 @@
     "webpack-merge": "^0.14.1"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "package.json"
   ]
 }

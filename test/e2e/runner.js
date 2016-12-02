@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'testing';
 
-require('phantomjs-prebuilt').path = './node_modules/.bin/phantomjs';
+require('phantomjs-prebuilt').path = '/usr/local/bin/phantomjs';
 // 1. start the dev server using production config
 var server = require('../../build/dev-server.js');
 

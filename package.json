@@ -1,6 +1,6 @@
 {
-  "name": "zero-hub",
-  "version": "1.0.0",
+  "name": "zero-front",
+  "version": "0.1.0",
   "description": "Zero Hub UI",
   "author": "Rahul Kadyan <hi@znck.me>",
   "private": true,
@@ -93,5 +93,8 @@
     "webpack-dev-middleware": "^1.8.3",
     "webpack-hot-middleware": "^2.12.2",
     "webpack-merge": "^0.14.1"
-  }
+  },
+  "files": [
+    "dist/"
+  ]
 }

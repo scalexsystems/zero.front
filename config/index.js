@@ -1,18 +1,14 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 
-var projectPath = process.env.PROJECT
-    ? path.resolve(process.env.PROJECT)
-    : path.resolve(__dirname, '../../../webappnext');
-
-console.log('  Project Path: ' + projectPath);
+var projectPath = __dirname;
 
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(projectPath, 'resources/views/app/vue.blade.php'),
-    template: path.resolve(projectPath, 'resources/views/app/vue.template.blade.php'),
-    assetsRoot: path.resolve(projectPath, 'public'),
+    index: path.resolve(projectPath, '../dist/vue.blade.php'),
+    template: path.resolve(projectPath, '../vue.template.blade.php'),
+    assetsRoot: path.resolve(projectPath, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     productionSourceMap: true,

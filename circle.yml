@@ -8,15 +8,13 @@ dependencies:
     - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     - sudo apt-get update && sudo apt-get install yarn
   override:
-    - yarn
+    - yarn --ignore-scripts --no-progress
   cache_directories:
     - "~/.yarn-cache"
 
 test:
   override:
-    - yarn run lint
-    - yarn run test
-    - yarn run build
+    - yarn run lint && yarn run test
 
 deployment:
   release:

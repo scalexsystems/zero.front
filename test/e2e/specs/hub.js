@@ -12,15 +12,11 @@ module.exports = {
       .url(hubLink)
       .assert.elementPresent('.hub-container', 'hub is reachable')
       .assert.elementPresent('.hub-sidebar-left > .group-list', 'group list is visible')
-      .waitForElementPresent('.group-list-container .group-list-item:nth-child(1)', 2000, 'has at least one group')
-      .click('.group-list-container .group-list-item:nth-child(1)')
-      .waitForElementPresent('.hub-group-preview', 200, 'open first group')
-      .assert.evaluate(function () {
-        return (
-          document.querySelector('.group-list-container .group-list-item:nth-child(1) .grop-list-name').textContent
-          === document.querySelector('.hub-group-preview .activity-box-title').textContent
-        );
-      }, null, 'visiting correct group')
+      .assert.elementPresent('.group-list-container .group-list-item:nth-child(1)', 'has at least one group')
+
+      .click('.group-list-container .group-list-item:nth-child(1)').pause(500)
+      .assert.elementPresent('.layout-box', 'open first group')
+      .assert.containsText('.hub-content .message-box-title', 'A Private', 'visiting correct group')
 
       // Click on `Private` link
       .click('.hub-sidebar-left > .btn-group:nth-child(1) a:nth-child(1)')

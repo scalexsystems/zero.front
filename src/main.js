@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'testing') {
   const requests = require('../mocks/http').default;
   /* eslint-enable */
   const vueResourceInterceptor = (request, next) => {
-    const key = `${request.method} ${request.getUrl()}`;
+    const key = `${request.method} ${request.getUrl().split('?')[0]}`;
 
     console.log(key, requests[key], requests);
     next(request.respondWith(JSON.stringify(requests[key] || {}), { status: 200 }));

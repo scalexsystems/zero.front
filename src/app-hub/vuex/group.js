@@ -76,10 +76,6 @@ export default {
         state.groups[index].messages[messageIndex].sending = false;
       }
     },
-
-    [types.JOIN_GROUP](state, group) {
-      state.groups.push(group);
-    },
   },
   actions: {
     [actions.getGroups]({ commit }, params = {}) {
@@ -152,6 +148,10 @@ export default {
       Vue.http.put(`groups/messages/${message.id}/read`)
           .then(() => commit(types.READ_GROUP_MESSAGE, { groupId, message }))
           .catch(response => response);
+    },
+
+    [actions.onJoinGroup]({ commit }, { group }) {
+      commit(types.ADD_GROUP, { group });
     },
   },
 };

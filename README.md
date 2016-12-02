@@ -1,3 +1,3 @@
 # Zero Hub UI
 
-> Unlicensed Proprietory Source
+> Unlicensed Proprietary Source

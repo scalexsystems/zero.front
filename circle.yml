@@ -12,6 +12,7 @@ dependencies:
     - "~/.yarn-cache"
   override:
     - yarn --ignore-scripts --no-progress
+    - npm rebuild node-sass
 
 test:
   override:

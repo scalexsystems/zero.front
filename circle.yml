@@ -1,0 +1,26 @@
+machine:
+  node:
+    version: 7.1.0
+
+dependencies:
+  pre:
+    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    - sudo apt-get update && sudo apt-get install yarn
+  override:
+    - yarn
+  cache_directories:
+    - "~/.yarn-cache"
+
+test:
+  override:
+    - yarn run lint
+    - yarn run test
+    - yarn run build
+
+deployment:
+  release:
+    tab: /v.*/
+    commands:
+      - "npm login <<EOF\n${NPM_USERNAME}\n${NPM_PASSWORD}\n${NPM_EMAIL}\nEOF\n"
+      - npm publish

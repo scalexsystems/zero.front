@@ -1,7 +1,7 @@
 <template>
 <div class="action-menu" v-if="!isEmpty">
   <div v-if="isSpaceAvailable" class="action-menu-actions">
-    <template v-for="{action, index} of collapsedActions">
+    <template v-for="(action, index) of collapsedActions">
     <slot :name="'action-menu-'+index">
       <a href="#" class="action-menu-action" @click.prevent="click($event, action, index)">
         <i class="fa fa-fw" :class="[`fa-${action.icon}`]"></i>
@@ -16,7 +16,7 @@
             aria-haspopup="true"
             aria-expanded="false"><i class="fa fa-fw fa-ellipsis-v"></i></button>
     <div class="dropdown-menu dropdown-menu-right" :aria-labelledby="id">
-      <template v-for="{action, index} of otherActions">
+      <template v-for="(action, index) of otherActions">
       <slot :name="'action-menu-'+index">
         <a href="#" class="dropdown-item" @click.prevent="click($event, action, index)">
           <i class="fa fa-fw" :class="[`fa-${action.icon}`]"></i> {{ action.name }}

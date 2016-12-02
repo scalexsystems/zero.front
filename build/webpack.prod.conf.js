@@ -32,9 +32,14 @@ var webpackConfig = merge(baseWebpackConfig, {
       'process.env': env
     }),
     new webpack.optimize.UglifyJsPlugin({
+      cacheFolder: path.resolve(__dirname, '../.uglify_cache/'),
       debug: true,
-      minimize: false,
-      compress: {
+      minimize: true,
+      sourceMap: false,
+      output: {
+        comments: false
+      },
+      compressor: {
         warnings: false
       }
     }),

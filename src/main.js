@@ -22,14 +22,19 @@ window.Tether = require('tether');
 require('bootstrap');
 
 window.Vue = Vue;
+window.Laravel = window.Laravel || {};
 
 Vue.use(VueDebug, { debug: true });
 Vue.use(VueResource);
 Vue.use(VueEcho, window.Laravel.broadcast);
 
 Vue.http.options.root = '/api';
+
 if ('token' in window.Laravel) {
   Vue.http.headers.common.Authorization = `Bearer ${window.Laravel.token}`;
+  window.Laravel.broadcast.auth = {
+    headers: { Authorization: `Bearer ${window.Laravel.token}` },
+  };
 } else {
   Vue.http.headers.common['X-CSRF-Token'] = window.Laravel.csrfToken;
 }

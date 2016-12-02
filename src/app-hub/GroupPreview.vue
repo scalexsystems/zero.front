@@ -12,6 +12,7 @@
       <div class="my-2">
         <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
         <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
+        <a @click=joinGroup() class="btn btn-primary"> Join Group </a>
       </div>
 
       <h2>{{ group.name }}</h2>
@@ -52,6 +53,7 @@ import throttle from 'lodash/throttle';
 import InfiniteScroll from 'vue-infinite-loading';
 
 import { pushIf } from '../util';
+import { types as mutations } from './vuex/meta';
 import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
 import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard } from '../components';
 
@@ -120,6 +122,14 @@ export default {
       }
     },
     ...mapActions({ getGroup: rootActions.getGroups }),
+
+    joinGroup() {
+      this.$http.put(`groups/${this.group.id}/join`)
+      .then((group) => {
+        this.$store.commit(mutations.JOIN_GROUP, group);
+        this.$router.push({ name: 'hub.group' });
+      });
+    },
   },
   watch: {
     $route() {

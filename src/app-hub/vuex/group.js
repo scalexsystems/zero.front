@@ -76,6 +76,10 @@ export default {
         state.groups[index].messages[messageIndex].sending = false;
       }
     },
+
+    [types.JOIN_GROUP](state, group) {
+      state.groups.push(group);
+    },
   },
   actions: {
     [actions.getGroups]({ commit }, params = {}) {

@@ -149,5 +149,9 @@ export default {
           .then(() => commit(types.READ_GROUP_MESSAGE, { groupId, message }))
           .catch(response => response);
     },
+
+    [actions.onJoinGroup]({ commit }, { group }) {
+      commit(types.ADD_GROUP, { group });
+    },
   },
 };

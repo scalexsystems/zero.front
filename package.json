@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Zero Hub UI",
   "author": "Rahul Kadyan <hi@znck.me>",
-  "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
@@ -95,7 +95,6 @@
     "webpack-merge": "^0.14.1"
   },
   "files": [
-    "dist/",
-    "package.json"
+    "dist/"
   ]
 }

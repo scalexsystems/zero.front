@@ -20,7 +20,7 @@ test:
 
 deployment:
   release:
-    tab: /v.*/
+    tag: /v.*/
     commands:
       - "npm login <<EOF\n${NPM_USERNAME}\n${NPM_PASSWORD}\n${NPM_EMAIL}\nEOF\n"
       - npm publish

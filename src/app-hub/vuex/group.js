@@ -1,6 +1,7 @@
 import isArray from 'lodash/isArray';
 import sort from 'lodash/sortBy';
 import unique from 'lodash/uniqBy';
+import omit from 'lodash/omit';
 import Vue from 'vue';
 import { pushIf } from '../../util';
 import { types as rootTypes } from '../../vuex/meta';
@@ -75,6 +76,11 @@ export default {
         state.groups[index].messages[messageIndex].failed = true;
         state.groups[index].messages[messageIndex].sending = false;
       }
+    },
+    [types.REMOVE_GROUP](state, { group }) {
+      const mappedIndex = state.groupMap[group];
+      state.groups.splice(mappedIndex, 1);
+      state.groupMap = omit(state.groupMap[group]);
     },
   },
   actions: {
@@ -152,6 +158,9 @@ export default {
 
     [actions.onJoinGroup]({ commit }, { group }) {
       commit(types.ADD_GROUP, { group });
+    },
+    [actions.onLeaveGroup]({ commit }, { group }) {
+      commit(types.REMOVE_GROUP, { group });
     },
   },
 };

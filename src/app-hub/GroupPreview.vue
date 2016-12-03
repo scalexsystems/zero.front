@@ -8,18 +8,19 @@
   </template>
   <div class="container py-2">
     <div class="text-xs-center">
-      <img class="group-preview-photo my-2" :src="group.photo">
-
       <div class="my-2">
         <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
         <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
-        <a @click="joinGroup()" class="btn btn-primary"> Join Group </a>
       </div>
-
+      <img class="group-preview-photo my-2" :src="group.photo">
       <h2>{{ group.name }}</h2>
       <p>
-        <small class="text-muted">{{ group.bio }}</small>
+
+      <small class="text-muted">{{ group.bio }}</small>
       </p>
+      <div class="my-2">
+      <a @click="joinGroup()" class="btn btn-primary"> Join Group </a>
+      </div>
     </div>
 
     <div class="row">

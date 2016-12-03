@@ -1,41 +1,80 @@
 <template>
-<directory title="Campus Groups"
-           subtitle="You can join any of these groups."
-           v-bind="{ items: groups, enableTopbar: true }"
-           @close="onClose"
-           @search="onSearch"
-           @load-more="onInfinite"
-           @item="onGroupSelected">
-  <template slot="actions">
-  <router-link :to="{ name: 'hub.group-create' }" class="btn btn-secondary">
-    <i class="fa fa-plus fa-fw"></i> Create New Group</router-link>
-  </template>
-</directory>
+    <activity-box
+            v-bind="{ title, subtitle, show: true, actions, disableFooter: true }"
+            @close="$emit('close')"
+            @option-click="onOptionClick">
+
+        <div class="directory-header row">
+            <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input class="form-control" type="search" v-model="q" @keyup="$emit('search', q)">
+                </div>
+            </div>
+        </div>
+
+        <div class="row directory-results-container">
+            <div class="col-xs-12 col-lg-8 offset-lg-2">
+                <div class="row">
+                    <div class="col-xs-12 directory-results-description">{{ resultMessage }}</div>
+                </div>
+                <div class="row">
+                    <div v-for="(item, index) of filtered" class="col-xs-12 col-md-6">
+                        <person-card :item="item" @open="$emit('item', item, index)">
+                            <div class="person-card-joined" v-if='item.is_member'> JOINED </div>
+                            <div class="person-card-bio"> {{ item.bio | filterBio }}</div>
+                        </person-card>
+                    </div>
+
+                    <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" spinner="waveDots" ref="infinite"></infinite-scroll>
+                </div>
+            </div>
+        </div>
+    </activity-box>
+
 </template>
 
 <script lang="babel">
+import Shifter from 'sifter';
 import throttle from 'lodash/throttle';
 import { mapActions, mapGetters } from 'vuex';
 
+import InfiniteScroll from 'vue-infinite-loading';
 import { httpThen } from '../util';
 import { getters, actions } from '../vuex/meta';
-import Directory from '../components/Directory.vue';
+import ActivityBox from '../components/ActivityBox.vue';
+import PersonCard from '../components/PersonCard.vue';
 
 export default {
   name: 'GroupDirectory',
-  components: { Directory },
+  components: { ActivityBox, InfiniteScroll, PersonCard },
   computed: {
     ...mapGetters({
       groups: getters.groups,
     }),
+    searchable() {
+      const items = this.groups;
+      return new Shifter(items);
+    },
+    filtered() {
+      const searchable = this.searchable;
+      const items = this.groups;
+      const query = this.q;
+      const result = searchable.search(query, {
+        fields: ['name'],
+        sort_empty: [{ field: 'name', direction: 'asc' }],
+      });
+      return result.items.map(({ id }) => items[id]);
+    },
   },
   data() {
-    return { q: '', page: 0 };
+    return { q: '', page: 0, resultMessage: '' };
   },
   methods: {
     onClose() {
       this.$router.go(-1);
     },
+    onOptionClick: ActivityBox.methods.onOptionClick,
     onGroupSelected(group) {
       const name = group.is_member === true ? 'hub.group' : 'hub.group-preview';
 
@@ -46,19 +85,36 @@ export default {
       this.page = 1;
       this.getGroups({ q: query });
     }, 500),
-    onInfinite({ done, end, error }) {
+
+    onInfinite() {
+      const emit = (e) => {
+        if (this.$refs.infinite) {
+          this.$refs.infinite.$emit(e);
+        }
+      };
+      const end = () => emit('$InfiniteLoading:complete');
+      const done = () => emit('$InfiniteLoading:loaded');
       this.getGroups({ q: this.q, page: this.page + 1 })
               .then(httpThen)
               .then((result) => {
                 this.page = result._meta.pagination.current_page;
-
                 return result.data.length ? done() : end();
-              })
-              .catch(() => error());
+              });
+
+      this.$emit('load-more', {
+        done,
+        end,
+        error: end,
+      });
     },
     ...mapActions({
       getGroups: actions.getGroups,
     }),
+  },
+  filters: {
+    filterBio(bio) {
+      return bio.split('・')[0] || '';
+    },
   },
 };
 </script>

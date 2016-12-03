@@ -8,9 +8,6 @@ dependencies:
   pre:
     - sudo curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
     - curl -o- -L https://yarnpkg.com/install.sh | bash
-    - wget https://selenium-release.storage.googleapis.com/2.44/selenium-server-standalone-2.44.0.jar
-    - java -jar selenium-server-standalone-2.44.0.jar:
-        background: true
   cache_directories:
     - "~/.yarn-cache"
   override:

@@ -6,6 +6,7 @@ import each from 'lodash/each';
 import VueEcho from './plugins/echo';
 import VueDebug from './plugins/debug';
 import * as inputs from './input';
+import * as directives from './directives';
 import App from './App.vue';
 import store from './vuex/store';
 import routerOptions from './options/router';
@@ -51,6 +52,7 @@ if ('token' in window.Laravel) {
   Vue.http.headers.common['X-CSRF-Token'] = window.Laravel.csrfToken;
 }
 
+each(directives, (directive, name) => Vue.directive(name, directive));
 each(inputs, (input, name) => Vue.component(name, input));
 each(apps, app => app(Vue, { store, routes: routerOptions.routes }));
 

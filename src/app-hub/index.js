@@ -1,6 +1,7 @@
 import Hub from './Hub.vue';
 
 import GroupCreate from './GroupCreate.vue';
+import GroupEdit from './GroupEdit.vue';
 import GroupDirectory from './GroupDirectory.vue';
 import GroupMessages from './GroupMessages.vue';
 import GroupPreview from './GroupPreview.vue';
@@ -21,6 +22,7 @@ export default function (Vue, { store, routes }) {
       children: [
         { name: 'hub.group-create', path: 'groups/create', component: GroupCreate },
         { name: 'hub.group-preview', path: 'groups/:group/preview', component: GroupPreview },
+        { name: 'hub.group-edit', path: 'groups/:group/edit', component: GroupEdit },
         { name: 'hub.group', path: 'groups/:group', component: GroupMessages },
         { name: 'hub.groups', path: 'groups', component: GroupDirectory },
         { name: 'hub.user-preview', path: 'people/:user/preview', component: UserPreview },

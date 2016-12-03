@@ -19,6 +19,7 @@ var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
+  quiet: process.env.NODE_ENV === 'testing',
   stats: {
     colors: true,
     chunks: false
@@ -57,7 +58,7 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-module.exports = app.listen(port, function (err) {
+var server = app.listen(port, function (err) {
   if (err) {
     console.log(err)
     return
@@ -66,3 +67,7 @@ module.exports = app.listen(port, function (err) {
   console.log('Listening at ' + uri + '\n')
   opn(uri)
 })
+
+server.devMiddleware = devMiddleware;
+
+module.exports = server;

@@ -2,7 +2,8 @@
 //   http://karma-runner.github.io/0.13/config/configuration-file.html
 // we are also using it with karma-webpack
 //   https://github.com/webpack/karma-webpack
-
+require('es6-promise/auto');
+require('phantomjs-prebuilt').path = '/usr/local/bin/phantomjs';
 var path = require('path');
 var merge = require('webpack-merge');
 var baseConfig = require('../../build/webpack.base.conf');

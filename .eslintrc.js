@@ -19,6 +19,9 @@ module.exports = {
       'webpack': {
         'config': 'build/webpack.base.conf.js'
       }
+    },
+    'import/alias': {
+      src: './src'
     }
   },
   // add your custom rules here

@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import { actions, types, getters } from '../meta';
 
+const Laravel = window.Laravel || {};
+
 export default {
   state: {
-    user: window.Laravel.user || {},
+    user: Laravel.user || {},
   },
   getters: {
     [getters.user](state) {

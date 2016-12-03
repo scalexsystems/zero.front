@@ -1,6 +1,6 @@
 {
   "name": "@scalex/zero.front",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "description": "Zero Hub UI",
   "author": "Rahul Kadyan <hi@znck.me>",
   "license": "UNLICENSED",
@@ -11,6 +11,8 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
+    "lint:fix": "eslint --fix --ext .js,.vue src test/unit/specs test/e2e/specs",
+    "mocks:http": "node mocks/http/generate.js",
     "prepublish": "npm run build",
     "postpublish": "rm -rf dist/*"
   },
@@ -19,6 +21,7 @@
     "autosize": "^3.0.17",
     "bootstrap": "~4.0.0-alpha",
     "debug": "^2.2.0",
+    "es6-promise": "^4.0.5",
     "font-awesome": "^4.6.3",
     "jquery": "^3.1.1",
     "laravel-echo": "^1.1.0",
@@ -79,6 +82,7 @@
     "lolex": "^1.4.0",
     "mocha": "^3.1.0",
     "nightwatch": "^0.9.8",
+    "nightwatch-helpers": "^1.2.0",
     "node-sass": "^3.10.1",
     "opn": "^4.0.2",
     "ora": "^0.3.0",

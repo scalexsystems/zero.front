@@ -56,7 +56,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       template: process.env.NODE_ENV === 'testing'
           ? 'index.html'
           : config.build.template,
-      inject: false,
+      inject: process.env.NODE_ENV === 'testing',
       minify: false,
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'

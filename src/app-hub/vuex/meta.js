@@ -4,6 +4,7 @@ export const types = {
   SET_MESSAGE_PAGE_TO_GROUP: 'hub/SET_MESSAGE_PAGE_TO_GROUP',
   STATUS_GROUP_MESSAGE: 'hub/STATUS_GROUP_MESSAGE',
   READ_GROUP_MESSAGE: 'hub/READ_GROUP_MESSAGE',
+  REMOVE_GROUP: 'hub/REMOVE_GROUP',
 
   ADD_USER: 'hub/ADD_USER',
   ADD_MESSAGE: 'hub/ADD_MESSAGE',
@@ -26,6 +27,7 @@ export const actions = {
   sendMessageReadReceipt: 'hub/sendMessageReadReceipt',
   onNewMessageToUser: 'hub/onNewMessageToUser',
   onJoinGroup: 'hub/onJoinGroup',
+  onLeaveGroup: 'hub/onLeaveGroup',
 };
 
 export const getters = {

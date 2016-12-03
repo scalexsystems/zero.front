@@ -20,6 +20,7 @@
       </p>
       <div class="my-2">
       <a @click="joinGroup()" class="btn btn-primary"> Join Group </a>
+      <a @click="leaveGroup()" class="btn btn-warning"> Leave Group </a>
       </div>
     </div>
 
@@ -128,8 +129,15 @@ export default {
     joinGroup() {
       this.$http.put(`groups/${this.group.id}/join`)
       .then((group) => {
-        this.$store.commit(actions.JOIN_GROUP, group);
+        this.$store.dispatch(actions.onJoinGroup, group);
         this.$router.push({ name: 'hub.group' });
+      });
+    },
+
+    leaveGroup() {
+      this.$http.delete(`groups/${this.group.id}/leave`)
+      .then(() => {
+        this.$store.dispatch(actions.onLeaveGroup, this.group.id);
       });
     },
   },

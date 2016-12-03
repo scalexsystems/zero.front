@@ -1,5 +1,5 @@
 <template>
-<activity-box v-if="group"
+<activity-box v-if="group" class="hub-group-preview"
               v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
               @close="$router.go(-1)">
   <template slot="actions">

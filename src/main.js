@@ -30,6 +30,18 @@ Vue.use(VueEcho, window.Laravel.broadcast);
 
 Vue.http.options.root = '/api';
 
+if (process.env.NODE_ENV === 'testing') {
+  /* eslint-disable */
+  const requests = require('../mocks/http').default;
+  /* eslint-enable */
+  const vueResourceInterceptor = (request, next) => {
+    const key = `${request.method} ${request.getUrl().split('?')[0]}`;
+
+    next(request.respondWith(JSON.stringify(requests[key] || {}), { status: 200 }));
+  };
+  Vue.http.interceptors.push(vueResourceInterceptor);
+}
+
 if ('token' in window.Laravel) {
   Vue.http.headers.common.Authorization = `Bearer ${window.Laravel.token}`;
   window.Laravel.broadcast.auth = {

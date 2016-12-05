@@ -132,8 +132,7 @@ export default {
 
     joinGroup() {
       this.$http.put(`groups/${this.group.id}/join`)
-      .then((group) => {
-        this.joinGroupAction({ group });
+      .then(() => {
         this.$router.push({ name: 'hub.group' });
       });
     },

@@ -19,8 +19,8 @@
       <small class="text-muted">{{ group.bio }}</small>
       </p>
       <div class="my-2">
-      <a @click="joinGroup()" class="btn btn-primary"> Join Group </a>
-      <a @click="leaveGroup()" class="btn btn-warning"> Leave Group </a>
+      <a href='#' @click.prevent="joinGroup" class="btn btn-primary"> Join Group </a>
+      <a href='#' @click.prevent="leaveGroup" class="btn btn-warning"> Leave Group </a>
       </div>
     </div>
 
@@ -124,20 +124,24 @@ export default {
         this.getGroup({ id });
       }
     },
-    ...mapActions({ getGroup: rootActions.getGroups }),
+    ...mapActions({
+      getGroup: rootActions.getGroups,
+      joinGroupAction: actions.joinGroup,
+      leaveGroupAction: actions.leaveGroup,
+    }),
 
     joinGroup() {
       this.$http.put(`groups/${this.group.id}/join`)
       .then((group) => {
-        this.$store.dispatch(actions.onJoinGroup, group);
+        this.joinGroupAction({ group });
         this.$router.push({ name: 'hub.group' });
       });
     },
 
     leaveGroup() {
       this.$http.delete(`groups/${this.group.id}/leave`)
-      .then(() => {
-        this.$store.dispatch(actions.onLeaveGroup, this.group.id);
+      .then((group) => {
+        this.leaveGroupAction({ group: group.body });
       });
     },
   },

@@ -26,8 +26,8 @@ export const actions = {
   sendMessageToUser: 'hub/sendMessageToUser',
   sendMessageReadReceipt: 'hub/sendMessageReadReceipt',
   onNewMessageToUser: 'hub/onNewMessageToUser',
-  onJoinGroup: 'hub/onJoinGroup',
-  onLeaveGroup: 'hub/onLeaveGroup',
+  joinGroup: 'hub/joinGroup',
+  leaveGroup: 'hub/leaveGroup',
 };
 
 export const getters = {

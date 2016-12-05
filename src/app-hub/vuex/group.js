@@ -78,9 +78,9 @@ export default {
       }
     },
     [types.REMOVE_GROUP](state, { group }) {
-      const mappedIndex = state.groupMap[group];
+      const mappedIndex = state.groupMap[group.id];
       state.groups.splice(mappedIndex, 1);
-      state.groupMap = omit(state.groupMap[group]);
+      state.groupMap = omit(state.groupMap[group.id]);
     },
   },
   actions: {
@@ -156,10 +156,10 @@ export default {
           .catch(response => response);
     },
 
-    [actions.onJoinGroup]({ commit }, { group }) {
+    [actions.joinGroup]({ commit }, { group }) {
       commit(types.ADD_GROUP, { group });
     },
-    [actions.onLeaveGroup]({ commit }, { group }) {
+    [actions.leaveGroup]({ commit }, { group }) {
       commit(types.REMOVE_GROUP, { group });
     },
   },

@@ -161,6 +161,7 @@ export default {
     },
     [actions.leaveGroup]({ commit }, { group }) {
       commit(types.REMOVE_GROUP, { group });
+      commit(rootTypes.SET_USER_IS_MEMBER, { groupId: group.id, isMember: false });
     },
   },
 };

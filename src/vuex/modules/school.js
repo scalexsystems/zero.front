@@ -62,6 +62,10 @@ export default {
     [types.ADD_GROUP](state, groups) {
       pushIf(state.groups, groups, state.groupMap);
     },
+    [types.SET_USER_IS_MEMBER](state, { groupId, isMember }) {
+      const mappedIndex = state.groupMap[groupId];
+      state.groups[mappedIndex].is_member = isMember;
+    },
   },
   actions: {
     [actions.getStudents]({ commit }, params = {}) {

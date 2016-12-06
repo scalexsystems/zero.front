@@ -77,10 +77,15 @@ export default {
         state.groups[index].messages[messageIndex].sending = false;
       }
     },
-    [types.REMOVE_GROUP](state, { group }) {
-      const mappedIndex = state.groupMap[group.id];
+    [types.REMOVE_GROUP](state, { groupId }) {
+      const mappedIndex = state.groupMap[groupId];
       state.groups.splice(mappedIndex, 1);
-      state.groupMap = omit(state.groupMap[group.id]);
+      state.groupMap = omit(state.groupMap, groupId);
+      Object.keys(state.groupMap).forEach((index) => {
+        if (state.groupMap[index] > mappedIndex) {
+          state.groupMap[index] -= 1;
+        }
+      });
     },
   },
   actions: {
@@ -159,9 +164,9 @@ export default {
     [actions.joinGroup]({ commit }, { group }) {
       commit(types.ADD_GROUP, { group });
     },
-    [actions.leaveGroup]({ commit }, { group }) {
-      commit(types.REMOVE_GROUP, { group });
-      commit(rootTypes.SET_USER_IS_MEMBER, { groupId: group.id, isMember: false });
+    [actions.leaveGroup]({ commit }, { groupId }) {
+      commit(types.REMOVE_GROUP, { groupId });
+      commit(rootTypes.SET_USER_IS_MEMBER, { groupId, isMember: false });
     },
   },
 };

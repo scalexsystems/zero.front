@@ -139,8 +139,8 @@ export default {
 
     leaveGroup() {
       this.$http.delete(`groups/${this.group.id}/leave`)
-      .then((group) => {
-        this.leaveGroupAction({ group: group.body });
+      .then(() => {
+        this.leaveGroupAction({ groupId: this.group.id });
         this.$router.push({ name: 'hub.groups' });
       });
     },

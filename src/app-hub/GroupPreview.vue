@@ -7,25 +7,28 @@
                  class="btn btn-primary">Edit</router-link>
   </template>
   <div class="container py-2">
-    <div class="text-xs-center">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
+      <div class="text-xs-center">
       <div class="my-2">
+        <img class="group-preview-photo my-2" :src="group.photo">
+      </div>
+        <div class="my-2">
         <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
         <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
       </div>
-      <img class="group-preview-photo my-2" :src="group.photo">
-      <h2>{{ group.name }}</h2>
-      <p>
-
-      <small class="text-muted">{{ group.bio }}</small>
+            <h2>{{ group.name }}</h2>
+        <p>
+      <small class="group-preview-description">{{ group.description }}</small>
       </p>
       <div class="my-2">
-      <a href='#' @click.prevent="joinGroup" class="btn btn-primary"> Join Group </a>
-      <a href='#' @click.prevent="leaveGroup" class="btn btn-warning"> Leave Group </a>
+      <!--<a href='#' @click.prevent="leaveGroup" class="btn btn-warning" v-if="group.is_member"> Leave Group </a>-->
+          <a href='#' @click.prevent="joinGroup" class="btn btn-primary" v-if="!group.is_member"> Join Group </a>
       </div>
+    </div>
     </div>
 
     <div class="row">
-      <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <div class="input-group input-group-lg">
           <span class="input-group-addon"><i class="fa fa-search"></i></span>
           <input class="form-control"
@@ -33,8 +36,11 @@
                  @keyup="search">
         </div>
       </div>
-      <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
-        <div class="row">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
+          <div class="text-xs-center group-preview-member-count">
+          <small> {{ group.member_count_text }} </small>
+          </div>
+          <div class="row">
           <div class="col-xs-12 col-lg-6" v-for="(member, index) of members">
             <item-card :item="member"
                        @open="openMemberProfile(member, index)"></item-card>
@@ -70,9 +76,7 @@ export default {
       return group ? group.name : '';
     },
     subtitle() {
-      const group = this.group;
-
-      return group ? group.bio : '';
+      return 'Group Information';
     },
     group() {
       const route = this.$route;
@@ -165,6 +169,20 @@ export default {
   }
   &-tag {
     padding: $spacer / 2;
+    font-size: 0.875rem;
+    padding: 0.3rem;
+  }
+
+  &-description {
+    font-size: 1em;
+    color: $gray;
+  }
+
+  &-member-count {
+      padding: 1.4rem;
+
   }
 }
+
+
 </style>

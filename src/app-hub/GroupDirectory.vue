@@ -68,7 +68,13 @@ export default {
     },
   },
   data() {
-    return { q: '', page: 0, resultMessage: '' };
+    return {
+      q: '',
+      page: 0,
+      resultMessage: '',
+      title: 'Campus Groups',
+      subtitle: 'You can join any of these groups.',
+    };
   },
   methods: {
     onClose() {

@@ -6,6 +6,7 @@ export const types = {
   ADD_GROUP: 'school/ADD_GROUP',
 
   SET_USER: 'me/SET_USER',
+  SET_USER_IS_MEMBER: '/school/SET_USER_IS_MEMBER',
 };
 
 export const actions = {

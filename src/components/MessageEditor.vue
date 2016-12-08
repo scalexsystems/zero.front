@@ -37,7 +37,7 @@ export default {
       this.$emit('input', event.target.value);
     },
     onEnter(event) {
-      if (event.shiftKey !== true) {
+      if (event.shiftKey !== true && event.target.value.trim()) {
         event.preventDefault();
         this.$emit('send', event);
       }

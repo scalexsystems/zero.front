@@ -20,9 +20,9 @@
                 </div>
                 <div class="row">
                     <div v-for="(item, index) of filtered" class="col-xs-12 col-md-6">
-                        <person-card :item="item" @open="$emit('item', item, index)">
+                        <person-card :item="item" @open="onGroupSelected(item,index)">
                             <div class="person-card-joined" v-if='item.is_member'> JOINED </div>
-                            <div class="person-card-bio"> {{ item.bio | filterBio }}</div>
+                            <div class="person-card-bio"> {{ item.member_count_text }}</div>
                         </person-card>
                     </div>
 
@@ -68,7 +68,13 @@ export default {
     },
   },
   data() {
-    return { q: '', page: 0, resultMessage: '' };
+    return {
+      q: '',
+      page: 0,
+      resultMessage: '',
+      title: 'Campus Groups',
+      subtitle: 'You can join any of these groups.',
+    };
   },
   methods: {
     onClose() {
@@ -110,11 +116,6 @@ export default {
     ...mapActions({
       getGroups: actions.getGroups,
     }),
-  },
-  filters: {
-    filterBio(bio) {
-      return bio.split('・')[0] || '';
-    },
   },
 };
 </script>

@@ -5,26 +5,33 @@
   <template slot="actions">
     <router-link v-if="group.is_admin" :to="{name: 'hub.group-edit', params: { group: group.id } }"
                  class="btn btn-primary">Edit</router-link>
+    <action-menu :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
+                 @option-click='actionClicks' v-if='group.is_member'>
+    </action-menu>
+
   </template>
   <div class="container py-2">
-    <div class="text-xs-center">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
+      <div class="text-xs-center">
       <div class="my-2">
+        <img class="group-preview-photo my-2" :src="group.photo">
+      </div>
+        <div class="my-2">
         <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
         <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
       </div>
-      <img class="group-preview-photo my-2" :src="group.photo">
-      <h2>{{ group.name }}</h2>
-      <p>
-
-      <small class="text-muted">{{ group.bio }}</small>
+            <h2>{{ group.name }}</h2>
+        <p>
+      <small class="group-preview-description">{{ group.description }}</small>
       </p>
       <div class="my-2">
-      <a @click="joinGroup()" class="btn btn-primary"> Join Group </a>
+          <a href='#' @click.prevent="joinGroup" class="btn btn-primary" v-if="!group.is_member"> Join Group </a>
       </div>
+    </div>
     </div>
 
     <div class="row">
-      <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <div class="input-group input-group-lg">
           <span class="input-group-addon"><i class="fa fa-search"></i></span>
           <input class="form-control"
@@ -32,8 +39,11 @@
                  @keyup="search">
         </div>
       </div>
-      <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
-        <div class="row">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
+          <div class="text-xs-center group-preview-member-count">
+          <small> {{ group.member_count_text }} </small>
+          </div>
+          <div class="row">
           <div class="col-xs-12 col-lg-6" v-for="(member, index) of members">
             <item-card :item="member"
                        @open="openMemberProfile(member, index)"></item-card>
@@ -57,11 +67,11 @@ import InfiniteScroll from 'vue-infinite-loading';
 import { pushIf } from '../util';
 import { actions } from './vuex/meta';
 import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
-import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard } from '../components';
+import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard, ActionMenu } from '../components';
 
 export default {
   name: 'GroupPreview',
-  components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll },
+  components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll, ActionMenu },
   computed: {
     title() {
       const group = this.group;
@@ -69,9 +79,7 @@ export default {
       return group ? group.name : '';
     },
     subtitle() {
-      const group = this.group;
-
-      return group ? group.bio : '';
+      return 'Group Information';
     },
     group() {
       const route = this.$route;
@@ -123,14 +131,30 @@ export default {
         this.getGroup({ id });
       }
     },
-    ...mapActions({ getGroup: rootActions.getGroups }),
+    ...mapActions({
+      getGroup: rootActions.getGroups,
+      joinGroupAction: actions.joinGroup,
+      leaveGroupAction: actions.leaveGroup,
+    }),
 
     joinGroup() {
       this.$http.put(`groups/${this.group.id}/join`)
-      .then((group) => {
-        this.$store.commit(actions.JOIN_GROUP, group);
+      .then(() => {
         this.$router.push({ name: 'hub.group' });
       });
+    },
+
+    leaveGroup() {
+      this.$http.delete(`groups/${this.group.id}/leave`)
+      .then(() => {
+        this.leaveGroupAction({ groupId: this.group.id });
+        this.$router.push({ name: 'hub.groups' });
+      });
+    },
+
+    actionClicks(event, action, index) {
+      const clickActions = [this.leaveGroup];
+      return clickActions[index] ? clickActions[index]() : () => {};
     },
   },
   watch: {
@@ -153,6 +177,20 @@ export default {
   }
   &-tag {
     padding: $spacer / 2;
+    font-size: 0.875rem;
+    padding: 0.3rem;
+  }
+
+  &-description {
+    font-size: 1em;
+    color: $gray;
+  }
+
+  &-member-count {
+      padding: 1.4rem;
+
   }
 }
+
+
 </style>

@@ -5,6 +5,10 @@
   <template slot="actions">
     <router-link v-if="group.is_admin" :to="{name: 'hub.group-edit', params: { group: group.id } }"
                  class="btn btn-primary">Edit</router-link>
+    <action-menu :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
+                 @option-click='actionClicks' v-if='group.is_member'>
+    </action-menu>
+
   </template>
   <div class="container py-2">
       <div class="col-xs-12 col-lg-8 offset-lg-2">
@@ -21,7 +25,6 @@
       <small class="group-preview-description">{{ group.description }}</small>
       </p>
       <div class="my-2">
-      <!--<a href='#' @click.prevent="leaveGroup" class="btn btn-warning" v-if="group.is_member"> Leave Group </a>-->
           <a href='#' @click.prevent="joinGroup" class="btn btn-primary" v-if="!group.is_member"> Join Group </a>
       </div>
     </div>
@@ -64,11 +67,11 @@ import InfiniteScroll from 'vue-infinite-loading';
 import { pushIf } from '../util';
 import { actions } from './vuex/meta';
 import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
-import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard } from '../components';
+import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard, ActionMenu } from '../components';
 
 export default {
   name: 'GroupPreview',
-  components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll },
+  components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll, ActionMenu },
   computed: {
     title() {
       const group = this.group;
@@ -147,6 +150,11 @@ export default {
         this.leaveGroupAction({ groupId: this.group.id });
         this.$router.push({ name: 'hub.groups' });
       });
+    },
+
+    actionClicks(event, action, index) {
+      const clickActions = [this.leaveGroup];
+      return clickActions[index] ? clickActions[index]() : () => {};
     },
   },
   watch: {

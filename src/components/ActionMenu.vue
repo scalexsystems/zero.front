@@ -4,7 +4,7 @@
     <template v-for="(action, index) of collapsedActions">
     <slot :name="'action-menu-'+index">
       <a href="#" class="action-menu-action" @click.prevent="click($event, action, index)">
-        <i class="fa fa-fw" :class="[`fa-${action.icon}`]"></i>
+        <i class="fa fa-fw" :class="[`fa-${action.action.icon}`]"></i>
       </a>
     </slot>
     </template>
@@ -18,8 +18,8 @@
     <div class="dropdown-menu dropdown-menu-right" :aria-labelledby="id">
       <template v-for="(action, index) of otherActions">
       <slot :name="'action-menu-'+index">
-        <a href="#" class="dropdown-item" @click.prevent="click($event, action, index)">
-          <i class="fa fa-fw" :class="[`fa-${action.icon}`]"></i> {{ action.name }}
+        <a href="#" class="dropdown-item" @click.prevent="click($event, action.action, index)">
+          <i class="fa fa-fw" :class="[`fa-${action.action.icon}`]"></i> {{ action.action.name }}
         </a>
       </slot>
       </template>

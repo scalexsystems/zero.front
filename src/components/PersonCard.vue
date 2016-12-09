@@ -76,9 +76,9 @@ export default {
 }
 
 .person-card-joined {
-    max-width: rem(50px);
+    max-width: rem(55px);
     flex: 1;
     font-size: 0.85714rem;
-    color: $blue;
+    color: $brand-primary;
 }
 </style>

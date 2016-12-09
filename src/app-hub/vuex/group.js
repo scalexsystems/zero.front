@@ -172,7 +172,7 @@ export default {
       commit(types.REMOVE_GROUP, { groupId });
       commit(rootTypes.SET_USER_IS_MEMBER, { groupId, isMember: false });
     },
-    [actions.updatePhoto]({ commit }, { groupId, photo }) {
+    [actions.updateGroupPhoto]({ commit }, { groupId, photo }) {
       commit(types.ADD_GROUP_PHOTO, { groupId, photo });
     },
   },

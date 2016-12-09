@@ -5,7 +5,7 @@
   <template slot="actions">
     <router-link v-if="group.is_admin" :to="{ name: 'hub.group-edit', params: { group: group.id } }"
                  class="btn btn-primary">Edit</router-link>
-    <action-menu v-else :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
+    <action-menu :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
                  @option-click='actionClicks' v-if='group.is_member'>
     </action-menu>
 
@@ -15,7 +15,15 @@
       <div class="text-xs-center">
       <div class="my-2">
         <div class="group-preview-image-wrapper">
-            <photo-holder :src="group.photo" @upload = "uploadImage"></photo-holder>
+            <photo-holder :src="group.photo" @upload = "uploadImage">
+                <template slot='overlay'>
+                    <a href='#' @click='openFile'>
+                        <i class="group-preview-upload-icon fa fa-arrow-circle-up"></i>
+                    <input ref='inputFile' type='file' id='file-input' @change="uploadImage" hidden>
+                        </a>
+                    <strong> Click to Upload </strong>
+                </template>
+                </photo-holder>
         </div>
       </div>
         <div class="my-2">
@@ -162,14 +170,20 @@ export default {
       return clickActions[index] ? clickActions[index]() : () => {};
     },
 
-    uploadImage() {
-      const file = PhotoHolder.file;
+    uploadImage(event) {
+      const file = event.target.files[0];
       if (file) {
-        this.$http.post(`groups/${this.group.id}/photo`, file)
-                    .then(() => {
-                      this.updatePhoto(this.group.id, file);
-                    });
+        const formData = new window.FormData();
+        formData.append('photo', file);
+        this.$http.post(`groups/${this.group.id}/photo`, formData)
+           .then((response) => {
+             this.updatePhoto({ groupId: this.group.id, photo: response.headers.map.location.pop() });
+           });
       }
+    },
+
+    openFile() {
+      return this.$refs.inputFile.click();
     },
   },
   watch: {

@@ -161,8 +161,8 @@ export default {
           .catch(response => response);
     },
 
-    [actions.joinGroup]({ commit }, { group }) {
-      commit(types.ADD_GROUP, { group });
+    [actions.joinGroup]({ commit }, { groupId }) {
+      commit(rootTypes.SET_USER_IS_MEMBER, { groupId, isMember: true });
     },
     [actions.leaveGroup]({ commit }, { groupId }) {
       commit(types.REMOVE_GROUP, { groupId });

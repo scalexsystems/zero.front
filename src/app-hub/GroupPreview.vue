@@ -3,9 +3,9 @@
               v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
               @close="$router.go(-1)">
   <template slot="actions">
-    <router-link v-if="group.is_admin" :to="{name: 'hub.group-edit', params: { group: group.id } }"
+    <router-link v-if="group.is_admin" :to="{ name: 'hub.group-edit', params: { group: group.id } }"
                  class="btn btn-primary">Edit</router-link>
-    <action-menu :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
+    <action-menu v-else :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
                  @option-click='actionClicks' v-if='group.is_member'>
     </action-menu>
 
@@ -14,7 +14,9 @@
       <div class="col-xs-12 col-lg-8 offset-lg-2">
       <div class="text-xs-center">
       <div class="my-2">
-        <img class="group-preview-photo my-2" :src="group.photo">
+        <div class="group-preview-image-wrapper">
+            <photo-holder :src="group.photo" @upload = "uploadImage"></photo-holder>
+        </div>
       </div>
         <div class="my-2">
         <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
@@ -67,11 +69,12 @@ import InfiniteScroll from 'vue-infinite-loading';
 import { pushIf } from '../util';
 import { actions } from './vuex/meta';
 import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
-import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard, ActionMenu } from '../components';
+import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard, ActionMenu, PhotoHolder } from '../components';
 
+/* eslint-disable max-len */
 export default {
   name: 'GroupPreview',
-  components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll, ActionMenu },
+  components: { LoadingPlaceholder, ActivityBox, ItemCard, InfiniteScroll, ActionMenu, PhotoHolder },
   computed: {
     title() {
       const group = this.group;
@@ -103,6 +106,7 @@ export default {
       members: [],
       q: '',
       page: 0,
+      uploadHover: false,
     };
   },
   methods: {
@@ -135,6 +139,7 @@ export default {
       getGroup: rootActions.getGroups,
       joinGroupAction: actions.joinGroup,
       leaveGroupAction: actions.leaveGroup,
+      updatePhoto: actions.updateGroupPhoto,
     }),
 
     joinGroup() {
@@ -156,6 +161,16 @@ export default {
       const clickActions = [this.leaveGroup];
       return clickActions[index] ? clickActions[index]() : () => {};
     },
+
+    uploadImage() {
+      const file = PhotoHolder.file;
+      if (file) {
+        this.$http.post(`groups/${this.group.id}/photo`, file)
+                    .then(() => {
+                      this.updatePhoto(this.group.id, file);
+                    });
+      }
+    },
   },
   watch: {
     $route() {
@@ -175,6 +190,10 @@ export default {
     height: rem(160px);
     border-radius: $border-radius-sm;
   }
+
+  &-photo-wrapper {
+
+  }
   &-tag {
     padding: $spacer / 2;
     font-size: 0.875rem;
@@ -189,6 +208,21 @@ export default {
   &-member-count {
       padding: 1.4rem;
 
+  }
+
+  &-overlay-container {
+      position: absolute;
+      top: 20%;
+      left: 0;
+      width: 100%;
+      height: 80%;
+      color: $gray
+  }
+
+  &-upload-icon {
+      font-size: 2.75em;
+      width: 100%;
+      margin-bottom: rem(20px);
   }
 }
 

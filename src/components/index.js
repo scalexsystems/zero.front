@@ -7,3 +7,4 @@ export { default as SidebarBox } from './SidebarBox.vue';
 export { default as LoadingPlaceholder } from './Loading.vue';
 export { default as MessageEditor } from './MessageEditor.vue';
 export { default as PersonCard } from './PersonCard.vue';
+export { default as PhotoHolder } from './PhotoHolder.vue';

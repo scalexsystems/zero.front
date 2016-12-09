@@ -87,6 +87,10 @@ export default {
         }
       });
     },
+    [types.ADD_GROUP_PHOTO](state, { groupId, photo }) {
+      const mappedIndex = state.groupMap[groupId];
+      state.groups[mappedIndex].photo = photo;
+    },
   },
   actions: {
     [actions.getGroups]({ commit }, params = {}) {
@@ -167,6 +171,9 @@ export default {
     [actions.leaveGroup]({ commit }, { groupId }) {
       commit(types.REMOVE_GROUP, { groupId });
       commit(rootTypes.SET_USER_IS_MEMBER, { groupId, isMember: false });
+    },
+    [actions.updatePhoto]({ commit }, { groupId, photo }) {
+      commit(types.ADD_GROUP_PHOTO, { groupId, photo });
     },
   },
 };

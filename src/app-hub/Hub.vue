@@ -3,8 +3,8 @@
   <div class="row hub-body">
     <div class="col-xs-12 col-lg-2 hub-sidebar-left" ref="sidebarLeft">
       <div class="btn-group my-1">
-        <a class="btn btn-outline-secondary" :class="{active: browseUsers}" href="#" @click.stop.prevent="browseUsers = true">Private</a>
         <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" href="#" @click.stop.prevent="browseUsers = false">Groups</a>
+        <a class="btn btn-outline-secondary" :class="{active: browseUsers}" href="#" @click.stop.prevent="browseUsers = true">Private</a>
       </div>
 
       <group-list v-show="!browseUsers"></group-list>

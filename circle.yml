@@ -9,7 +9,7 @@ dependencies:
   cache_directories:
     - "~/.yarn-cache"
   override:
-    - yarn --ignore-scripts --no-progress --ignore-engines
+    - yarn --ignore-scripts --no-progress
     - npm rebuild node-sass
     - npm rebuild phantomjs-prebuilt
 

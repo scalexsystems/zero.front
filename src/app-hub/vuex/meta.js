@@ -11,7 +11,7 @@ export const types = {
   SET_MESSAGE_PAGE_TO_USER: 'hub/SET_MESSAGE_PAGE_TO_GROUP',
   STATUS_MESSAGE: 'hub/STATUS_MESSAGE',
   READ_MESSAGE: 'hub/READ_MESSAGE',
-  ADD_GROUP_PHOTO: 'hub/ADD_GROUP_PHOTO',
+  SET_VALUE_ON_GROUP: 'hub/SET_VALUE_ON_GROUP',
 };
 
 export const actions = {

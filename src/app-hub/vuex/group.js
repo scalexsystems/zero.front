@@ -87,9 +87,10 @@ export default {
         }
       });
     },
-    [types.ADD_GROUP_PHOTO](state, { groupId, photo }) {
+    [types.SET_VALUE_ON_GROUP](state, { groupId, key, value }) {
       const mappedIndex = state.groupMap[groupId];
-      state.groups[mappedIndex].photo = photo;
+
+      state.groups[mappedIndex][key] = value;
     },
   },
   actions: {
@@ -170,10 +171,11 @@ export default {
     },
     [actions.leaveGroup]({ commit }, { groupId }) {
       commit(types.REMOVE_GROUP, { groupId });
-      commit(rootTypes.SET_USER_IS_MEMBER, { groupId, isMember: false });
+      commit(rootTypes.SET_VALUE_ON_GROUP, { groupId, isMember: false });
     },
     [actions.updateGroupPhoto]({ commit }, { groupId, photo }) {
-      commit(types.ADD_GROUP_PHOTO, { groupId, photo });
+      commit(types.SET_VALUE_ON_GROUP, { groupId, key: 'photo', value: photo });
+      commit(rootTypes.SET_VALUE_ON_GROUP, { groupId, key: 'photo', value: photo });
     },
   },
 };

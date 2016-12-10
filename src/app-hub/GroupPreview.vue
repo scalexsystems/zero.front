@@ -16,7 +16,11 @@
         <div class="my-2">
           <photo-holder v-if="group.is_admin"
                         :src="group.photo" class="group-preview-photo"
-                        :dest="`groups/${group.id}/photo`"></photo-holder>
+                        :dest="`groups/${group.id}/photo`"
+                        @uploaded="profileUpdated">
+
+              <img :src="group.photo" class="group-preview-photo">
+          </photo-holder>
           <img v-else :src="group.photo" class="group-preview-photo">
         </div>
 
@@ -147,7 +151,7 @@ export default {
     }),
 
     joinGroup() {
-      this.$http.post(`groups/${this.group.id}/join`)
+      this.$http.put(`groups/${this.group.id}/join`)
       .then(() => {
         this.joinGroupAction({ groupId: this.group.id });
         this.$router.push({ name: 'hub.group' });
@@ -167,20 +171,12 @@ export default {
       return clickActions[index] ? clickActions[index]() : () => {};
     },
 
-    uploadImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const formData = new window.FormData();
-        formData.append('photo', file);
-        this.$http.post(`groups/${this.group.id}/photo`, formData)
-           .then((response) => {
-             this.updatePhoto({ groupId: this.group.id, photo: response.headers.map.location.pop() });
-           });
-      }
-    },
-
     openFile() {
       return this.$refs.inputFile.click();
+    },
+
+    profileUpdated(src) {
+      this.updatePhoto({ groupId: this.group.id, photo: src });
     },
   },
   watch: {
@@ -199,7 +195,7 @@ export default {
   &-photo {
     width: rem(160px);
     height: rem(160px);
-    border-radius: $border-radius-sm;
+    border-radius: 100%;
   }
 
   &-tag {

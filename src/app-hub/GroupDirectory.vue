@@ -4,6 +4,12 @@
             @close="$emit('close')"
             @option-click="onOptionClick">
 
+        <template slot="actions">
+          <router-link class="btn btn-primary" :to="{ name: 'hub.group-create' }">
+            Create New Group
+          </router-link>
+        </template>
+
         <div class="directory-header row">
             <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
                 <div class="input-group input-group-lg">
@@ -21,8 +27,12 @@
                 <div class="row">
                     <div v-for="(item, index) of filtered" class="col-xs-12 col-md-6">
                         <person-card :item="item" @open="onGroupSelected(item,index)">
-                            <div class="person-card-joined" v-if='item.is_member'> JOINED </div>
-                            <div class="person-card-bio"> {{ item.member_count_text }}</div>
+                            <div class="person-card-bio">
+                              <span v-if='item.is_member'>
+                                <span class="text-primary">JOINED</span> &centerdot;
+                              </span>
+                              {{ item.member_count_text }}
+                            </div>
                         </person-card>
                     </div>
 

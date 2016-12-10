@@ -66,6 +66,11 @@ export default {
       const mappedIndex = state.groupMap[groupId];
       state.groups[mappedIndex].is_member = isMember;
     },
+    [types.SET_VALUE_ON_GROUP](state, { groupId, key, value }) {
+      const mappedIndex = state.groupMap[groupId];
+
+      state.groups[mappedIndex][key] = value;
+    },
   },
   actions: {
     [actions.getStudents]({ commit }, params = {}) {

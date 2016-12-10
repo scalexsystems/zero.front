@@ -4,9 +4,10 @@ export const types = {
   ADD_STUDENT: 'school/ADD_STUDENT',
   ADD_TEACHER: 'school/ADD_TEACHER',
   ADD_GROUP: 'school/ADD_GROUP',
+  SET_USER_IS_MEMBER: 'school/SET_USER_IS_MEMBER',
+  SET_VALUE_ON_GROUP: 'school/SET_VALUE_ON_GROUP',
 
   SET_USER: 'me/SET_USER',
-  SET_USER_IS_MEMBER: '/school/SET_USER_IS_MEMBER',
 };
 
 export const actions = {
@@ -15,6 +16,7 @@ export const actions = {
   getStudents: 'school/getStudents',
   getTeachers: 'school/getTeachers',
   getEmployees: 'school/getEmployees',
+
   getUser: 'me/getUser',
 };
 

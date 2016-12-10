@@ -6145,6 +6145,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
+vanilla-image-cropper@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/vanilla-image-cropper/-/vanilla-image-cropper-1.3.2.tgz#a1f95210ff83628e812345441f2d3654b36a99c5"
+
 vary@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.0.tgz#e1e5affbbd16ae768dd2674394b9ad3022653140"

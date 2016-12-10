@@ -5,66 +5,62 @@
   <template slot="actions">
     <router-link v-if="group.is_admin" :to="{ name: 'hub.group-edit', params: { group: group.id } }"
                  class="btn btn-primary">Edit</router-link>
-    <action-menu :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
-                 @option-click='actionClicks' v-if='group.is_member'>
+    <action-menu v-if='group.is_member && !group.is_admin' :actions="[{ icon: 'sign-out', name: 'Leave Group', collapseIfRoom: false }]"
+                 @option-click='actionClicks'>
     </action-menu>
-
   </template>
+
   <div class="container py-2">
-      <div class="col-xs-12 col-lg-8 offset-lg-2">
-      <div class="text-xs-center">
-      <div class="my-2">
-        <div class="group-preview-image-wrapper">
-            <photo-holder :src="group.photo" @upload = "uploadImage">
-                <template slot='overlay'>
-                    <a href='#' @click='openFile'>
-                        <i class="group-preview-upload-icon fa fa-arrow-circle-up"></i>
-                    <input ref='inputFile' type='file' id='file-input' @change="uploadImage" hidden>
-                        </a>
-                    <strong> Click to Upload </strong>
-                </template>
-                </photo-holder>
+    <div class="row">
+      <div class="col-xs-12 col-lg-8 offset-lg-2 text-xs-center">
+        <div class="my-2">
+          <photo-holder v-if="group.is_admin"
+                        :src="group.photo" class="group-preview-photo"
+                        :dest="`groups/${group.id}/photo`"></photo-holder>
+          <img v-else :src="group.photo" class="group-preview-photo">
+        </div>
+
+        <div class="my-2">
+          <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
+          <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
+        </div>
+
+        <h2>{{ group.name }}</h2>
+
+        <p>
+          <small class="group-preview-description">{{ group.description }}</small>
+        </p>
+
+        <div class="my-2">
+          <a href='#' @click.prevent="joinGroup" class="btn btn-primary" v-if="!group.is_member"> Join Group </a>
         </div>
       </div>
-        <div class="my-2">
-        <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
-        <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
-      </div>
-            <h2>{{ group.name }}</h2>
-        <p>
-      <small class="group-preview-description">{{ group.description }}</small>
-      </p>
-      <div class="my-2">
-          <a href='#' @click.prevent="joinGroup" class="btn btn-primary" v-if="!group.is_member"> Join Group </a>
-      </div>
-    </div>
-    </div>
 
-    <div class="row">
       <div class="col-xs-12 col-lg-8 offset-lg-2">
         <div class="input-group input-group-lg">
           <span class="input-group-addon"><i class="fa fa-search"></i></span>
-          <input class="form-control"
-                 type="search" v-model="q"
-                 @keyup="search">
+          <input class="form-control" type="search" v-model="q" @keyup="search">
         </div>
       </div>
+
       <div class="col-xs-12 col-lg-8 offset-lg-2">
           <div class="text-xs-center group-preview-member-count">
-          <small> {{ group.member_count_text }} </small>
+            <small> {{ group.member_count_text }} </small>
           </div>
+
           <div class="row">
-          <div class="col-xs-12 col-lg-6" v-for="(member, index) of members">
-            <item-card :item="member"
-                       @open="openMemberProfile(member, index)"></item-card>
-          </div>
-          <infinite-scroll class="col-xs-12" :on-infinite="onInfinite"
-                           ref="infinite"></infinite-scroll>
+            <div class="col-xs-12 col-lg-6" v-for="(member, index) of members">
+              <item-card :item="member"
+                         @open="openMemberProfile(member, index)"></item-card>
+            </div>
+
+            <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" ref="infinite"></infinite-scroll>
         </div>
       </div>
     </div>
   </div>
 </activity-box>
+
 <loading-placeholder v-else></loading-placeholder>
 </template>
 
@@ -151,7 +147,7 @@ export default {
     }),
 
     joinGroup() {
-      this.$http.put(`groups/${this.group.id}/join`)
+      this.$http.post(`groups/${this.group.id}/join`)
       .then(() => {
         this.joinGroupAction({ groupId: this.group.id });
         this.$router.push({ name: 'hub.group' });
@@ -206,9 +202,6 @@ export default {
     border-radius: $border-radius-sm;
   }
 
-  &-photo-wrapper {
-
-  }
   &-tag {
     padding: $spacer / 2;
     font-size: 0.875rem;

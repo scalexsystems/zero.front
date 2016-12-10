@@ -137,6 +137,7 @@ $border-radius-sm: 0.2rem !default;
   border: none;
   font-size: 1.142857rem;
   padding: 0.125rem .25rem;
+  cursor: pointer;
 
   border-radius: $border-radius-sm;
   &:hover, &:focus {

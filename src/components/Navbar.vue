@@ -1,5 +1,5 @@
 <template>
-<nav class="navbar navbar-fixed-top navbar-dark bg-primary">
+<nav class="navbar navbar-fixed-top navbar-dark bg-accent">
   <div class="container navbar-container">
     <div class="dropdown">
       <button class="navbar-toggler"
@@ -69,6 +69,10 @@ export default {
 @import '../styles/methods';
 
 $navbar-height: 54px !default;
+
+.bg-accent {
+  background: $brand-accent; 
+}
 
 body {
   padding-top: rem($navbar-height);

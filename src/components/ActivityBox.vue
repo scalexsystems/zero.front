@@ -89,13 +89,20 @@ $activity-box-subtitle-color: #9b9b9b !default;
 
 .activity-box-title-container {
   margin: -1px 1rem; // Top and bottom margin -1px to make height 70px.
+  overflow-x: hidden;
 }
 
 .activity-box-title {
   font-size: 1.28571rem;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .activity-box-subtitle {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: $activity-box-subtitle-color;
   font-size: 0.85714rem;
 }

@@ -24,7 +24,7 @@
     <div class="overlay" v-if="empty">
       <div class="upload-trigger">
         <div>
-          <i class="fa fa-arrow-circle-up fa-2x mt-2 mb-1"></i>
+          <i class="fa fa-arrow-circle-up fa-3x mt-2 mb-1"></i>
         </div>
 
         <span>Click to Upload</span>
@@ -167,7 +167,7 @@ export default{
 
   &:hover {
     .overlay {
-      opacity: 0.34;
+      opacity: 0.95;
     }
   }
 }
@@ -192,7 +192,7 @@ img, .uploading, .uploading:before {
 .uploading {
   &:before {
     content: '';
-    background: rgba(0, 0, 0, 0.6);
+    opacity: 0.85;
   }
 
   display: flex;
@@ -207,6 +207,13 @@ img, .uploading, .uploading:before {
     margin-top: 1rem;
     height: .25rem;
     z-index: 1;
+  }
+}
+
+.round {
+  .overlay, .uploading {
+    border-radius: 100%;
+    overflow: hidden;
   }
 }
 </style>

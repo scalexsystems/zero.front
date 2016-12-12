@@ -76,15 +76,23 @@ $border-radius-sm: .2rem;
 .message-box-title-container {
   align-self: center;
   margin: -1px 1rem; // Top and bottom margin -1px to make height 70px.
+  overflow-x: hidden;
 }
 
 .message-box-title {
   cursor: pointer;
   font-size: 1.28571rem;
   user-select: none;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .message-box-subtitle {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
   color: $message-box-subtitle-color;
   font-size: 0.85714rem;
 }

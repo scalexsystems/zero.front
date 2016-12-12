@@ -2,9 +2,10 @@
 <div>
   <message-box v-if="context"
                :title="context.name"
-               :subtitle="context.bio"
+               subtitle="Click here to open group information"
                :photo="context.photo"
                type="group"
+               @openSubtitle="openTitle"
                @openPhoto="openTitle"
                @openTitle="openTitle">
     <message-list :messages="context.messages"

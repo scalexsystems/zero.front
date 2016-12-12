@@ -3,9 +3,6 @@
 
 module.exports = {
   Sidebar: function test(browser) {
-    // automatically uses dev Server port from /config.index.js
-    // default: http://localhost:8080
-    // see nightwatch.conf.js
     const hubLink = `${browser.globals.devServerURL}/hub`;
 
     browser

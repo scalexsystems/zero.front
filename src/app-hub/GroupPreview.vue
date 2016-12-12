@@ -15,10 +15,9 @@
       <div class="col-xs-12 col-lg-8 offset-lg-2 text-xs-center">
         <div class="my-2">
           <photo-holder v-if="group.is_admin"
-                        :src="group.photo" class="group-preview-photo"
+                        class="group-preview-photo round"
                         :dest="`groups/${group.id}/photo`"
                         @uploaded="profileUpdated">
-
               <img :src="group.photo" class="group-preview-photo">
           </photo-holder>
           <img v-else :src="group.photo" class="group-preview-photo">
@@ -26,7 +25,7 @@
 
         <div class="my-2">
           <span class="alert alert-info group-preview-tag" v-if="!group.private">Public Group</span>
-          <span class="alert alert-danger group-preview-tag" v-else>Public Group</span>
+          <span class="alert alert-danger group-preview-tag" v-else>Private Group</span>
         </div>
 
         <h2>{{ group.name }}</h2>

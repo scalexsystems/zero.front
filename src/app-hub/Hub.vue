@@ -72,6 +72,13 @@ export default {
   height: 100%;
 }
 
+.hub-content {
+  @include media-breakpoint-down(sm) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 .hub-sidebar-left {
   height: 100%;
   overflow-y: auto;

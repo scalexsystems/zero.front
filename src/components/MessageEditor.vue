@@ -4,11 +4,16 @@
             placeholder="Start discussing..." autofocus @input="onInput"
             @keydown.enter="onEnter" :disabled="disabled" rows='1'
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
+
+   <slot name='message-actions'>
+    <message-box-action></message-box-action>
+   </slot>
 </div>
 </template>
 
 <script lang="babel">
 import resize from 'autosize';
+import MessageBoxAction from './MessageBoxAction.vue';
 
 export default {
   props: {
@@ -21,6 +26,7 @@ export default {
       required: true,
     },
   },
+  components: { MessageBoxAction },
   methods: {
     resize() {
       const event = window.document.createEvent('Event');
@@ -63,7 +69,7 @@ export default {
 .message-input {
   border: none;
   resize: none;
-  width: 100%;
+  width: 95%;
   min-height: 21px;
   max-height: 300px;
   line-height: 1.5;

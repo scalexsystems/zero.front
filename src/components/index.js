@@ -8,4 +8,4 @@ export { default as LoadingPlaceholder } from './Loading.vue';
 export { default as MessageEditor } from './MessageEditor.vue';
 export { default as PersonCard } from './PersonCard.vue';
 export { default as PhotoHolder } from './ProfilePhotoUploader.vue';
-export { default as MessageBoxAction } from './MessageBoxAction.vue';
+export { default as MessageAction } from './MessageAction.vue';

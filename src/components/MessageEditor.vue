@@ -1,19 +1,19 @@
 <template>
-<div class="message-input-wrapper">
+<div class="row message-input-wrapper">
   <textarea class="message-input" name="message" :value="value" ref="input"
             placeholder="Start discussing..." autofocus @input="onInput"
             @keydown.enter="onEnter" :disabled="disabled" rows='1'
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
 
    <slot name='message-actions'>
-    <message-box-action></message-box-action>
+       <message-action :actions="[{ name: 'Import File', icon: 'plus' }]"></message-action>
    </slot>
 </div>
 </template>
 
 <script lang="babel">
 import resize from 'autosize';
-import MessageBoxAction from './MessageBoxAction.vue';
+import MessageAction from './MessageAction.vue';
 
 export default {
   props: {
@@ -26,7 +26,7 @@ export default {
       required: true,
     },
   },
-  components: { MessageBoxAction },
+  components: { MessageAction },
   methods: {
     resize() {
       const event = window.document.createEvent('Event');
@@ -78,5 +78,9 @@ export default {
   &:active, &:focus {
     outline: none;
   }
+}
+
+.message-actions {
+ width: 5%;
 }
 </style>

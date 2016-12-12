@@ -6,16 +6,24 @@
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
 
    <slot name='message-actions'>
-       <message-action :actions="[{ name: 'Import File', icon: 'plus' }]"></message-action>
+       <message-action :actions="[{ name: 'Import File', icon: 'plus' }]" @message-option-click="actionClicks"></message-action>
    </slot>
+
+    <popup :showTitle="false" v-if="showPopup"> Test popup </popup>
 </div>
 </template>
 
 <script lang="babel">
 import resize from 'autosize';
 import MessageAction from './MessageAction.vue';
+import Popup from './Popup.vue';
 
 export default {
+  data() {
+    return {
+      showPopup: false,
+    };
+  },
   props: {
     disabled: {
       type: Boolean,
@@ -26,7 +34,7 @@ export default {
       required: true,
     },
   },
-  components: { MessageAction },
+  components: { MessageAction, Popup },
   methods: {
     resize() {
       const event = window.document.createEvent('Event');
@@ -47,6 +55,17 @@ export default {
         event.preventDefault();
         this.$emit('send', event);
       }
+    },
+    actionClicks(event, action, index) {
+      const clickActions = [this.importFile];
+      return clickActions[index] ? clickActions[index]() : () => {};
+    },
+
+    importFile() {
+      this.showPopup = true;
+    },
+    popUpClose() {
+      this.showPopup = false;
     },
   },
   mounted() {

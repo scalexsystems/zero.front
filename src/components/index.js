@@ -9,3 +9,4 @@ export { default as MessageEditor } from './MessageEditor.vue';
 export { default as PersonCard } from './PersonCard.vue';
 export { default as PhotoHolder } from './ProfilePhotoUploader.vue';
 export { default as MessageAction } from './MessageAction.vue';
+export { default as Popup } from './Popup.vue';

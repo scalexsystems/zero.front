@@ -2,7 +2,7 @@
   <div class='message-action-wrapper'>
     <slot name='messageActions'>
         <template v-for="(action, index) of actions">
-          <a href="#" class="message-box-action" @click.prevent="click($event, 'test')">
+          <a href="#" class="message-box-action" @click.prevent="click($event, action, index)">
             <i class="fa fa-fw" :class="[`fa-${action.icon}`]"></i>
           </a>
         </template>
@@ -19,6 +19,11 @@ export default{
   props: {
     actions: {
       type: Array,
+    },
+  },
+  methods: {
+    click(event, action, index) {
+      this.$emit('message-option-click', event, action, index);
     },
   },
 };

@@ -52,8 +52,8 @@ import throttle from 'lodash/throttle';
 import InfiniteScroll from 'vue-infinite-loading';
 
 import { pushIf, isValidationException, normalizeValidationErrors as normalize } from '../util';
-import { types as mutations } from './vuex/meta';
-import { types as rootMutations, getters as rootGetters, actions as rootActions } from '../vuex/meta';
+// import { types as mutations } from './vuex/meta';
+import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
 import { LoadingPlaceholder, ActivityBox, PersonCard } from '../components';
 
 export default {
@@ -103,6 +103,13 @@ export default {
       query: '',
       page: 0,
       members: [],
+      editedGroup: {
+        name: '',
+        description: '',
+        type: 'public',
+        addedMembers: [],
+        removedMembers: [],
+      },
     };
   },
   methods: {
@@ -112,23 +119,25 @@ export default {
       }
 
       this.$refs.action.classList.add('disabled');
-      this.$http.put(`groups/${this.group.id}`, this.values)
-              .then(response => response.json())
-              .then((result) => {
-                this.$refs.action.classList.remove('disabled');
-                this.$store.commit(mutations.ADD_GROUP, result);
-                this.$store.commit(rootMutations.ADD_GROUP, result);
+      this.$http.put(`groups/${this.group.id}`,
+        {
+          ...this.values,
+          addedMembers: this.editedGroup.addedMembers,
+          removedMembers: this.editedGroup.removedMembers,
+        })
+          .then(() => {
+            this.$refs.action.classList.remove('disabled');
+//            this.members.splice()
+//            this.members.push()
+          })
+          .catch((response) => {
+            this.$refs.action.classList.remove('disabled');
+            if (isValidationException(response)) {
+              response.json().then(result => this.$set(this, 'errors', normalize(result.errors)));
+            }
 
-                return result;
-              })
-              .catch((response) => {
-                this.$refs.action.classList.remove('disabled');
-                if (isValidationException(response)) {
-                  response.json().then(result => this.$set(this, 'errors', normalize(result.errors)));
-                }
-
-                return response;
-              });
+            return response;
+          });
     },
     validate() {
       const v = Validator.make(this.values, {
@@ -152,16 +161,25 @@ export default {
       this.findMembers({ q: value }).then(end);
     }, 400),
     onSelect(member) {
-      if (this.group.member_ids.indexOf(member.id) < 0) {
-        this.group.member_ids.push(member.id);
+      if (this.editedGroup.addedMembers.indexOf(member.id) < 0
+              && this.members.indexOf(member) < 0) {
+        this.editedGroup.addedMembers.push(member.id);
         this.members.push(member);
       }
     },
     removeMember(member) {
-      const index = this.group.member_ids.indexOf(member.id);
-      if (index > -1) {
-        this.group.member_ids.splice(index, 1);
-        this.members.splice(index, 1);
+      if (this.editedGroup.removedMembers.indexOf(member.id) < 0) {
+        const index = this.editedGroup.addedMembers.indexOf(member.id);
+        if (index > -1) {
+          this.editedGroup.addedMembers.splice(index, 1);
+          this.members.splice(index, 1);
+        }
+      } else if (this.members.indexOf(member) < 0) {
+        this.editedGroup.removedMembers.push(member.id);
+        const removedMember = this.members.indexOf(member);
+        if (removedMember >= 0) {
+          this.members.splice(removedMember, 1);
+        }
       }
     },
     search: throttle(function search() {
@@ -200,7 +218,7 @@ export default {
         this.setGroup();
       }
     },
-    ...mapActions({ getGroup: rootActions.getGroups }),
+    ...mapActions({ getGroup: rootActions.getGroups, findMembers: rootActions.getUsers }),
   },
   watch: {
     $route: 'findGroup',

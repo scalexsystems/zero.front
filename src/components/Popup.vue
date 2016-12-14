@@ -6,21 +6,17 @@
         <div class="modal-container">
 
             <div class="modal-header" v-if="showHeader">
-                <slot name="header">
+                <slot name="popup-header">
                     {{ title }}
                 </slot>
             </div>
 
             <div class="modal-body">
-                <slot name="body"></slot>
+                <slot name="popup-body"></slot>
             </div>
 
             <div class="modal-footer" v-if="showFooter">
-              <slot name="footer">
-                <a href='#' class="modal-default-button" @click="$emit('popupClose')">
-                    OK
-                </a>
-            </slot>
+              <slot name="popup-footer"></slot>
             </div>
         </div>
     </div>
@@ -90,10 +86,7 @@ export default{
   margin: 20px 0;
 }
 
-.modal-default-button {
-  float: right;
+.modal-footer {
+ text-align: left;
 }
-
-
-
 </style>

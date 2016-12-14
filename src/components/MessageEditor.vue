@@ -7,9 +7,13 @@
 
    <slot name='message-actions'>
        <message-action :actions="[{ name: 'Import File', icon: 'plus' }]" @message-option-click="actionClicks"></message-action>
+       <slot name='file-uploader'>
+               <file-uploader ref='uploader' :dest="uploadDest" @uploaded="uploaded"
+                              @groupFileShared="fileShared">
+               </file-uploader>
+       </slot>
    </slot>
 
-    <popup :showTitle="false" v-if="showPopup"> Test popup </popup>
 </div>
 </template>
 
@@ -17,6 +21,7 @@
 import resize from 'autosize';
 import MessageAction from './MessageAction.vue';
 import Popup from './Popup.vue';
+import FileUploader from './FileUploader.vue';
 
 export default {
   data() {
@@ -33,8 +38,12 @@ export default {
       type: String,
       required: true,
     },
+
+    uploadDest: {
+      type: String,
+    },
   },
-  components: { MessageAction, Popup },
+  components: { MessageAction, Popup, FileUploader },
   methods: {
     resize() {
       const event = window.document.createEvent('Event');
@@ -62,10 +71,16 @@ export default {
     },
 
     importFile() {
-      this.showPopup = true;
+      this.$refs.uploader.$emit('triggerFileInput');
     },
-    popUpClose() {
+    closePopup() {
       this.showPopup = false;
+    },
+    uploaded() {
+
+    },
+    fileShared(event, file) {
+      this.$emit('groupFileShared', event, file);
     },
   },
   mounted() {

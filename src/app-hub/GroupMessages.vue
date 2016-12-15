@@ -12,7 +12,7 @@
                   @load-more="loadMore"
                   @seen="markMessagesSeen"></message-list>
 
-    <message-editor slot="footer" ref="input" v-model="message" :uploadDest="`groups/${context.id}/file`"
+    <message-editor slot="footer" ref="input" v-model="message" :canUpload="true" :uploadDest="`groups/${context.id}/file`"
                     @send="send" @focused="markMessagesSeen" @groupFileShared="fileShared">
     </message-editor>
   </message-box>

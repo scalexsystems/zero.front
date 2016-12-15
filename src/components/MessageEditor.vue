@@ -5,7 +5,7 @@
             @keydown.enter="onEnter" :disabled="disabled" rows='1'
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
 
-   <slot name='message-actions'>
+   <slot name='message-actions' v-if="canUpload">
        <message-action :actions="[{ name: 'Import File', icon: 'plus' }]" @message-option-click="actionClicks"></message-action>
        <slot name='file-uploader'>
                <file-uploader ref='uploader' :dest="uploadDest" @uploaded="uploaded"
@@ -41,6 +41,11 @@ export default {
 
     uploadDest: {
       type: String,
+    },
+
+    canUpload: {
+      type: Boolean,
+      default: false,
     },
   },
   components: { MessageAction, Popup, FileUploader },

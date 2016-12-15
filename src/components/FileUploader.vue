@@ -8,6 +8,7 @@
             <progress class="progress mb-0" :value="progress" max="100">
               <div class="progress">
                 <span class="progress-bar" :style="{ width: progress + '%' }"></span>
+                <span class="text-center"> Uploading </span>
               </div>
             </progress>
           </template>
@@ -28,7 +29,7 @@
               </template>
 
               <template slot="popup-footer">
-                  <a href='#' class="btn btn-primary"> Cancel </a>
+                  <a href='#' class="btn btn-primary" @click="closePopup"> Cancel </a>
                   <a href='#' class="btn btn-primary" @click="shareFileClick"> Share file </a>
              </template>
           </popup>
@@ -100,7 +101,7 @@ export default{
         })
         .then((response) => {
           this.uploading = false;
-          this.file.src = response.headers.get('Location');
+          this.file.src = response.body.path;
           this.file.id = response.body.id;
 
         })
@@ -127,14 +128,22 @@ export default{
 
     },
     shareFileClick(event) {
-      this.$emit('groupFileShared', event, this.file)
-      this.showPopup = false;
+      if (!this.error) {
+        this.$emit('groupFileShared', event, this.file)
+        this.showPopup = false;
+      }
     },
     closePopup() {
+      this.showPopup = false;
     },
   },
 };
 
 </script>
-<style>
+<style lang="scss">
+.progress {
+    margin-top: 1rem;
+    height: .25rem;
+    z-index: 1;
+}
 </style>

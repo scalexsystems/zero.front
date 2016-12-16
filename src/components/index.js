@@ -9,3 +9,5 @@ export { default as MessageEditor } from './MessageEditor.vue';
 export { default as PersonCard } from './PersonCard.vue';
 export { default as PhotoHolder } from './ProfilePhotoUploader.vue';
 export { default as WindowBox } from './Window.vue';
+export { default as InfiniteLoader } from './InfiniteLoader.vue';
+export { default as Modal } from './Modal.vue';

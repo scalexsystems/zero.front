@@ -1,5 +1,5 @@
 <template>
-<span v-html="name"></span>
+<div class="search-option" v-html="name"></div>
 </template>
 
 <script lang="babel">
@@ -44,4 +44,7 @@ export default {
 
 
 <style lang="scss">
+.search-option {
+  padding: .4rem 1rem;
+}
 </style>

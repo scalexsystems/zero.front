@@ -1,9 +1,7 @@
 <template>
-<div class="fl">
-  <img class="photo" :src="option.photo">
-  <div class="fl-auto ml-1 name">
-    {{ name }}
-  </div>
+<div class="fl search-option">
+  <img class="photo rounded" :src="option.photo">
+  <div class="fl-auto ml-1 name" v-html="name"></div>
 </div>
 </template>
 
@@ -49,11 +47,15 @@ export default {
 
 
 <style lang="scss" scoped>
+.search-option {
+  padding: .5rem 1rem;
+}
+
 .photo {
-  height: 48px;
-  width: 48px;
+  height: 28px;
+  width: 28px;
 }
 .name {
-  line-height: 48px;
+  line-height: 28px;
 }
 </style>

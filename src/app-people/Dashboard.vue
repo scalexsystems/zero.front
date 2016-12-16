@@ -17,7 +17,7 @@
               </div>
             </div>
             <div class="col-xs-12 col-lg-4 mb-1">
-              <div class="card card-block ow-teacher">
+              <div class="card card-block ow-teacher" role="button" @click="$router.push({name: 'teacher'})">
                 <div class="title">Teachers</div>
                 <div class="count">{{ stats.teacher }}</div>
                 <div class="subtitle">
@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="col-xs-12 col-lg-4 mb-1">
-              <div class="card card-block ow-employee">
+              <div class="card card-block ow-employee" role="button" @click="$router.push({name: 'employee'})">
                 <div class="title">Employees</div>
                 <div class="count">{{ stats.employee }}</div>
                 <div class="subtitle">

@@ -1,18 +1,7 @@
 <template>
 <nav class="navbar navbar-fixed-top navbar-dark bg-accent">
   <div class="container navbar-container fl">
-    <div class="dropdown">
-      <button class="navbar-toggler"
-              data-toggle="dropdown"
-              type="button" id="navbar-toggler"
-              aria-haspopup="true" role="button"
-              aria-expanded="false"><i class="fa fa-fw fa-bars"></i></button>
-      <div class="dropdown-menu" aria-labelledby="navbar-toggler">
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-      </div>
-    </div>
+    <apps-menu></apps-menu>
     <global-search class="fl-auto"></global-search>
     <div class="navbar-user">
       <div class="dropdown">
@@ -55,6 +44,7 @@ import { mapGetters } from 'vuex';
 import { getters } from '../vuex/meta';
 
 import GlobalSearch from './GlobalSearch.vue';
+import AppsMenu from './AppsMenu.vue';
 
 export default {
   computed: {
@@ -73,7 +63,7 @@ export default {
     },
     ...mapGetters({ user: getters.user }),
   },
-  components: { GlobalSearch },
+  components: { AppsMenu, GlobalSearch },
 };
 </script>
 
@@ -92,24 +82,6 @@ body {
 
 .navbar {
   line-height: 1.9; // This makes navbar height 54px with 14px base size.
-}
-
-.navbar-toggler {
-  padding-top: .75rem; // This adjusts toggler in middle of line.
-  padding-bottom: .75rem;
-}
-
-.navbar-toggler {
-  color: inherit;
-  user-select: none;
-  &:focus {
-    outline: none;
-  }
-}
-
-.navbar-dark .navbar-toggler {
-  background-image: none;
-  border-color: transparent;
 }
 
 .navbar-brand {
@@ -138,7 +110,7 @@ body {
 .navbar-user-photo {
   margin: -1px 0 -1px .5rem;
   border-radius: 100%;
-  border: solid 0.0714rem white;
+  background-color: white;
 }
 
 .user-menu-toggler {

@@ -9,7 +9,11 @@
 
             <div class="window-subtitle text-muted">{{ subtitle }}</div>
           </div>
-          <slot name="header"></slot>
+          <slot name="header">
+            <a role="button" @click.prevent="$router.go(-1)" class="btn btn-secondary">
+              <i class="fa fa-fw fa-arrow-left"></i> Back
+            </a>
+          </slot>
         </div>
       </div>
 

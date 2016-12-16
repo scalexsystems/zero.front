@@ -236,7 +236,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../styles/variables";
 @import "../styles/mixins";
 
@@ -255,21 +255,21 @@ export default {
     cursor: pointer;
     position: relative;
     padding: $input-padding-y $input-padding-x + 1.5rem $input-padding-y $input-padding-x;
-    &::before {
-      display: inline-block;
-      width: 0;
-      height: 0;
-      margin-right: .25rem;
-      margin-left: .25rem;
-      vertical-align: middle;
-      content: "";
-      border-top: $caret-width solid;
-      border-right: $caret-width solid transparent;
-      border-left: $caret-width solid transparent;
-      position: absolute;
-      right: .25rem;
-      top: 50%;
-    }
+    // &::before {
+    //   display: inline-block;
+    //   width: 0;
+    //   height: 0;
+    //   margin-right: .25rem;
+    //   margin-left: .25rem;
+    //   vertical-align: middle;
+    //   content: "";
+    //   border-top: $caret-width solid;
+    //   border-right: $caret-width solid transparent;
+    //   border-left: $caret-width solid transparent;
+    //   position: absolute;
+    //   right: .25rem;
+    //   top: 50%;
+    // }
 
     list-style: none;
     margin-bottom: 0;
@@ -281,6 +281,7 @@ export default {
       display: block;
       border: none;
       outline: none;
+      width: 100%;
     }
 
     i.fa {
@@ -311,6 +312,8 @@ export default {
     @extend .dropdown-item;
 
     cursor: pointer;
+    padding: 0;
+    margin: 0;
   }
 }
 </style>

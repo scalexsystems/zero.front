@@ -1,8 +1,9 @@
 <template>
     <div>
-        <div class='file-attachment-wrapper'>
+        <div class='card file-attachment-wrapper'>
+            <div class="card-block">
            <div class="file-attachment-logo">
-               <i class="fa" :class="[`fa-file-${ext}-o`]"></i>
+               <i class="fa" :class="[`fa-file-${ext.icon}`]" :style="{ color: ext.color }"></i>
            </div>
             <div class="file-attachment-filename" @click="downloadFile">
                 {{ attachment.filename }}
@@ -10,6 +11,7 @@
                     <small class='text-muted'> {{ attachment.size }} Kb </small>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </template>
@@ -26,8 +28,39 @@
     },
     computed: {
       ext() {
-        const extMap = { pdf: 'pdf', doc: 'word', docx: 'word', xls: 'excel', xlsx: 'excel', ppt: 'powerpoint', pptx: 'powerpoint' };
-        return extMap[this.attachment.extension] || '';
+        const extMap = {
+          pdf: {
+            icon: 'pdf-o',
+            color: 'red',
+          },
+          doc: {
+            icon: 'word-o',
+            color: 'blue',
+          },
+          docx: {
+            icon: 'word-o',
+            color: 'blue',
+          },
+          xls: {
+            icon: 'excel-o',
+            color: 'green',
+          },
+          xlsx: {
+            icon: 'excel-o',
+            color: 'green',
+          },
+          ppt: {
+            icon: 'powerpoint-o',
+            color: 'red',
+          },
+
+          def: {
+            icon: 'o',
+            color: 'gray',
+          },
+        };
+
+        return extMap[this.attachment.extension] || extMap.def;
       },
     },
     components: {},
@@ -45,7 +78,7 @@
 
     .file-attachment {
    &-logo {
-     padding: rem(5px);
+     padding: 0 rem(5px) 0 rem(5px);
      color: $brand-danger;
      font-size: 2rem;
 
@@ -59,14 +92,10 @@
    }
 
    &-wrapper {
-     display: flex;
-     flex-direction: row;
-     padding: rem(9px) rem(10px);
-     border: 1px solid $gray-lighter;
-     width: rem(250px);
-     margin: rem(10px) 0 rem(10px) 0;
-     cursor: pointer;
-
+       display: flex;
+       min-width: rem(300px);
+       cursor: pointer;
+       margin: 0;
    }
 
    &-size {
@@ -74,5 +103,10 @@
 
    }
  }
+
+    .card-block {
+      display: flex;
+      padding: rem(12px);
+    }
 
 </style>

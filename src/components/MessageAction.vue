@@ -2,8 +2,10 @@
   <div class='message-action-wrapper'>
     <slot name='messageActions'>
         <template v-for="(action, index) of actions">
-          <a href="#" class="message-box-action" @click.prevent="click($event, action, index)">
-            <i class="fa fa-fw" :class="[`fa-${action.icon}`]"></i>
+          <a href="#" class="message-box-action" data-toggle="tooltip" data-placement="left"
+             @click.prevent="click($event, action, index)" >
+             <img :src="action.asset">
+            <!--<i class="fa fa-fw" :class="[`fa-${action.icon}`]"></i>-->
           </a>
         </template>
     </slot>

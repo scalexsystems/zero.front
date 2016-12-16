@@ -57,6 +57,7 @@ $layout-box-actions-color: #9b9b9b !default;
   display: flex;
   flex-direction: column;
   background: white;
+  z-index: 100;
 
   @include match-parent();
 
@@ -68,7 +69,7 @@ $layout-box-actions-color: #9b9b9b !default;
   flex-direction: row;
   padding: 1rem 1.714rem;
   border-bottom: 1px solid $border-color;
-
+  z-index: 100;
   box-shadow: 0 2px rgba(0, 0, 0, 0.1);
 }
 

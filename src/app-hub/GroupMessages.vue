@@ -127,8 +127,8 @@ export default {
     }),
 
     fileShared(event, file) {
-      this.message = file.message || `${file.name} uploaded`;
-      this.send({ attachment_id: file.id });
+      this.message = file.message || '';
+      this.send({ attachment_id: file.id, name: file.name });
     },
   },
   watch: {

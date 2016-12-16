@@ -3,12 +3,17 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-container" :class="styleClass">
 
-            <div class="modal-header" v-if="showHeader">
-                <slot name="popup-header">
+            <div class="modal-header popup-header" v-if="showHeader">
+                <slot name="popup-title">
                     {{ title }}
                 </slot>
+                <div v-if="dismissable">
+                  <a class="popup-dismiss" href="#" @click.prevent.stop="$emit('popupClose')">
+                    <img src="../assets/cross.svg">
+                  </a>
+                 </div>
             </div>
 
             <div class="modal-body">
@@ -44,12 +49,25 @@ export default{
       type: String,
       default: '',
     },
+
+    styleClass: {
+      type: String,
+      default: '',
+    },
+
+    dismissable: {
+      type: Boolean,
+      default: true,
+    },
   },
 
 };
 </script>
-<style>
-  .modal-mask {
+<style lang="scss">
+    @import '../styles/methods';
+    @import '../styles/variables';
+
+.modal-mask {
   position: fixed;
   z-index: 9998;
   top: 0;
@@ -67,7 +85,6 @@ export default{
 }
 
  .modal-container {
-  width: 300px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -80,13 +97,30 @@ export default{
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
+  border: 0;
 }
 
 .modal-body {
-  margin: 20px 0;
 }
 
 .modal-footer {
- text-align: left;
+    text-align: left;
+    border: 0;
 }
+
+
+.popup-header {
+ text-align: left;
+ border: 0;
+ display: flex;
+ min-width: rem(600px);
+}
+.popup-dismiss {
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+}
+
 </style>

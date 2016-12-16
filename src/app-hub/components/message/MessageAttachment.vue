@@ -37,7 +37,7 @@ export default{
 <style lang="scss">
 @import '../../../styles/methods';
 .attachment-wrapper {
-  padding: rem(9px) rem(10px);
+    padding: rem(10px) 0 rem(10px);
 }
 
 </style>

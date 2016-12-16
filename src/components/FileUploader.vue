@@ -3,7 +3,7 @@
     <input type="file" ref="inputFile" hidden @change="onFileSelected">
 
     <slot name="progress">
-      <popup :showTitle="false" v-if="uploading">
+      <popup :showTitle="false" styleClass="col-sm-6 col-lg-4" v-if="uploading">
           <template slot="popup-body">
             <progress class="progress mb-0" :value="progress" max="100">
               <div class="progress">
@@ -16,20 +16,24 @@
     </slot>
 
       <slot name="postUpload">
-          <popup :showTitle="false" v-if="showPopup" @popupClose="closePopup">
+          <popup :showTitle="true" v-if="showFilePopup" styleClass="col-sm-6 col-lg-5" @popupClose="closePopup">
+              <template slot="popup-title">
+                 <div class="popup-title">About The File </div>
+              </template>
+
               <template slot="popup-body">
                   <div class="row">
-                      <div class="">
+                      <div class="popup-body-input col-sm-12">
                           <input-text title="Name of the File" required v-model="file.name" ></input-text>
                       </div>
-                      <div class="">
+                      <div class="popup-body-input col-sm-12">
                           <input-text title="Add a message (optional)" v-model="file.message"></input-text>
                       </div>
                   </div>
               </template>
 
               <template slot="popup-footer">
-                  <a href='#' class="btn btn-primary" @click="closePopup"> Cancel </a>
+                  <a href='#' class="popup-cancel btn btn-default" @click="closePopup"> Cancel </a>
                   <a href='#' class="btn btn-primary" @click="shareFileClick"> Share file </a>
              </template>
           </popup>
@@ -81,6 +85,10 @@ export default{
      })
   },
   computed: {
+    showFilePopup() {
+      this.showPopup = false;
+      return this.showPopup && !this.error
+    }
   },
   methods: {
     upload (payload) {
@@ -106,17 +114,9 @@ export default{
 
         })
         .catch((response) => {
+          debugger;
           this.uploading = false;
-
-          if ('json' in response) {
-            response.json().then((result) => {
-              this.error = result.message || 'Upload failed.';
-            }).catch((error) => {
-              this.error = error;
-            });
-          } else {
-            this.error = response;
-          }
+          this.error = true;
         });
     },
     onFileSelected (event) {
@@ -141,9 +141,33 @@ export default{
 
 </script>
 <style lang="scss">
+@import "../styles/variables";
+@import "../styles/methods";
 .progress {
-    margin-top: 1rem;
-    height: .25rem;
-    z-index: 1;
+  margin-top: 1rem;
+  height: .25rem;
+  z-index: 1;
+}
+
+.popup-cancel {
+  border: 1px solid $gray;
+  color: $black;
+  margin-right: rem(8px);
+
+}
+
+.popup-title {
+  color: $btn-primary-bg;
+  font-size: 1.28571rem;
+  min-width: 80%;
+
+}
+
+.popup-footer {
+  align-self: left;
+}
+
+.popup-body-input {
+  padding: rem(10px) rem(15px);
 }
 </style>

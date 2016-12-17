@@ -6,7 +6,7 @@
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
 
    <slot name='message-actions' v-if="canUpload">
-       <message-action :actions="[{ name: 'Import File', icon: 'plus' }]" @message-option-click="actionClicks"></message-action>
+       <message-action :actions="messageAction" @message-option-click="actionClicks"></message-action>
        <slot name='file-uploader'>
                <file-uploader ref='uploader' :dest="uploadDest" @uploaded="uploaded"
                               @groupFileShared="fileShared">
@@ -22,6 +22,7 @@ import resize from 'autosize';
 import MessageAction from './MessageAction.vue';
 import Popup from './Popup.vue';
 import FileUploader from './FileUploader.vue';
+import AttachFile from '../assets/attach-file.svg';
 
 export default {
   data() {
@@ -46,6 +47,14 @@ export default {
     canUpload: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    messageAction() {
+      return [{
+        name: 'Upload File',
+        asset: AttachFile,
+      }];
     },
   },
   components: { MessageAction, Popup, FileUploader },

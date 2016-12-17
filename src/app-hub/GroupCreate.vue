@@ -1,9 +1,10 @@
 <template>
-<activity-box title="Add new group" subtitle="Make group to coverse better." :show="true" @close="$router.go(-1)">
+<activity-box title="Add new group" subtitle="Make group to coverse better."
+  @close="$router.push({ name: 'hub.group', params: { group: group.id } })">
   <template slot="actions">
-  <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="createGroup" ref="action">
-    Create Group
-  </a>
+    <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="createGroup" ref="action">
+      Create Group
+    </a>
   </template>
 
   <div class="container py-1">

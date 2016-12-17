@@ -1,8 +1,7 @@
 <template>
     <activity-box
-            v-bind="{ title, subtitle, show: true, actions, disableFooter: true }"
-            @close="$emit('close')"
-            @option-click="onOptionClick">
+            v-bind="{ title, subtitle, disableFooter: true }"
+            @close="$emit('close')">
 
         <template slot="icon">
           <img src="../assets/group-icon.svg">
@@ -94,7 +93,6 @@ export default {
     onClose() {
       this.$router.go(-1);
     },
-    onOptionClick: ActivityBox.methods.onOptionClick,
     onGroupSelected(group) {
       const name = group.is_member === true ? 'hub.group' : 'hub.group-preview';
 

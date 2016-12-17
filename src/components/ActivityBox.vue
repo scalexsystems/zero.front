@@ -1,75 +1,46 @@
 <template>
-<transition name="activity-box" appear v-if="show">
-  <layout-box v-bind="{ actions, disableFooter }" @option-click="onOptionClick">
+  <layout-box v-bind="{ disableFooter }">
     <template slot="context">
-    <slot name="icon">
-      <a class="activity-box-dismiss" role="button" @click.prevent.stop="$emit('close')">
-        <img src="../assets/cross.svg">
-      </a>
-    </slot>
-    <div class="activity-box-title-container">
-      <div class="activity-box-title" @click="$emit('openTitle')">
-        <slot name="title">{{ title }}</slot>
+      <slot name="icon">
+        <a class="activity-box-dismiss" role="button" @click.prevent.stop="$emit('close')">
+          <img src="../assets/cross.svg">
+        </a>
+      </slot>
+      <div class="activity-box-title-container">
+        <div class="activity-box-title" @click="$emit('openTitle')">
+          <slot name="title">{{ title }}</slot>
+        </div>
+        <div class="activity-box-subtitle" @click="$emit('openSubtitle')">
+          <slot name="subtitle">{{ subtitle }}</slot>
+        </div>
       </div>
-      <div class="activity-box-subtitle" @click="$emit('openSubtitle')">
-        <slot name="subtitle">{{ subtitle }}</slot>
-      </div>
-    </div>
     </template>
 
-    <template slot="actions">
-    <slot name="actions">
-      <action-menu :actions="actions" @option-click="onOptionClick"></action-menu>
-    </slot>
-    </template>
+    <template slot="actions"><slot name="actions"></slot></template>
+    <template slot="footer"><slot name="footer"></slot></template>
 
     <slot></slot>
   </layout-box>
-</transition>
 </template>
 
 <script lang="babel">
 import LayoutBox from './LayoutBox.vue';
-import ActionMenu from './ActionMenu.vue';
 
 export default {
   props: {
-    show: {
-      type: Boolean,
-      default: true,
-    },
     title: String,
     subtitle: String,
-    enableTopbar: {
-      default: false,
-      type: Boolean,
-    },
     ...LayoutBox.props,
   },
-  components: { LayoutBox, ActionMenu },
-  methods: {
-    onOptionClick: LayoutBox.methods.onOptionClick,
-  },
+  components: { LayoutBox },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/methods';
 
 $border-radius-sm: 0.2rem !default;
 $activity-box-subtitle-color: #9b9b9b !default;
-
-.activity-box-enter {
-}
-
-.activity-box-enter-active {
-}
-
-.activity-box-leave {
-}
-
-.activity-box-leave-active {
-}
 
 .activity-box-dismiss {
   width: rem(42px);

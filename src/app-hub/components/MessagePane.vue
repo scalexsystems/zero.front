@@ -166,7 +166,7 @@ export default {
 .message-list-container {
   padding: 1rem 1.714rem;
   flex: 1;
-  min-height: calc(100% - 5rem);
+  min-height: 100%;
 
   justify-content: flex-end;
   display: flex;

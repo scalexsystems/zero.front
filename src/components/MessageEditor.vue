@@ -1,19 +1,17 @@
 <template>
-<div class="row message-input-wrapper">
+<div class="message-input-wrapper">
   <textarea class="message-input" name="message" :value="value" ref="input"
             placeholder="Start discussing..." autofocus @input="onInput"
             @keydown.enter="onEnter" :disabled="disabled" rows='1'
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
-
    <slot name='message-actions' v-if="canUpload">
        <message-action :actions="messageAction" @message-option-click="actionClicks"></message-action>
        <slot name='file-uploader'>
-               <file-uploader ref='uploader' :dest="uploadDest" @uploaded="uploaded"
-                              @groupFileShared="fileShared">
-               </file-uploader>
+           <file-uploader ref='uploader' :dest="uploadDest" @uploaded="uploaded"
+                          @groupFileShared="fileShared">
+           </file-uploader>
        </slot>
    </slot>
-
 </div>
 </template>
 

@@ -5,7 +5,7 @@
       <slot name="context"></slot>
       <div class="layout-box-actions-container">
         <slot name="actions">
-          <action-menu :actions="actions" @option-click="onOptionClick"></action-menu>
+
         </slot>
       </div>
     </slot>
@@ -21,16 +21,13 @@
 
 <script lang="babel">
 import { bool } from '../util';
-import ActionMenu from './ActionMenu.vue';
 
 export default {
   props: {
     disableFooter: {
       default: false,
     },
-    ...ActionMenu.props,
   },
-  components: { ActionMenu },
   computed: {
     isFooterDisabled() {
       const disableFooter = this.disableFooter;
@@ -38,15 +35,10 @@ export default {
       return bool(disableFooter);
     },
   },
-  methods: {
-    onOptionClick(...args) {
-      this.$emit('option-click', ...args);
-    },
-  },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/methods';
 @import '../styles/mixins';
 

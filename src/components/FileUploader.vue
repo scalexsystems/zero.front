@@ -69,7 +69,7 @@ export default{
     return {
       uploading: false,
       progress: 0,
-      error: null,
+      error: false,
       showPopup: false,
       file: {
         name: null,
@@ -86,9 +86,8 @@ export default{
   },
   computed: {
     showFilePopup() {
-      this.showPopup = false;
-      return this.showPopup && !this.error
-    }
+      return this.showPopup && ! this.error;
+    },
   },
   methods: {
     upload (payload) {
@@ -97,11 +96,11 @@ export default{
       form.append(this.name, payload);
       this.uploading = true;
       this.progress = 0;
-      this.error = null;
+      this.error = false;
 
       this.$http.post(this.dest, form, {
           progress: (event) => {
-            this.showPopup = true;
+            this.uploading = true;
             if (event.lengthComputable) {
               this.progress = event.loaded / event.total * 100;
             }
@@ -109,12 +108,12 @@ export default{
         })
         .then((response) => {
           this.uploading = false;
+          this.showPopup = true;
           this.file.src = response.body.path;
           this.file.id = response.body.id;
 
         })
         .catch((response) => {
-          debugger;
           this.uploading = false;
           this.error = true;
         });

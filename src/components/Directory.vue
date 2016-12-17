@@ -4,7 +4,9 @@
         @close="$emit('close')"
         @option-click="onOptionClick">
 
-  <template slot="actions"><slot name="actions"></slot></template>
+  <template slot="icon">
+    <img src="../assets/campus-directory-icon.svg">
+  </template>
 
   <div class="directory-header row">
     <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">

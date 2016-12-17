@@ -54,19 +54,19 @@ export default {
   },
   mutations: {
     [types.ADD_USER](state, users) {
-      pushIf(state.users, users, state.userMap);
+      pushIf(state.users, users, state.userMap, []);
     },
     [types.ADD_STUDENT](state, students) {
-      pushIf(state.students, students, state.studentMap);
+      pushIf(state.students, students, state.studentMap, []);
     },
     [types.ADD_TEACHER](state, teachers) {
-      pushIf(state.teachers, teachers, state.teacherMap);
+      pushIf(state.teachers, teachers, state.teacherMap, []);
     },
     [types.ADD_EMPLOYEE](state, employees) {
-      pushIf(state.employees, employees, state.employeeMap);
+      pushIf(state.employees, employees, state.employeeMap, []);
     },
     [types.ADD_GROUP](state, groups) {
-      pushIf(state.groups, groups, state.groupMap);
+      pushIf(state.groups, groups, state.groupMap, []);
     },
     [types.SET_USER_IS_MEMBER](state, { groupId, isMember }) {
       const mappedIndex = state.groupMap[groupId];

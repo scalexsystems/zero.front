@@ -2,9 +2,11 @@
 <transition name="activity-box" appear v-if="show">
   <layout-box v-bind="{ actions, disableFooter }" @option-click="onOptionClick">
     <template slot="context">
-    <a class="activity-box-dismiss" href="#" @click.prevent.stop="$emit('close')">
-      <img src="../assets/cross.svg">
-    </a>
+    <slot name="icon">
+      <a class="activity-box-dismiss" role="button" @click.prevent.stop="$emit('close')">
+        <img src="../assets/cross.svg">
+      </a>
+    </slot>
     <div class="activity-box-title-container">
       <div class="activity-box-title" @click="$emit('openTitle')">
         <slot name="title">{{ title }}</slot>

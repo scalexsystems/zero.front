@@ -16,7 +16,8 @@ export const types = {
 
 export const actions = {
   // Groups.
-  getGroups: 'hub/getUsers',
+  getGroups: 'hub/getGroups',
+  setGroups: 'hub/setGroups',
   getMessagesFromGroup: 'hub/getMessagesFromGroup',
   sendMessageToGroup: 'hub/sendMessageToGroup',
   sendMessageReadReceiptForGroup: 'hub/sendMessageReadReceiptForGroup',

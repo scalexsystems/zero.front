@@ -4,8 +4,12 @@
             @close="$emit('close')"
             @option-click="onOptionClick">
 
+        <template slot="icon">
+          <img src="../assets/group-icon.svg">
+        </template>
+
         <template slot="actions">
-          <router-link class="btn btn-primary" :to="{ name: 'hub.group-create' }">
+          <router-link class="btn btn-secondary" :to="{ name: 'hub.group-create' }">
             Create New Group
           </router-link>
         </template>

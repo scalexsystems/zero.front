@@ -3,7 +3,8 @@
   <message-box v-if="context"
                :title="context.name"
                :subtitle="context.bio"
-               :photo="context.photo">
+               :photo="context.photo"
+               @openTitle="openUserPreview" @openSubtitle="openUserPreview" @openPhoto="openUserPreview">
     <message-list ref="list" :messages="context.messages" :loading="loading" :all-loaded="allLoaded"
                   @load-more="loadMore" @seen="markMessagesSeen"></message-list>
 
@@ -109,6 +110,9 @@ export default {
                   this.$store.commit(mutations.ADD_USER, result.data);
                 });
       }
+    },
+    openUserPreview() {
+      this.$router.push({ name: 'hub.user-preview', params: { user: this.context.id } });
     },
     ...mapActions({
       findUsers: rootActions.getUsers,

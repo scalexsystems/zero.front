@@ -1,16 +1,34 @@
 <template>
-<div class="message-input-wrapper">
+<div class="row message-input-wrapper">
   <textarea class="message-input" name="message" :value="value" ref="input"
             placeholder="Start discussing..." autofocus @input="onInput"
             @keydown.enter="onEnter" :disabled="disabled" rows='1'
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
+
+   <slot name='message-actions' v-if="canUpload">
+       <message-action :actions="[{ name: 'Import File', icon: 'plus' }]" @message-option-click="actionClicks"></message-action>
+       <slot name='file-uploader'>
+               <file-uploader ref='uploader' :dest="uploadDest" @uploaded="uploaded"
+                              @groupFileShared="fileShared">
+               </file-uploader>
+       </slot>
+   </slot>
+
 </div>
 </template>
 
 <script lang="babel">
 import resize from 'autosize';
+import MessageAction from './MessageAction.vue';
+import Popup from './Popup.vue';
+import FileUploader from './FileUploader.vue';
 
 export default {
+  data() {
+    return {
+      showPopup: false,
+    };
+  },
   props: {
     disabled: {
       type: Boolean,
@@ -20,7 +38,17 @@ export default {
       type: String,
       required: true,
     },
+
+    uploadDest: {
+      type: String,
+    },
+
+    canUpload: {
+      type: Boolean,
+      default: false,
+    },
   },
+  components: { MessageAction, Popup, FileUploader },
   methods: {
     resize() {
       const event = window.document.createEvent('Event');
@@ -41,6 +69,23 @@ export default {
         event.preventDefault();
         this.$emit('send', event);
       }
+    },
+    actionClicks(event, action, index) {
+      const clickActions = [this.importFile];
+      return clickActions[index] ? clickActions[index]() : () => {};
+    },
+
+    importFile() {
+      this.$refs.uploader.$emit('triggerFileInput');
+    },
+    closePopup() {
+      this.showPopup = false;
+    },
+    uploaded() {
+
+    },
+    fileShared(event, file) {
+      this.$emit('groupFileShared', event, file);
     },
   },
   mounted() {
@@ -63,7 +108,7 @@ export default {
 .message-input {
   border: none;
   resize: none;
-  width: 100%;
+  width: 95%;
   min-height: 21px;
   max-height: 300px;
   line-height: 1.5;
@@ -72,5 +117,9 @@ export default {
   &:active, &:focus {
     outline: none;
   }
+}
+
+.message-actions {
+ width: 5%;
 }
 </style>

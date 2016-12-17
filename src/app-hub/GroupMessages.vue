@@ -12,8 +12,9 @@
                   @load-more="loadMore"
                   @seen="markMessagesSeen"></message-list>
 
-    <message-editor slot="footer" ref="input" v-model="message"
-                    @send="send" @focused="markMessagesSeen"></message-editor>
+    <message-editor slot="footer" ref="input" v-model="message" :canUpload="true" :uploadDest="`groups/${context.id}/file`"
+                    @send="send" @focused="markMessagesSeen" @groupFileShared="fileShared">
+    </message-editor>
   </message-box>
 
   <loading-placeholder v-else></loading-placeholder>
@@ -27,7 +28,7 @@ import int from 'lodash/toInteger';
 import { mapActions, mapGetters } from 'vuex';
 
 import { httpThen } from '../util';
-import { MessageBox, MessageEditor, LoadingPlaceholder } from '../components';
+import { MessageBox, MessageEditor, LoadingPlaceholder, FileUploader } from '../components';
 import { getters, actions } from './vuex/meta';
 import MessageList from './components/MessagePane.vue';
 
@@ -38,6 +39,7 @@ export default {
     MessageList,
     MessageEditor,
     LoadingPlaceholder,
+    FileUploader,
   },
   computed: {
     context() {
@@ -65,8 +67,8 @@ export default {
     };
   },
   methods: {
-    send() {
-      this.sendMessage({ groupId: this.context.id, content: this.message });
+    send(params = {}) {
+      this.sendMessage({ groupId: this.context.id, content: this.message, params });
       this.message = '';
       this.$refs.input.resize();
       this.$refs.input.focus();
@@ -123,6 +125,11 @@ export default {
       readMessage: actions.sendMessageReadReceiptForGroup,
       sendMessage: actions.sendMessageToGroup,
     }),
+
+    fileShared(event, file) {
+      this.message = file.message || '';
+      this.send({ attachment_id: file.id, name: file.name });
+    },
   },
   watch: {
     $route() {

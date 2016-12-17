@@ -45,22 +45,28 @@ export default {
     [getters.users](state) {
       return state.users;
     },
+    [getters.departments](state) {
+      return state.departments;
+    },
+    [getters.disciplines](state) {
+      return state.disciplines;
+    },
   },
   mutations: {
     [types.ADD_USER](state, users) {
-      pushIf(state.users, users, state.userMap);
+      pushIf(state.users, users, state.userMap, []);
     },
     [types.ADD_STUDENT](state, students) {
-      pushIf(state.students, students, state.studentMap);
+      pushIf(state.students, students, state.studentMap, []);
     },
     [types.ADD_TEACHER](state, teachers) {
-      pushIf(state.teachers, teachers, state.teacherMap);
+      pushIf(state.teachers, teachers, state.teacherMap, []);
     },
     [types.ADD_EMPLOYEE](state, employees) {
-      pushIf(state.employees, employees, state.employeeMap);
+      pushIf(state.employees, employees, state.employeeMap, []);
     },
     [types.ADD_GROUP](state, groups) {
-      pushIf(state.groups, groups, state.groupMap);
+      pushIf(state.groups, groups, state.groupMap, []);
     },
     [types.SET_USER_IS_MEMBER](state, { groupId, isMember }) {
       const mappedIndex = state.groupMap[groupId];
@@ -70,6 +76,12 @@ export default {
       const mappedIndex = state.groupMap[groupId];
 
       state.groups[mappedIndex][key] = value;
+    },
+    [types.SET_DEPARTMENTS](state, departments) {
+      state.departments = departments;
+    },
+    [types.SET_DISCIPLINES](state, disciplines) {
+      state.disciplines = disciplines;
     },
   },
   actions: {
@@ -131,6 +143,31 @@ export default {
             return result;
           })
           .catch(response => response);
+    },
+    [actions.getDepartments]({ commit }, params = {}) {
+      return Vue.http.get('departments', { params })
+          .then(response => response.json())
+          .then((result) => {
+            commit(types.SET_DEPARTMENTS, result.data);
+          })
+          .catch(response => response);
+    },
+    [actions.getDisciplines]({ commit }, params = {}) {
+      return Vue.http.get('disciplines', { params })
+          .then(response => response.json())
+          .then((result) => {
+            commit(types.SET_DISCIPLINES, result.data);
+          })
+          .catch(response => response);
+    },
+    [actions.findStudent]({ state }, id) {
+      const index = state.studentMap[id];
+
+      if (index > -1) {
+        return state.students[index];
+      }
+
+      return null;
     },
   },
 };

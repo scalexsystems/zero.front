@@ -36,7 +36,7 @@ export default {
       window.history.back();
     },
     onPersonSelected(user) {
-      this.$router.push({ name: 'hub.user-preview', params: { user: user.id } });
+      this.$router.push({ name: 'hub.user', params: { user: user.id } });
     },
     onSearch: throttle(function onSearch(query) {
       this.page = 1;

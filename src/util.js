@@ -35,13 +35,20 @@ export const mapObject = (source, mappings) => {
   return output;
 };
 
-export const pushIf = (target, items, mappings = {}) => {
+export const pushIf = (target, items, mappings = {}, local) => {
   if (!_.isArray(items)) {
     return pushIf(target, [items], mappings);
   }
 
   items.forEach((item) => {
-    if (item.id in mappings) return;
+    if (item.id in mappings) {
+      if (local === undefined) return;
+
+      const index = mappings[item.id];
+      target.splice(index, 1, { ...item, ...mapObject(target[index], local) });
+
+      return;
+    }
 
     /* eslint-disable */
     mappings[item.id] = target.length;

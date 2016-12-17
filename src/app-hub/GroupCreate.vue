@@ -1,7 +1,7 @@
 <template>
 <activity-box title="Add new group" subtitle="Make group to coverse better." :show="true" @close="$router.go(-1)">
   <template slot="actions">
-  <a class="btn btn-primary" href="#" @click.prevent.stop="createGroup" ref="action">
+  <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="createGroup" ref="action">
     Create Group
   </a>
   </template>

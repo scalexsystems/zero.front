@@ -3,7 +3,7 @@
               v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
               @close="$router.go(-1)">
   <template slot="actions">
-  <a class="btn btn-primary" href="#" @click.prevent.stop="updateGroup" ref="action">
+  <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="updateGroup" ref="action">
     Update Group
   </a>
   </template>
@@ -52,7 +52,7 @@ import throttle from 'lodash/throttle';
 import InfiniteScroll from 'vue-infinite-loading';
 
 import { pushIf, isValidationException, normalizeValidationErrors as normalize } from '../util';
-// import { types as mutations } from './vuex/meta';
+import { actions } from './vuex/meta';
 import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
 import { LoadingPlaceholder, ActivityBox, PersonCard } from '../components';
 
@@ -125,10 +125,11 @@ export default {
           addedMembers: this.editedGroup.addedMembers,
           removedMembers: this.editedGroup.removedMembers,
         })
-          .then(() => {
+          .then(response => response.json())
+          .then((result) => {
             this.$refs.action.classList.remove('disabled');
-//            this.members.splice()
-//            this.members.push()
+            this.updateGroupAction([result]);
+            this.$router.push({ name: 'hub.group-preview', params: { group: this.group.id } });
           })
           .catch((response) => {
             this.$refs.action.classList.remove('disabled');
@@ -204,7 +205,7 @@ export default {
       if (this.group) {
         this.values = {
           name: this.group.name || '',
-          type: this.group.type || '',
+          type: this.group.private ? 'private' : 'public',
           description: this.group.description || '',
         };
       }
@@ -218,7 +219,11 @@ export default {
         this.setGroup();
       }
     },
-    ...mapActions({ getGroup: rootActions.getGroups, findMembers: rootActions.getUsers }),
+    ...mapActions({
+      getGroup: rootActions.getGroups,
+      updateGroupAction: actions.setGroups,
+      findMembers: rootActions.getUsers,
+    }),
   },
   watch: {
     $route: 'findGroup',

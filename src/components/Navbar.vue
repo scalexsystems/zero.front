@@ -1,19 +1,8 @@
 <template>
 <nav class="navbar navbar-fixed-top navbar-dark bg-accent">
-  <div class="container navbar-container">
-    <div class="dropdown">
-      <button class="navbar-toggler"
-              data-toggle="dropdown"
-              type="button" id="navbar-toggler"
-              aria-haspopup="true"
-              aria-expanded="false"><i class="fa fa-fw fa-bars"></i></button>
-      <div class="dropdown-menu" aria-labelledby="navbar-toggler">
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-      </div>
-    </div>
-    <div class="navbar-brand">{{ title }}</div>
+  <div class="container navbar-container fl">
+    <apps-menu></apps-menu>
+    <global-search class="fl-auto"></global-search>
     <div class="navbar-user">
       <div class="dropdown">
         <a class="user-menu-toggler text-white"
@@ -21,10 +10,19 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="false">
-          <span class="hidden-sm-down">{{ name }}</span>
-          <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
+           <div class="fl">
+             <div class="hidden-md-down fl-auto navbar-user-info">
+               <div class="name">{{ name }}</div>
+               <div class="school">{{ schoolName }}</div>
+             </div>
+            <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
+           </div>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-toggler">
+          <div class="dropdown-item hidden-lg-up fl-auto navbar-user-info">
+            <div class="name">{{ name }}</div>
+            <div class="school">{{ schoolName }}</div>
+          </div>
           <a class="dropdown-item" href="#">Action</a>
           <a class="dropdown-item" href="#">Another action</a>
           <div class="dropdown-divider"></div>
@@ -45,9 +43,12 @@
 import { mapGetters } from 'vuex';
 import { getters } from '../vuex/meta';
 
+import GlobalSearch from './GlobalSearch.vue';
+import AppsMenu from './AppsMenu.vue';
+
 export default {
   computed: {
-    title() {
+    schoolName() {
       return 'Name of the School';
     },
     name() {
@@ -62,6 +63,7 @@ export default {
     },
     ...mapGetters({ user: getters.user }),
   },
+  components: { AppsMenu, GlobalSearch },
 };
 </script>
 
@@ -71,7 +73,7 @@ export default {
 $navbar-height: 54px !default;
 
 .bg-accent {
-  background: $brand-accent; 
+  background: $brand-accent;
 }
 
 body {
@@ -82,45 +84,33 @@ body {
   line-height: 1.9; // This makes navbar height 54px with 14px base size.
 }
 
-.navbar-toggler {
-  padding: .75rem; // This adjusts toggler in middle of line.
-}
-
-.navbar-toggler {
-  color: inherit;
-  user-select: none;
-  &:focus {
-    outline: none;
-  }
-}
-
-.navbar-dark .navbar-toggler {
-  background-image: none;
-  border-color: transparent;
-}
-
-.navbar-container {
-  display: flex;
-  flex-direction: row;
-}
-
 .navbar-brand {
-  flex: 0 1 auto;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .navbar-user {
-  flex: 1 1 auto;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   text-align: right;
 }
 
+.navbar-user-info {
+  line-height: 1.3;
+
+  .name {
+
+  }
+
+  .school {
+    font-size: 0.6rem;
+  }
+}
+
 .navbar-user-photo {
   margin: -1px 0 -1px .5rem;
   border-radius: 100%;
-  border: solid 0.0714rem white;
+  background-color: white;
 }
 
 .user-menu-toggler {

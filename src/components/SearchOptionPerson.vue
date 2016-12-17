@@ -1,5 +1,8 @@
 <template>
-<div class="search-option" v-html="name"></div>
+<div class="fl search-option">
+  <img class="photo rounded" :src="option.photo">
+  <div class="fl-auto ml-1 name" v-html="name"></div>
+</div>
 </template>
 
 <script lang="babel">
@@ -43,8 +46,16 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .search-option {
-  padding: .4rem 1rem;
+  padding: .5rem 1rem;
+}
+
+.photo {
+  height: 28px;
+  width: 28px;
+}
+.name {
+  line-height: 28px;
 }
 </style>

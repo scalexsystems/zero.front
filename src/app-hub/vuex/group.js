@@ -33,7 +33,7 @@ export default {
             ...group,
           }));
 
-      pushIf(state.groups, groups, state.groupMap);
+      pushIf(state.groups, groups, state.groupMap, ['messages', 'messages_next_page', 'unread_count', 'has_unread']);
     },
     [types.SET_MESSAGE_PAGE_TO_GROUP](state, { groupId, paginator }) {
       if (!(groupId in state.groupMap)) return;
@@ -94,6 +94,10 @@ export default {
     },
   },
   actions: {
+    [actions.setGroups]({ commit }, groups) {
+      commit(types.ADD_GROUP, groups);
+      commit(rootTypes.ADD_GROUP, groups);
+    },
     [actions.getGroups]({ commit }, params = {}) {
       return Vue.http.get('me/groups', { params })
           .then(response => response.json())

@@ -71,7 +71,7 @@ export default {
       const index = state.groupMap[groupId];
       const messageIndex = state.groups[index].messages.indexOf(message);
       if (success) {
-        state.groups[index].messages[messageIndex] = payload;
+        state.groups[index].messages.splice(messageIndex, 1, payload);
       } else {
         state.groups[index].messages[messageIndex].failed = true;
         state.groups[index].messages[messageIndex].sending = false;

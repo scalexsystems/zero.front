@@ -16,9 +16,13 @@
         </slot>
       </div>
 
-      <div class="message-content">
-        <slot>
-          <span v-html="content"></span>
+        <div class="message-content">
+            <span v-html="content"></span>
+            <message-attachment :attachments="message.attachments.data" v-if="message.attachments">
+
+        </message-attachment>
+
+          <slot>
         </slot>
       </div>
     </div>
@@ -29,6 +33,7 @@
 <script lang="babel">
 import moment from 'moment';
 import { escapeHtml as e, nl2br } from '../../../util';
+import MessageAttachment from './MessageAttachment.vue';
 
 export default {
   name: 'Message',
@@ -37,6 +42,7 @@ export default {
       required: true,
     },
   },
+  components: { MessageAttachment },
   filters: {
     time(date) {
       return moment(date).format('LT');

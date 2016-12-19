@@ -4,6 +4,15 @@
                   v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
                   @close="$router.go(-1)">
 
+        <template slot="actions">
+            <slot name="actions"></slot>
+        </template>
+
+        <slot name="settings-body">
+
+
+        </slot>
+
     </activity-box>
 </template>
 <script lang="babel">

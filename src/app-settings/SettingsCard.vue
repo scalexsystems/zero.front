@@ -27,7 +27,6 @@ export default{
   },
   methods: {
     settingClicked() {
-      debugger;
       this.$router.push({ name: this.setting.path });
     },
   },

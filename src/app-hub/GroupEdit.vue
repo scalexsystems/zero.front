@@ -1,7 +1,7 @@
 <template>
 <activity-box v-if="values"
-              v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
-              @close="$router.go(-1)">
+              v-bind="{ title, subtitle, disableFooter: true }"
+              @close="$router.push({ name: 'hub.group-preview', params: { group: group.id } })">
   <template slot="actions">
   <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="updateGroup" ref="action">
     Update Group

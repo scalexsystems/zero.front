@@ -12,8 +12,8 @@
                   @load-more="loadMore"
                   @seen="markMessagesSeen"></message-list>
 
-    <message-editor slot="footer" ref="input" v-model="message" :canUpload="true" :uploadDest="`groups/${context.id}/file`"
-                    @send="send" @focused="markMessagesSeen" @groupFileShared="fileShared">
+    <message-editor slot="footer" ref="input" v-model="message" :dest="`groups/${context.id}/attachment`"
+      @send="send" @focused="markMessagesSeen">
     </message-editor>
   </message-box>
 
@@ -67,8 +67,8 @@ export default {
     };
   },
   methods: {
-    send(params = {}) {
-      this.sendMessage({ groupId: this.context.id, content: this.message, params });
+    send(content, attachments = [], errors = []) {
+      this.sendMessage({ groupId: this.context.id, content, errors, params: { attachments } });
       this.message = '';
       this.$refs.input.resize();
       this.$refs.input.focus();
@@ -125,11 +125,6 @@ export default {
       readMessage: actions.sendMessageReadReceiptForGroup,
       sendMessage: actions.sendMessageToGroup,
     }),
-
-    fileShared(event, file) {
-      this.message = file.message || '';
-      this.send({ attachment_id: file.id, name: file.name });
-    },
   },
   watch: {
     $route() {

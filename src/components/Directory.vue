@@ -1,8 +1,7 @@
 <template>
 <activity-box
-        v-bind="{ title, subtitle, show: true, actions, disableFooter: true }"
-        @close="$emit('close')"
-        @option-click="onOptionClick">
+        v-bind="{ title, subtitle, disableFooter: true }"
+        @close="$emit('close')">
 
   <template slot="icon">
     <img src="../assets/campus-directory-icon.svg">
@@ -78,7 +77,6 @@ export default {
     };
   },
   methods: {
-    onOptionClick: ActivityBox.methods.onOptionClick,
     onInfinite() {
       const emit = (e) => {
         if (this.$refs.infinite) {

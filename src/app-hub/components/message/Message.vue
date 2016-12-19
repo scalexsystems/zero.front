@@ -2,28 +2,27 @@
 <div class="message-container">
   <slot name="sender-photo">
     <img class="message-sender-photo" :class="[message.sender._type]"
-         src="assets/people.jpg" :src="message.sender.photo" @click.stop.prevent="onSenderProfile()">
+         src="assets/people.jpg" :src="message.sender.photo" @click.stop.prevent="onSenderProfile(message.sender)">
   </slot>
+
   <slot name="message">
     <div class="message-box">
-      <div class="message-meta">
+      <div class="message-meta" :class="{'text-danger': message.failed === true}">
         <slot name="message-meta">
           <a @click.stop.prevent="onSenderProfile(message.sender)"
-             class="message-sender-name"
-             href="#">{{ message.sender.name }}</a>
+             class="message-sender-name" role="button">{{ message.sender.name }}</a>
           &centerdot;
           <span class="message-received-at">{{ message.received_at | time }}</span>
+
+          <i v-if="message.sending" class="fa fa-fw fa-circle-o-notch fa-spin bg-faded text-muted"></i>
+          <i v-if="message.failed" class="fa fa-fw fa- fa-spin text-danger"></i>
         </slot>
       </div>
 
-        <div class="message-content">
-            <span v-html="content"></span>
-            <message-attachment :attachments="message.attachments.data" v-if="message.attachments">
-
-        </message-attachment>
-
-          <slot>
-        </slot>
+      <div class="message-content">
+          <span v-html="content"></span>
+          <message-attachment :message="message" v-if="message.attachments"></message-attachment>
+          <slot></slot>
       </div>
     </div>
   </slot>

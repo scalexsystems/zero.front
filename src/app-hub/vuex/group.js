@@ -136,7 +136,8 @@ export default {
 
       commit(types.ADD_MESSAGE, { groupId: senderId, messages: [message] });
     },
-    [actions.sendMessageToGroup]({ commit, rootState }, { groupId, content, params = {} }) {
+    [actions.sendMessageToGroup]({ commit, rootState },
+      { groupId, content, params = {}, errors = [] }) {
       const message = { id: Date.now(), content, sending: true, sender: rootState.user.user };
       commit(types.ADD_MESSAGE_TO_GROUP, { groupId, messages: [message] });
 
@@ -146,7 +147,7 @@ export default {
             commit(types.STATUS_GROUP_MESSAGE, {
               groupId,
               message,
-              payload: result,
+              payload: { ...result, errors },
               success: true,
             });
 

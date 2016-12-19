@@ -8,7 +8,7 @@
     <message-list ref="list" :messages="context.messages" :loading="loading" :all-loaded="allLoaded"
                   @load-more="loadMore" @seen="markMessagesSeen"></message-list>
 
-    <message-editor slot="footer" ref="input" v-model="message" :disabled="disabled" @send="send"
+    <message-editor slot="footer" ref="input" v-model="message" :dest="`messages/attachment`" @send="send"
                     @focused="markMessagesSeen"></message-editor>
   </message-box>
 
@@ -64,14 +64,11 @@ export default {
     };
   },
   methods: {
-    send() {
-      this.sendMessage({ userId: this.context.id, content: this.message });
-      this.$nextTick(() => {
-        this.$refs.list.$emit('scrollToLast');
-        this.$refs.input.resize();
-        this.$refs.input.focus();
-      });
+    send(content, attachments = [], errors = []) {
+      this.sendMessage({ userId: this.context.id, content, errors, params: { attachments } });
       this.message = '';
+      this.$refs.input.resize();
+      this.$refs.input.focus();
     },
     loadMore(loader) {
       this.getMessages({ userId: this.context.id, params: {} })

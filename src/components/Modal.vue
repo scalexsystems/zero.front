@@ -6,13 +6,14 @@
     <slot></slot>
   </div>
 
-  <a role="button" class="dissmiss" @click.prevent="$emit('hide')">&times;</a>
+  <a v-if="dismissable" role="button" class="dissmiss" @click.prevent="$emit('hide')">&times;</a>
 </div>
 </template>
 
 <script>
 export default {
   props: {
+    name: String,
     show: {
       default: undefined,
       type: Boolean,
@@ -23,6 +24,11 @@ export default {
     },
     wrapper: {
       type: String,
+      default: 'wrapper-default',
+    },
+    dismissable: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {
@@ -43,11 +49,19 @@ export default {
     };
   },
   created() {
-    this.$on('show', () => this.$set(this, 'state', true));
-    this.$on('hide', () => this.$set(this, 'state', false));
+    this.$on('show', () => {
+      this.$debug(`SHOW MODAL ${this.name}`);
+      this.state = true;
+    });
+    this.$on('hide', () => {
+      this.$debug(`HIDE MODAL ${this.name}`);
+      this.state = false;
+    });
   },
   methods: {
     onWrapper(event) {
+      if (!this.dismissable) return;
+
       if (this.dissmissOnBackdrop && this.$refs.wrapper === event.target) {
         this.$emit('hide');
       }
@@ -74,6 +88,32 @@ export default {
   right: 0;
   bottom: 0;
   z-index: $zindex-modal;
+
+  .dissmiss {
+    color: white !important;
+    &:hover {
+      color: $gray-dark !important;
+      background: $gray-lighter;
+    }
+  }
+
+  .backdrop {
+      background-color: rgba(0, 0, 0, .85);
+  }
+
+  &.inverse {
+    .dissmiss {
+      color: $gray-dark !important;
+      &:hover {
+        color: white !important;
+        background: $gray-dark;
+      }
+    }
+
+    .backdrop {
+        background-color: white;
+    }
+  }
 }
 
 .backdrop {
@@ -83,8 +123,6 @@ export default {
   right: 0;
   bottom: 0;
   z-index: -1;
-
-  background-color: rgba(0, 0, 0, .85);
 }
 
 .wrapper {
@@ -107,12 +145,25 @@ export default {
   top: 0;
   right: 0;
   z-index: $zindex-modal + 10;
-  color: white !important;
   transition: all .3s;
+}
 
-  &:hover {
-    color: $gray-dark !important;
-    background: $gray-lighter;
+.wrapper-default {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+
+  &:before, &:after {
+    content: '';
+    display: block;
+    flex: 1;
+  }
+
+  > * {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
   }
 }
 </style>

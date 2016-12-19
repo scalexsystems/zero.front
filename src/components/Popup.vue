@@ -1,10 +1,8 @@
 <template>
-<div>
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container" :class="styleClass">
-
             <div class="modal-header popup-header" v-if="showHeader">
                 <slot name="popup-title">
                     {{ title }}
@@ -25,9 +23,7 @@
             </div>
         </div>
     </div>
-</div>
-</transition>
-</div>
+  </transition>
 </template>
 <script>
 export default{

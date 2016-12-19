@@ -1,12 +1,12 @@
 <template>
-<div class="message-container">
+<div class="message-container fl">
   <slot name="sender-photo">
     <img class="message-sender-photo" :class="[message.sender._type]"
          src="assets/people.jpg" :src="message.sender.photo" @click.stop.prevent="onSenderProfile(message.sender)">
   </slot>
 
   <slot name="message">
-    <div class="message-box">
+    <div class="message-box fl-auto">
       <div class="message-meta" :class="{'text-danger': message.failed === true}">
         <slot name="message-meta">
           <a @click.stop.prevent="onSenderProfile(message.sender)"
@@ -71,8 +71,7 @@ $border-radius-sm: .2rem !default;
 
 .message-container {
   margin-top: 1rem;
-  display: flex;
-  flex-direction: row;
+  overflow-x: hidden;
 }
 
 .message-sender-photo {

@@ -1,9 +1,9 @@
 <template>
     <div class="attachment-wrapper" v-if="attachments.length">
-      <template v-for="(attachment, index) of sorted">
-          <image-attachment v-bind="{ attachment }" v-if="isImage(attachment)"></image-attachment>
+      <image-attachment v-bind="{ images }" v-if="images.length"></image-attachment>
+      <template v-for="(attachment, index) of files">
           <file-attachment v-bind="{ attachment }" v-if="isFile(attachment)"></file-attachment>
-          <failed-attachment v-bind="{ attachment }" v-if="isError(attachment)"></failed-attachment>
+          <failed-attachment v-bind="{ attachment, messageId: message.id }" v-if="isError(attachment)"></failed-attachment>
       </template>
     </div>
 </template>
@@ -22,29 +22,15 @@ export default{
     },
   },
   computed: {
-    sorted() {
+    files() {
       const attachments = this.attachments;
-      const sorted = [];
 
-      attachments.forEach((attachment) => {
-        if (this.isFile(attachment)) {
-          sorted.push(attachment);
-        }
-      });
+      return attachments.filter(a => !this.isImage(a));
+    },
+    images() {
+      const attachments = this.attachments;
 
-      attachments.forEach((attachment) => {
-        if (this.isImage(attachment)) {
-          sorted.push(attachment);
-        }
-      });
-
-      attachments.forEach((attachment) => {
-        if (this.isError(attachment)) {
-          sorted.push(attachment);
-        }
-      });
-
-      return sorted;
+      return attachments.filter(a => this.isImage(a));
     },
     attachments() {
       const message = this.message;

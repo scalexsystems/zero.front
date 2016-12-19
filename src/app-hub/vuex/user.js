@@ -115,14 +115,20 @@ export default {
 
       commit(types.ADD_MESSAGE, { userId: senderId, messages: [message] });
     },
-    [actions.sendMessageToUser]({ commit, rootState }, { userId, content, params = {} }) {
+    [actions.sendMessageToUser]({ commit, rootState },
+        { userId, content, params = {}, errors = [] }) {
       const message = { id: Date.now(), content, sending: true, sender: rootState.user.user };
       commit(types.ADD_MESSAGE, { userId, messages: [message] });
 
       return Vue.http.post(`me/messages/users/${userId}`, { content, ...params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.STATUS_MESSAGE, { userId, message, payload: result, success: true });
+            commit(types.STATUS_MESSAGE, {
+              userId,
+              message,
+              payload: { ...result, errors },
+              success: true,
+            });
           })
           .catch((response) => {
             commit(types.STATUS_MESSAGE, { userId, message, success: false });

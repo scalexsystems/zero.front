@@ -1,13 +1,21 @@
 <template>
-  <div class="card file-attachment" role="button">
+  <div class="card file-attachment">
      <div class="file-attachment-logo">
          <i class="fa fa-fw" :class="[getClassFor(extension)]"></i>
      </div>
       <div class="file-attachment-meta">
           <div class="file-attachment-filename">{{ filename }}</div>
           <div class="text-danger">
-            <i class="fa fa-fw fa-warning"></i> {{ attachment.message.join(' ') }} <a role="button">Click to Retry.</a>
+            <span v-if="!uploading">
+              <i class="fa fa-fw fa-warning"></i> {{ errorMessage }}
+            </span>
           </div>
+      </div>
+      <div class="file-attachment-retry">
+        <a role="button" @click="retry" :disabled="uploading">
+          <i v-if="uploading" class="fa fa-fw fa-circle-o-notch fa-spin"></i>
+          <i v-else class="fa fa-fw fa-upload"></i>
+        </a>
       </div>
   </div>
 </template>
@@ -18,6 +26,13 @@ export default{
       type: Object,
       required: true,
     },
+    messageId: {
+      type: Number,
+      required: true,
+    },
+  },
+  data() {
+    return { uploading: false, error: null };
   },
   computed: {
     extension() {
@@ -29,6 +44,12 @@ export default{
       const attachment = this.attachment;
 
       return attachment.payload.get(attachment.name).name;
+    },
+    errorMessage() {
+      const attachment = this.attachment;
+      const error = this.error;
+
+      return String(error || attachment.message);
     },
   },
   methods: {
@@ -67,6 +88,28 @@ export default{
         default: return 'fa-file-o';
       }
     },
+    retry() {
+      if (this.uploading) return;
+
+      this.uploading = true;
+
+      this.attachment.payload.append('message_id', this.messageId);
+      this.$http.post(this.attachment.dest, this.attachment.payload)
+        .then(response => response.json())
+        .then(() => {
+          this.error = null;
+        })
+        .catch((response) => {
+          if (response && 'json' in response) {
+            response.json().then((result) => {
+              this.error = result.errors.file;
+            });
+          }
+        })
+        .then(() => {
+          this.uploading = false;
+        });
+    },
   },
 };
 </script>
@@ -79,12 +122,13 @@ export default{
    display: inline-flex;
    flex-direction: row;
 
-   max-width: 280px;
+   width: 280px;
 
    margin: .5rem .5rem .5rem 0;
 
    &-meta {
      overflow-x: hidden;
+     flex: 1;
    }
 
    &-logo {

@@ -12,7 +12,7 @@
                   @load-more="loadMore"
                   @seen="markMessagesSeen"></message-list>
 
-    <message-editor slot="footer" ref="input" v-model="message" :dest="`groups/${context.id}/file`"
+    <message-editor slot="footer" ref="input" v-model="message" :dest="`groups/${context.id}/attachment`"
       @send="send" @focused="markMessagesSeen">
     </message-editor>
   </message-box>

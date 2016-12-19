@@ -88,6 +88,32 @@ export default {
   right: 0;
   bottom: 0;
   z-index: $zindex-modal;
+
+  .dissmiss {
+    color: white !important;
+    &:hover {
+      color: $gray-dark !important;
+      background: $gray-lighter;
+    }
+  }
+
+  .backdrop {
+      background-color: rgba(0, 0, 0, .85);
+  }
+
+  &.inverse {
+    .dissmiss {
+      color: $gray-dark !important;
+      &:hover {
+        color: white !important;
+        background: $gray-dark;
+      }
+    }
+
+    .backdrop {
+        background-color: white;
+    }
+  }
 }
 
 .backdrop {
@@ -97,8 +123,6 @@ export default {
   right: 0;
   bottom: 0;
   z-index: -1;
-
-  background-color: rgba(0, 0, 0, .85);
 }
 
 .wrapper {
@@ -121,13 +145,7 @@ export default {
   top: 0;
   right: 0;
   z-index: $zindex-modal + 10;
-  color: white !important;
   transition: all .3s;
-
-  &:hover {
-    color: $gray-dark !important;
-    background: $gray-lighter;
-  }
 }
 
 .wrapper-default {

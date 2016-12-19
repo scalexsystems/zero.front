@@ -4,23 +4,20 @@
             placeholder="Start discussing..." autofocus @input="onInput"
             @keydown.enter="onEnter" :disabled="disabled" rows='1'
             autocomplete="off" autocorrect="off" @focus="$emit('focused')"></textarea>
-   <slot name='message-actions' v-if="canUpload">
-       <message-action :actions="messageAction" @message-option-click="actionClicks"></message-action>
-       <slot name='file-uploader'>
-           <file-uploader ref='uploader' :dest="uploadDest" @uploaded="uploaded"
-                          @groupFileShared="fileShared">
-           </file-uploader>
-       </slot>
-   </slot>
+  <div class="message-editor-actions">
+    <a role="button" class="action" v-tooltip:left="'Add files'"
+       @click.prevent="$refs.uploader.$emit('upload')">
+       <img src="../assets/attach-file.svg" alt="+">
+    </a>
+
+    <file-uploader v-bind="{ dest }" ref="uploader" @uploaded="onUploaded"></file-uploader>
+  </div>
 </div>
 </template>
 
 <script lang="babel">
 import resize from 'autosize';
-import MessageAction from './MessageAction.vue';
-import Popup from './Popup.vue';
 import FileUploader from './FileUploader.vue';
-import AttachFile from '../assets/attach-file.svg';
 
 export default {
   data() {
@@ -37,25 +34,11 @@ export default {
       type: String,
       required: true,
     },
-
-    uploadDest: {
+    dest: {
       type: String,
     },
-
-    canUpload: {
-      type: Boolean,
-      default: false,
-    },
   },
-  computed: {
-    messageAction() {
-      return [{
-        name: 'Upload File',
-        asset: AttachFile,
-      }];
-    },
-  },
-  components: { MessageAction, Popup, FileUploader },
+  components: { FileUploader },
   methods: {
     resize() {
       const event = window.document.createEvent('Event');
@@ -74,25 +57,20 @@ export default {
     onEnter(event) {
       if (event.shiftKey !== true && event.target.value.trim()) {
         event.preventDefault();
-        this.$emit('send', event);
+        this.$emit('send', this.value);
       }
     },
-    actionClicks(event, action, index) {
-      const clickActions = [this.importFile];
-      return clickActions[index] ? clickActions[index]() : () => {};
-    },
+    onUploaded(attachments, errors) {
+      if (!attachments.length) return;
 
-    importFile() {
-      this.$refs.uploader.$emit('triggerFileInput');
-    },
-    closePopup() {
-      this.showPopup = false;
-    },
-    uploaded() {
+      const message = attachments[0].message || this.getUploadMessage(attachments);
 
+      this.$emit('send', message, attachments.map(i => i.id), errors);
     },
-    fileShared(event, file) {
-      this.$emit('groupFileShared', event, file);
+    getUploadMessage(attachments) {
+      if (attachments.length === 1) return `Uploaded ${attachments[0].originalFilename}`;
+
+      return `Uploaded ${attachments.length} files.`;
     },
   },
   mounted() {
@@ -104,12 +82,19 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/variables';
 
 .message-input-wrapper {
   padding: 0 1.8714rem;
   border-top: 1px solid $border-color;
+  position: relative;
+}
+
+.message-editor-actions {
+  position: absolute;
+  right: 1.8714rem;
+  top: 1rem;
 }
 
 .message-input {

@@ -6,13 +6,14 @@
     <slot></slot>
   </div>
 
-  <a role="button" class="dissmiss" @click.prevent="$emit('hide')">&times;</a>
+  <a v-if="dismissable" role="button" class="dissmiss" @click.prevent="$emit('hide')">&times;</a>
 </div>
 </template>
 
 <script>
 export default {
   props: {
+    name: String,
     show: {
       default: undefined,
       type: Boolean,
@@ -23,6 +24,11 @@ export default {
     },
     wrapper: {
       type: String,
+      default: 'wrapper-default',
+    },
+    dismissable: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {
@@ -43,11 +49,19 @@ export default {
     };
   },
   created() {
-    this.$on('show', () => this.$set(this, 'state', true));
-    this.$on('hide', () => this.$set(this, 'state', false));
+    this.$on('show', () => {
+      this.$debug(`SHOW MODAL ${this.name}`);
+      this.state = true;
+    });
+    this.$on('hide', () => {
+      this.$debug(`HIDE MODAL ${this.name}`);
+      this.state = false;
+    });
   },
   methods: {
     onWrapper(event) {
+      if (!this.dismissable) return;
+
       if (this.dissmissOnBackdrop && this.$refs.wrapper === event.target) {
         this.$emit('hide');
       }
@@ -113,6 +127,25 @@ export default {
   &:hover {
     color: $gray-dark !important;
     background: $gray-lighter;
+  }
+}
+
+.wrapper-default {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+
+  &:before, &:after {
+    content: '';
+    display: block;
+    flex: 1;
+  }
+
+  > * {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
   }
 }
 </style>

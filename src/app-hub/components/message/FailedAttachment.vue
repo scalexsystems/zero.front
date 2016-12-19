@@ -1,37 +1,37 @@
 <template>
   <div class="card file-attachment" role="button">
      <div class="file-attachment-logo">
-         <i class="fa fa-fw" :class="[getClassFor(attachment.extension)]"></i>
+         <i class="fa fa-fw" :class="[getClassFor(extension)]"></i>
      </div>
-      <div class="file-attachment-meta" @click="downloadFile">
-          <div class="file-attachment-filename">
-            <span v-if="attachment.title">{{ attachment.title }}</span>
-            <span v-else>{{  attachment.filename }}</span>
-          </div>
-          <div class="file-attachment-size">
-              <small class='text-muted'>{{ attachment.size | forHumans }}</small>
+      <div class="file-attachment-meta">
+          <div class="file-attachment-filename">{{ filename }}</div>
+          <div class="text-danger">
+            <i class="fa fa-fw fa-warning"></i> {{ attachment.message.join(' ') }} <a role="button">Click to Retry.</a>
           </div>
       </div>
   </div>
 </template>
 <script lang="babel">
-import filesize from 'filesize';
-
 export default{
-  data() {
-    return { };
-  },
   props: {
     attachment: {
       type: Object,
       required: true,
     },
   },
-  methods: {
-    downloadFile() {
-      const path = this.attachment.path || '#';
-      window.open(path);
+  computed: {
+    extension() {
+      const attachment = this.attachment;
+
+      return attachment.payload.get(attachment.name).name.split('.').pop();
     },
+    filename() {
+      const attachment = this.attachment;
+
+      return attachment.payload.get(attachment.name).name;
+    },
+  },
+  methods: {
     getClassFor(ext) {
       switch (ext) {
         case 'webp':
@@ -41,7 +41,7 @@ export default{
         case 'jpeg':
         case 'jpg':
         case 'gif':
-        case 'png': return 'fa-picture-o';
+        case 'png': return 'fa-file-picture-o';
         case '7z':
         case 'gz':
         case 'tar':
@@ -68,11 +68,6 @@ export default{
       }
     },
   },
-  filters: {
-    forHumans(value) {
-      return filesize(value);
-    },
-  },
 };
 </script>
 <style lang="scss" scoped>
@@ -84,7 +79,7 @@ export default{
    display: inline-flex;
    flex-direction: row;
 
-   width: 280px;
+   max-width: 280px;
 
    margin: .5rem .5rem .5rem 0;
 
@@ -108,7 +103,7 @@ export default{
    }
 }
 
-.fa-picture-o, .fa-file-word-o { color: blue; }
+.fa-file-picture-o, .fa-file-word-o { color: blue; }
 .fa-file-excel-o { color: green; }
 .fa-file-powerpoint-o, .fa-file-pdf-o { color: red; }
 .fa-file-text-o, .fa-file-o { color: gray; }

@@ -21,7 +21,7 @@
 
       <div class="message-content">
           <span v-html="content"></span>
-          <message-attachment :attachments="message.attachments.data" v-if="message.attachments"></message-attachment>
+          <message-attachment :message="message" v-if="message.attachments"></message-attachment>
           <slot></slot>
       </div>
     </div>

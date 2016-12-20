@@ -179,7 +179,12 @@ export default{
               };
             })
             .catch(() => {
-              this.errors[index] = `Failed to upload: ${filename}`;
+              this.errors[index] = {
+                message: `Failed to upload: ${filename}`,
+                payload,
+                dest: this.dest,
+                name: this.name,
+              };
             });
         });
     },

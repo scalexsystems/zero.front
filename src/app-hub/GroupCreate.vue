@@ -1,9 +1,9 @@
 <template>
 <activity-box title="Add new group" subtitle="Make group to coverse better."
-  @close="$router.push({ name: 'hub.group', params: { group: group.id } })">
+  @close="$router.push({ name: 'hub.groups' })">
   <template slot="actions">
     <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="createGroup" ref="action">
-      Create Group
+      <i class="fa fa-fw fa-save hidden-lg-up" v-tooltip:bottom="'Create Group'"></i> <span class="hidden-md-down">Create Group</span>
     </a>
   </template>
 
@@ -14,14 +14,14 @@
       <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-text title="Name of the group" required v-model="group.name" :feedback="errors.name"></input-text>
       </div>
-      <div class="col-xs-6 col-lg-8 offset-lg-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-radio title="Group Type" required v-model="group.type" :options="groupTypes"
                      :feedback="errors.type"></input-radio>
       </div>
-      <div class="col-xs-6 col-lg-8 offset-lg-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-textarea title="Description" v-model="group.description" :feedback="errors.description"></input-textarea>
       </div>
-      <div class="col-xs-6 col-lg-8 offset-lg-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-search title="Members" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
                       @select="onSelect"></input-search>
 

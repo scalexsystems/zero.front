@@ -70,7 +70,7 @@ export default {
 
 .search-box {
   position: relative;
-  z-index: $zindex-navbar + 1;
+  z-index: $zindex-dropdown;
 }
 
 .search-field {

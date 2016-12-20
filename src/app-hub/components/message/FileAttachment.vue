@@ -78,13 +78,18 @@ export default{
 <style lang="scss" scoped>
 @import "../../../styles/variables";
 @import '../../../styles/methods';
+@import '../../../styles/mixins';
 
 .file-attachment {
    padding: rem(12px) rem(12px);
    display: inline-flex;
    flex-direction: row;
 
-   width: 280px;
+   width: 100%;
+
+   @include media-breakpoint-up(md) {
+     width: 280px;
+   }
 
    margin: .5rem .5rem .5rem 0;
 

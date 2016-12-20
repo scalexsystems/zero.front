@@ -46,10 +46,10 @@ export default {
 
       const index = state.groupMap[groupId];
       const group = state.groups[index];
-      group.messages.push(...messages);
-      group.messages = sort(unique(group.messages, 'id'), 'id');
-      group.unread_count = group.messages.filter(message => message.unread).length;
-      group.has_unread = group.unread_count > 0;
+      state.groups[index].messages.push(...messages);
+      state.groups[index].messages = sort(unique(group.messages, 'id'), 'id');
+      state.groups[index].unread_count = group.messages.filter(message => message.unread).length;
+      state.groups[index].has_unread = group.unread_count > 0;
     },
     [types.READ_GROUP_MESSAGE](state, { groupId, message }) {
       if (!(groupId in state.groupMap)) return;
@@ -60,10 +60,10 @@ export default {
       const messageState = group.messages[messageIndex];
       messageState.read_at = (new Date()).toISOString();
       if (messageState.unread) {
-        messageState.unread_count -= 1;
+        state.groupMap[groupId].messages[messageIndex].unread_count -= 1;
       }
-      messageState.unread = false;
-      group.has_unread = group.unread_count > 0;
+      state.groupMap[groupId].messages[messageIndex].unread = false;
+      state.groupMap[groupId].has_unread = group.unread_count > 0;
     },
     [types.STATUS_GROUP_MESSAGE](state, { groupId, message, payload, success }) {
       if (!(groupId in state.groupMap)) return;
@@ -109,16 +109,22 @@ export default {
           })
           .catch(response => response);
     },
-    [actions.getMessagesFromGroup]({ commit, state }, { groupId, params }) {
+    [actions.getMessagesFromGroup]({ commit, state }, { groupId, params = {} }) {
       const index = state.groupMap[groupId];
       const group = state.groups[index];
       const payload = {
         params: {
+          ...params,
           timestamp: bootedAt,
           page: group.messages_next_page,
-          ...params,
         },
       };
+
+      commit(types.SET_VALUE_ON_GROUP, {
+        groupId,
+        key: 'messages_next_page',
+        value: group.messages_next_page + 1,
+      });
 
       return Vue.http.get(`groups/${groupId}/messages`, payload)
           .then(response => response.json())
@@ -130,11 +136,11 @@ export default {
           .catch(response => response);
     },
     [actions.onNewMessageToGroup]({ commit }, { groupId, message }) {
-      const senderId = groupId === undefined
-          ? message.sender.id
+      const receiverId = groupId === undefined
+          ? message.receiver.id
           : groupId;
 
-      commit(types.ADD_MESSAGE, { groupId: senderId, messages: [message] });
+      commit(types.ADD_MESSAGE, { groupId: receiverId, messages: [message] });
     },
     [actions.sendMessageToGroup]({ commit, rootState },
       { groupId, content, params = {}, errors = [] }) {
@@ -160,13 +166,13 @@ export default {
           });
     },
     [actions.sendMessageReadReceiptForGroup]({ commit, rootState }, { groupId, message }) {
-      if (message.sender_id === rootState.user.me.id) {
+      if (message.sender_id === rootState.user.user.id) {
         commit(types.READ_GROUP_MESSAGE, { groupId, message });
 
         return;
       }
 
-      Vue.http.put(`groups/messages/${message.id}/read`)
+      Vue.http.put(`groups/${groupId}/messages/${message.id}/read`)
           .then(() => commit(types.READ_GROUP_MESSAGE, { groupId, message }))
           .catch(response => response);
     },

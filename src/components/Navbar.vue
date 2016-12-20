@@ -1,7 +1,10 @@
 <template>
 <nav class="navbar navbar-fixed-top navbar-dark bg-accent">
   <div class="container navbar-container fl">
-    <apps-menu></apps-menu>
+    <a role="button" class="navbar-brand" tabindex @click="$root.$emit('sidebar')">
+      <i class="fa fa-fw fa-bars hidden-lg-up"></i>
+      <img src="../assets/logo.svg" alt="Zero" class="hidden-md-down">
+    </a>
     <global-search class="fl-auto"></global-search>
     <div class="navbar-user">
       <div class="dropdown">
@@ -18,13 +21,11 @@
             <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
            </div>
         </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-toggler">
+        <div class="dropdown-menu dropdown-menu-right user-menu-dropdown" aria-labelledby="navbar-toggler">
           <div class="dropdown-item hidden-lg-up fl-auto navbar-user-info">
             <div class="name">{{ name }}</div>
             <div class="school">{{ schoolName }}</div>
           </div>
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
           <div class="dropdown-divider"></div>
           <div class="dropdown-item" href="#">
             <form method="POST" action="/logout">
@@ -35,6 +36,7 @@
         </div>
       </div>
     </div>
+    <apps-menu></apps-menu>
   </div>
 </nav>
 </template>
@@ -67,26 +69,35 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '../styles/variables';
 @import '../styles/methods';
+@import '../styles/mixins';
 
-$navbar-height: 54px !default;
+$navbar-height: 46px !default;
 
 .bg-accent {
   background: $brand-accent;
 }
 
-body {
-  padding-top: rem($navbar-height);
-}
-
 .navbar {
   line-height: 1.9; // This makes navbar height 54px with 14px base size.
+  border-top: 2px solid black;
+  padding: rem(1px) 1rem rem(3px);
 }
 
 .navbar-brand {
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding: rem(3px) .5rem;
+  padding-right: 0;
+}
+
+@include media-breakpoint-down(md) {
+  .navbar, .navbar-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .navbar-user {
@@ -97,33 +108,42 @@ body {
 
 .navbar-user-info {
   line-height: 1.3;
-
   .name {
-
+    font-size: rem(12px)
   }
-
   .school {
-    font-size: 0.6rem;
+    font-size: rem(10px);
   }
 }
-
 .navbar-user-photo {
   margin: -1px 0 -1px .5rem;
   border-radius: 100%;
   background-color: white;
 }
 
+.user-menu-dropdown {
+  margin-top: 9px;
+}
 .user-menu-toggler {
   &:hover, &:focus, &:active {
     text-decoration: none;
   }
 }
-
 .user-logout-button {
   border: none;
   padding: 0;
   margin: 0;
   background: transparent;
   cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+@import '../styles/variables';
+
+$navbar-height: 46px !default;
+
+body {
+  padding-top: $navbar-height;
 }
 </style>

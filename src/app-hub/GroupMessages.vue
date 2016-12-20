@@ -70,6 +70,10 @@ export default {
     send(content, attachments = [], errors = []) {
       this.sendMessage({ groupId: this.context.id, content, errors, params: { attachments } });
       this.message = '';
+      const key = `group.${this.context.id}.message`;
+      if (key in window.localStorage) {
+        window.localStorage.removeItem(key);
+      }
       this.$refs.input.resize();
       this.$refs.input.focus();
     },
@@ -88,7 +92,7 @@ export default {
         loader.done();
         return;
       }
-      this.getMessages({ groupId: this.context.id, params: {} })
+      this.getMessages({ groupId: this.context.id })
               .then(httpThen)
               .then((result) => {
                 const paginator = result._meta.pagination;
@@ -111,13 +115,14 @@ export default {
               .catch(response => response);
     },
     markMessagesSeen(payload = null) {
+      const groupId = this.context.id;
       if (payload !== null) {
-        this.readMessage({ groupId: this.context.id, message: payload });
+        this.readMessage({ groupId, message: payload });
         return;
       }
 
       const messages = this.context.messages.filter(message => message.unread);
-      each(messages, message => this.readMessage({ groupId: this.context.id, message }));
+      each(messages, message => this.readMessage({ groupId, message }));
     },
     ...mapActions({
       getGroups: actions.getGroups,
@@ -127,19 +132,37 @@ export default {
     }),
   },
   watch: {
-    $route() {
-      this.findGroup();
-    },
-    context(group) {
-      if (!group.messages.length) {
-        this.loadMore();
+    $route(to, from) {
+      if (this.message.trim().length) {
+        const key = `group.${from.params.group}.message`;
+
+        window.localStorage.setItem(key, this.message);
       }
+
+      const key = `group.${to.params.group}.message`;
+
+      this.message = window.localStorage.getItem(key) || '';
+
+      return this.findGroup();
     },
+  },
+  beforeRouteEnter(to, from, next) {
+    const key = `group.${to.params.group}.message`;
+
+    if (key in window.localStorage) {
+      next(vm => vm.$set(vm, 'message', window.localStorage.getItem(key)));
+    } else {
+      next(vm => vm.$set(vm, 'message', ''));
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.message.trim().length) {
+      const key = `group.${this.context.id}.message`;
+
+      window.localStorage.setItem(key, this.message);
+    }
+
+    next();
   },
 };
 </script>
-
-
-<style lang="scss">
-
-</style>

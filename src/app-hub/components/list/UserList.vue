@@ -7,7 +7,7 @@
   <div class="user-list-container">
     <div class="user-list-item" v-for="(user, index) of sortedUsers"
          :class="{ active: activeId === user.id }"
-         @click.stop.prevent="onUserSelected(user, index, $event)">
+         @click="onUserSelected(user, index, $event)">
       <img class="user-list-photo" :src="user.photo">
       <div class="user-list-name" :class="{ unread: user.has_unread }">
         {{ user.name }}

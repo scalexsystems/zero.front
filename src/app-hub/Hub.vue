@@ -1,7 +1,7 @@
 <template>
 <div class="container hub-container">
   <div class="row hub-body">
-    <div class="col-xs-12 col-lg-2 hub-sidebar-left" ref="sidebarLeft">
+    <div class="col-xs-12 col-lg-2 hub-sidebar-left" ref="sidebarLeft" @click="closeSidebar">
       <div class="btn-group my-1">
         <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" href="#" @click.stop.prevent="browseUsers = false">Groups</a>
         <a class="btn btn-outline-secondary" :class="{active: browseUsers}" href="#" @click.stop.prevent="browseUsers = true">Private</a>
@@ -37,7 +37,22 @@ export default {
       browseUsers: false,
     };
   },
-  methods: { ...mapActions({ onMessage: actions.onNewMessageToUser }) },
+  methods: {
+    closeSidebar() {
+      this.$el.classList.remove('open-sidebar');
+    },
+    openSidebar() {
+      this.$el.classList.add('open-sidebar');
+    },
+    toggleSidebar() {
+      if (this.$el.classList.contains('open-sidebar')) {
+        this.closeSidebar();
+      } else {
+        this.openSidebar();
+      }
+    },
+    ...mapActions({ onMessage: actions.onNewMessageToUser }),
+  },
   mounted() {
     this.$nextTick(() => {
       scrollbar.initialize(this.$refs.sidebarLeft, {
@@ -49,12 +64,13 @@ export default {
     this.$echo
             .private(this.user.channel)
             .listen('NewMessage', message => this.onMessage({ message }));
+    this.$root.$on('sidebar', () => this.toggleSidebar());
   },
 };
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/variables';
 @import '../styles/mixins';
 
@@ -87,6 +103,33 @@ export default {
   @include media-breakpoint-up(lg) {
     margin-right: -15px;
     margin-left: 15/2px;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .hub-container {
+    .hub-sidebar-left {
+      z-index: $zindex-navbar;
+      position: fixed;
+      width: 70%;
+      left: -70%;
+      transition: left .3s;
+    }
+    .hub-content {
+      transition: transform .3s;
+    }
+
+    &.open-sidebar {
+      .sidebar-toggler {
+        right: 0;
+      }
+      .hub-sidebar-left {
+        left: 0;
+      }
+      .hub-content {
+        transform: translateX(70%);
+      }
+    }
   }
 }
 </style>

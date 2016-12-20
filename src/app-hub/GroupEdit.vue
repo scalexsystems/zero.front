@@ -1,10 +1,10 @@
 <template>
-<activity-box v-if="values"
-              v-bind="{ title, subtitle, disableFooter: true }"
+<activity-box v-if="values" subtitle="Update group details."
+              v-bind="{ title, disableFooter: true }"
               @close="$router.push({ name: 'hub.group-preview', params: { group: group.id } })">
   <template slot="actions">
   <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="updateGroup" ref="action">
-    Update Group
+    <i class="fa fa-fw fa-cloud-upload hidden-lg-up" v-tooltip:bottom="'Update Group'"></i> <span class="hidden-md-down">Update Group</span>
   </a>
   </template>
 
@@ -15,14 +15,14 @@
       <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-text title="Name of the group" required v-model="values.name" :feedback="errors.name"></input-text>
       </div>
-      <div class="col-xs-6 col-lg-8 offset-lg-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-radio title="Group Type" required v-model="values.type" :options="groupTypes"
                      :feedback="errors.type"></input-radio>
       </div>
-      <div class="col-xs-6 col-lg-8 offset-lg-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-textarea title="Description" v-model="values.description" :feedback="errors.description"></input-textarea>
       </div>
-      <div class="col-xs-6 col-lg-8 offset-lg-2">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
         <input-search title="Add Members" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
                       @select="onSelect"></input-search>
 
@@ -64,11 +64,6 @@ export default {
       const group = this.group;
 
       return group ? group.name : '';
-    },
-    subtitle() {
-      const group = this.group;
-
-      return group ? group.bio : '';
     },
     groupTypes() {
       return {

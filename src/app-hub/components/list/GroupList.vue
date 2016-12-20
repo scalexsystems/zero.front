@@ -6,11 +6,16 @@
   </router-link>
   <div class="group-list-container">
     <div class="group-list-item" v-for="(group, index) of sortedGroups"
-         :class="{ active: activeId === group.id }"
-         @click.stop.prevent="onGroupSelected(group, index, $event)">
+         :class="{ active: activeId === group.id }" :key="index"
+         @click="onGroupSelected(group, index, $event)">
       <img class="group-list-photo" :src="group.photo">
       <div class="group-list-name" :class="{ unread: group.has_unread }">
         {{ group.name }}
+      </div>
+      <div class="group-list-unread-count" v-if="group.unread_count > 0">
+        <span class="tag tag-default">
+          {{ group.unread_count }}
+        </span>
       </div>
     </div>
   </div>
@@ -158,14 +163,11 @@ $group-list-photo-border-radius: rem(28px) !default;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-
-    &.unread {
-      color: $brand-info;
-    }
   }
 
   &-unread-count {
-    padding: 0 $group-list-item-padding;
+    margin-top: -2px;
+    font-size: 1.1rem;
   }
 }
 </style>

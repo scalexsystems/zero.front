@@ -162,9 +162,16 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
 .message-list-container {
-  padding: 1rem 1.714rem;
+  padding: 1rem;
+  @include media-breakpoint-up(lg) {
+    padding: 1rem 1.714rem;
+  }
+
   flex: 1;
   min-height: 100%;
 

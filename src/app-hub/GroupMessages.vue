@@ -88,7 +88,7 @@ export default {
         loader.done();
         return;
       }
-      this.getMessages({ groupId: this.context.id, params: {} })
+      this.getMessages({ groupId: this.context.id })
               .then(httpThen)
               .then((result) => {
                 const paginator = result._meta.pagination;
@@ -111,13 +111,14 @@ export default {
               .catch(response => response);
     },
     markMessagesSeen(payload = null) {
+      const groupId = this.context.id;
       if (payload !== null) {
-        this.readMessage({ groupId: this.context.id, message: payload });
+        this.readMessage({ groupId, message: payload });
         return;
       }
 
       const messages = this.context.messages.filter(message => message.unread);
-      each(messages, message => this.readMessage({ groupId: this.context.id, message }));
+      each(messages, message => this.readMessage({ groupId, message }));
     },
     ...mapActions({
       getGroups: actions.getGroups,

@@ -1,7 +1,10 @@
 <template>
 <nav class="navbar navbar-fixed-top navbar-dark bg-accent">
   <div class="container navbar-container fl">
-    <a role="button" class="navbar-brand" tabindex @click="$root.$emit('sidebar')"><i class="fa fa-fw fa-bars"></i></a>
+    <a role="button" class="navbar-brand" tabindex @click="$root.$emit('sidebar')">
+      <i class="fa fa-fw fa-bars hidden-lg-up"></i>
+      <img src="../assets/logo.svg" alt="Zero" class="hidden-md-down">
+    </a>
     <global-search class="fl-auto"></global-search>
     <div class="navbar-user">
       <div class="dropdown">

@@ -119,7 +119,37 @@ export default {
     }),
   },
   watch: {
-    $route: 'findUser',
+    $route(to, from) {
+      if (this.message.trim().length) {
+        const key = `user.${from.params.user}.message`;
+
+        window.localStorage.setItem(key, this.message);
+      }
+
+      const key = `user.${to.params.user}.message`;
+
+      this.message = window.localStorage.getItem(key) || '';
+
+      return this.findUser();
+    },
+  },
+  beforeRouteEnter(to, from, next) {
+    const key = `user.${to.params.user}.message`;
+
+    if (key in window.localStorage) {
+      next(vm => vm.$set(vm, 'message', window.localStorage.getItem(key)));
+    } else {
+      next(vm => vm.$set(vm, 'message', ''));
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.message.trim().length) {
+      const key = `user.${this.context.id}.message`;
+
+      window.localStorage.setItem(key, this.message);
+    }
+
+    next();
   },
 };
 </script>

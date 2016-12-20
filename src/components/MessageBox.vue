@@ -1,5 +1,5 @@
 <template>
-<layout-box v-bind="{ actions   , disableFooter }">
+<layout-box v-bind="{ actions, disableFooter }">
   <template slot="context">
   <img class="message-box-photo" src="../assets/person.jpg" :src="photo" :class="[typeClass]"
        @click="$emit('openPhoto')">

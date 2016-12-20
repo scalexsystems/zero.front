@@ -27,8 +27,6 @@ window.Laravel = window.Laravel || {};
 
 Vue.use(VueDebug, { debug: true });
 Vue.use(VueResource);
-Vue.use(VueEcho, window.Laravel.broadcast);
-
 Vue.http.options.root = '/api';
 
 if (process.env.NODE_ENV === 'testing') {
@@ -43,14 +41,16 @@ if (process.env.NODE_ENV === 'testing') {
   Vue.http.interceptors.push(vueResourceInterceptor);
 }
 
-if ('token' in window.Laravel) {
+if ('csrfToken' in window.Laravel) {
+  Vue.http.headers.common['X-CSRF-Token'] = window.Laravel.csrfToken;
+} else if ('token' in window.Laravel) {
   Vue.http.headers.common.Authorization = `Bearer ${window.Laravel.token}`;
   window.Laravel.broadcast.auth = {
     headers: { Authorization: `Bearer ${window.Laravel.token}` },
   };
-} else {
-  Vue.http.headers.common['X-CSRF-Token'] = window.Laravel.csrfToken;
 }
+
+Vue.use(VueEcho, window.Laravel.broadcast);
 
 each(directives, (directive, name) => Vue.directive(name, directive));
 each(inputs, (input, name) => Vue.component(name, input));

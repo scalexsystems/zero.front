@@ -59,7 +59,10 @@ $layout-box-actions-color: #9b9b9b !default;
 .layout-box-header {
   display: flex;
   flex-direction: row;
-  padding: 1rem 1.714rem;
+  padding: .714rem 1rem;
+  @include media-breakpoint-up(lg) {
+    padding: .714rem 1.714rem;
+  }
   border-bottom: 1px solid $border-color;
   z-index: 100;
   box-shadow: 0 2px rgba(0, 0, 0, 0.1);

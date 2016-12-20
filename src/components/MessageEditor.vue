@@ -63,14 +63,9 @@ export default {
     onUploaded(attachments, errors) {
       if (!attachments.length) return;
 
-      const message = attachments[0].message || this.getUploadMessage(attachments);
+      const message = attachments[0].message || '';
 
       this.$emit('send', message, attachments.map(i => i.id), errors);
-    },
-    getUploadMessage(attachments) {
-      if (attachments.length === 1) return `Uploaded ${attachments[0].originalFilename}`;
-
-      return `Uploaded ${attachments.length} files.`;
     },
   },
   mounted() {

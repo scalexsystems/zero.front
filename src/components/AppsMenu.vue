@@ -2,9 +2,9 @@
 <div class="dropdown" :id="id">
     <a href="#" :id="toggler" class="btn navbar-toggler"
         data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"
-        :data-target="'#'+id"><i class="fa fa-fw fa-bars"></i></a>
+        :data-target="'#'+id"><img src="../assets/apps.svg" alt="Menu"></a>
 
-    <div class="dropdown-menu" :aria-labelledby="'#'+toggler">
+    <div class="dropdown-menu dropdown-menu-right" :aria-labelledby="'#'+toggler">
 
         <h6 class="dropdown-header text-uppercase m-y-1 text-xs-center">Select any one</h6>
 
@@ -64,8 +64,7 @@ export default {
 
 <style lang="scss" scoped>
 .navbar-toggler {
-  padding-top: .75rem; // This adjusts toggler in middle of line.
-  padding-bottom: .75rem;
+  padding-top: .7rem; // This adjusts toggler in middle of line.
   user-select: none;
   &:focus {
     outline: none;

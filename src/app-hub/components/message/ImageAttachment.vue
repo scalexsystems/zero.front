@@ -90,7 +90,6 @@ export default{
 
 .image-attachment {
   width: 100%;
-
   margin: .5rem .5rem .5rem 0;
 
   @include media-breakpoint-up(md) {

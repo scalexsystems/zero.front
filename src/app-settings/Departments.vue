@@ -22,6 +22,15 @@
             <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
             </div>
         </modal>
+
+        <settings-card v-for="(department, index) in departments" :title="department.name"
+                       :text="getText(department)" :additional="true">
+            <template slot="additional-text">
+                {{ department.stats.student || 0 }} students,
+                {{ department.stats.teachers || 0 }} teachers,
+                {{ department.stats.employees || 0 }} staff
+            </template>
+        </settings-card>
     </template>
 
 
@@ -30,13 +39,22 @@
 
 </template>
 <script lang="babel">
+import { mapActions, mapGetters } from 'vuex';
 import SettingsBox from './SettingsBox.vue';
+import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
+import { actions, getters } from '../vuex/meta';
 
 export default{
+  created() {
+    if (this.departments.length === 0) {
+      this.getDepartments();
+    }
+  },
   data() {
     return {
       onAdd: false,
+      loaded: false,
       department: {
         name: '',
         acronym: '',
@@ -52,8 +70,11 @@ export default{
         nonAcademic: 'Non-Academic/Administrative',
       };
     },
+    ...mapGetters({
+      departments: getters.departments,
+    }),
   },
-  components: { SettingsBox, Modal },
+  components: { SettingsBox, Modal, SettingsCard },
   methods: {
     addDepartment() {
       this.onAdd = true;
@@ -67,6 +88,15 @@ export default{
           .then(() => {})
           .catch(() => {});
     },
+    getText(department) {
+      const hod = department.head.length ? department.head.name : 'Not assigned';
+      return `HOD: + ${hod}`;
+    },
+
+
+    ...mapActions({
+      getDepartments: actions.getDepartments,
+    }),
   },
 };
 </script>

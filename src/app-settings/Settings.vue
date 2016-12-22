@@ -12,7 +12,8 @@
           <div class="row">
             <div class="col-xs-12 col-lg-8 offset-lg-2 text-xs-center">
               <div class="my-2">
-                 <setting-card class="settings-card" v-bind="{ setting }" v-for="(setting,index) in settingCards">
+                 <setting-card class="settings-card" :title="setting.title" :text="setting.text" v-bind="{ index }"
+                               v-for="(setting,index) in settingCards" @cardClicked="settingClicked">
 
                  </setting-card>
             </div>
@@ -72,6 +73,10 @@ export default {
   },
   components: { ActivityBox, SettingCard },
   methods: {
+    settingClicked(index) {
+      debugger;
+      this.$router.push({ name: this.settingCards[index].path });
+    },
   },
 };
 </script>

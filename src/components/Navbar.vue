@@ -1,10 +1,12 @@
 <template>
 <nav class="navbar navbar-fixed-top navbar-dark bg-accent">
   <div class="container navbar-container fl">
-    <a role="button" class="navbar-brand" tabindex @click="$root.$emit('sidebar')">
-      <i class="fa fa-fw fa-bars hidden-lg-up"></i>
-      <img src="../assets/logo.svg" alt="Zero" class="hidden-md-down">
+    <a role="button" class="navbar-brand nav-sidebar hidden-lg-up" tabindex @click="$root.$emit('sidebar')">
+      <i class="fa fa-fw fa-bars"></i>
     </a>
+    <router-link to="/" class="navbar-brand nav-zero">
+      <img src="../assets/logo.svg" alt="Zero">
+    </router-link>
     <global-search class="fl-auto"></global-search>
     <div class="navbar-user">
       <div class="dropdown">
@@ -140,10 +142,31 @@ $navbar-height: 46px !default;
 
 <style lang="scss">
 @import '../styles/variables';
+@import '../styles/mixins';
 
 $navbar-height: 46px !default;
 
 body {
   padding-top: $navbar-height;
+
+  .nav-zero {
+    display: inline;
+  }
+
+  .nav-sidebar {
+    display: none;
+  }
+
+  @include media-breakpoint-down(md) {
+    &.has-sidebar {
+      .nav-zero {
+        display: none;
+      }
+
+      .nav-sidebar {
+        display: inline;;
+      }
+    }
+  }
 }
 </style>

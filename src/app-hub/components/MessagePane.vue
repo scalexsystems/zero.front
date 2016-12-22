@@ -45,10 +45,11 @@ export default {
   computed: {
     unread() {
       const messages = this.messages;
-      const firstUnread = first(messages.filter(message => message.unread));
+      const unread = messages.filter(message => message.unread);
+      const firstUnread = first(unread);
 
       if (firstUnread) {
-        return { id: firstUnread.id, count: messages.length - messages.indexOf(firstUnread) };
+        return { id: firstUnread.id, count: unread.length };
       }
 
       return { id: undefined, count: 0 };
@@ -57,6 +58,7 @@ export default {
   created() {
     this.$on('scrollToLast', () => this.scrollInView(last(this.messages)));
     this.$on('scrollToFirst', () => this.scrollInView(first(this.messages)));
+    this.$on('reset', () => this.$refs.infinite.$emit('$InfiniteLoading:complete'));
   },
   mounted() {
     this.scrollParent = getScrollParent(this.$el);
@@ -85,7 +87,10 @@ export default {
         type = message._type;
       }
 
-      if (index < 1 || this.isDateChangingAt(message, index) || message.id === this.unread.id) {
+      if (index < 1 || this.isDateChangingAt(message, index) ||
+        message.id === this.unread.id ||
+        (message.attachments && message.attachments.data.length > 0)
+      ) {
         return type;
       }
 
@@ -137,6 +142,7 @@ export default {
   },
   watch: {
     messages(n, o) {
+      this.$debug('Group Messages Updated.');
       if (this.skipScroll) return;
 
       this.skipScroll = true;

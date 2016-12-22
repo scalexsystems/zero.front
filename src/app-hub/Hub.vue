@@ -1,10 +1,14 @@
 <template>
 <div class="container hub-container">
   <div class="row hub-body">
-    <div class="col-xs-12 col-lg-2 hub-sidebar-left" ref="sidebarLeft" @click="closeSidebar">
-      <div class="btn-group my-1">
-        <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" href="#" @click.stop.prevent="browseUsers = false">Groups</a>
-        <a class="btn btn-outline-secondary" :class="{active: browseUsers}" href="#" @click.stop.prevent="browseUsers = true">Private</a>
+    <div class="col-xs-12 col-lg-2 hub-sidebar-left fl fl-ver" ref="sidebarLeft" @click="closeSidebar">
+      <div class="btn-group my-1 d-block tab-buttons">
+        <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" role="button" @click.stop.prevent="browseUsers = false">
+          Groups <span v-if="countGroupMessages > 0" class="tag tag-default">{{ countGroupMessages }}</span>
+        </a>
+        <a class="btn btn-outline-secondary" :class="{active: browseUsers}" role="button" @click.stop.prevent="browseUsers = true">
+          Private <span v-if="countUserMessages > 0" class="tag tag-default">{{ countUserMessages }}</span>
+        </a>
       </div>
 
       <group-list v-show="!browseUsers"></group-list>
@@ -22,7 +26,7 @@ import scrollbar from 'perfect-scrollbar';
 import { mapActions, mapGetters } from 'vuex';
 
 import * as components from './components';
-import { actions } from './vuex/meta';
+import { actions, getters } from './vuex/meta';
 import { getters as rootGetters } from '../vuex/meta';
 
 export default {
@@ -31,7 +35,15 @@ export default {
   beforeDestroy() {
     scrollbar.destroy(this.$refs.sidebarLeft);
   },
-  computed: { ...mapGetters({ user: rootGetters.user }) },
+  computed: {
+    countUserMessages() {
+      return this.users.reduce((total, user) => total + user.unread_count, 0);
+    },
+    countGroupMessages() {
+      return this.groups.reduce((total, group) => total + group.unread_count, 0);
+    },
+    ...mapGetters({ user: rootGetters.user, groups: getters.groups, users: getters.users }),
+  },
   data() {
     return {
       browseUsers: false,
@@ -51,6 +63,17 @@ export default {
         this.openSidebar();
       }
     },
+    redirect() {
+      if (this.$route.name === 'hub') {
+        const group = this.$el.querySelector('.group-list-item');
+        const user = this.$el.querySelector('.group-list-item');
+        const link = this.$el.querySelector('a[href]');
+
+        if (group) group.click();
+        else if (user) user.click();
+        else if (link) link.click();
+      }
+    },
     ...mapActions({ onMessage: actions.onNewMessageToUser }),
   },
   mounted() {
@@ -58,13 +81,20 @@ export default {
       scrollbar.initialize(this.$refs.sidebarLeft, {
         suppressScrollX: true,
       });
+      this.redirect();
     });
   },
   created() {
-    this.$echo
-            .private(this.user.channel)
-            .listen('NewMessage', message => this.onMessage({ message }));
+    this.$echo.private(this.user.channel).listen('NewMessage', message => this.onMessage({ message }));
     this.$root.$on('sidebar', () => this.toggleSidebar());
+  },
+  beforeRouteEnter(to, from, next) {
+    document.body.classList.add('has-sidebar');
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    document.body.classList.remove('has-sidebar');
+    next();
   },
 };
 </script>
@@ -74,8 +104,16 @@ export default {
 @import '../styles/variables';
 @import '../styles/mixins';
 
+.tab-buttons {
+  > a {
+    width: 50%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 .hub-container {
   @include match-parent();
+  overflow: hidden;
 
   .btn-outline-secondary.active {
     background: white;

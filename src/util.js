@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import isArray from 'lodash/isArray';
 
 export const bool = any => [true, 'true', 'yes', '1', 1].indexOf(any) > -1;
 
@@ -17,7 +18,7 @@ export const unescapeHtml = (escapedString) => {
   return child ? child.nodeValue : '';
 };
 
-export const nl2br = content => content.replace(/\n/g, '<br>');
+export const nl2br = content => content.replace(/\n+/g, '<br>');
 
 export const mapObject = (source, mappings) => {
   const output = {};
@@ -35,8 +36,26 @@ export const mapObject = (source, mappings) => {
   return output;
 };
 
+export const pushOrMerge = (target, items, local = []) => {
+  if (!isArray(items)) {
+    return pushOrMerge(target, [items], local);
+  }
+
+  items.forEach((item) => {
+    const index = target.findIndex(i => i.id === item.id);
+
+    if (index === -1) {
+      target.push(item);
+    } else {
+      target.splice(index, 1, { ...item, ...mapObject(target[index], local) });
+    }
+  });
+
+  return target;
+};
+
 export const pushIf = (target, items, mappings = {}, local) => {
-  if (!_.isArray(items)) {
+  if (!isArray(items)) {
     return pushIf(target, [items], mappings);
   }
 

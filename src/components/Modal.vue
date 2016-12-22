@@ -163,7 +163,8 @@ export default {
   > * {
     margin-left: auto;
     margin-right: auto;
-    width: 600px;
+    width: 100%;
+    max-width: 600px;
   }
 }
 </style>

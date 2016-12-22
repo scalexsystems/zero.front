@@ -12,7 +12,7 @@
           <a @click.stop.prevent="onSenderProfile(message.sender)"
              class="message-sender-name" role="button">{{ message.sender.name }}</a>
           &centerdot;
-          <span class="message-received-at">{{ message.received_at | time }}</span>
+          <time class="message-received-at">{{ message.received_at | time }}</time>
 
           <i v-if="message.sending" class="fa fa-fw fa-circle-o-notch fa-spin bg-faded text-muted"></i>
           <i v-if="message.failed" class="fa fa-fw fa- fa-spin text-danger"></i>
@@ -31,6 +31,7 @@
 
 <script lang="babel">
 import moment from 'moment';
+import marked from 'marked';
 import { escapeHtml as e, nl2br } from '../../../util';
 import MessageAttachment from './MessageAttachment.vue';
 
@@ -51,7 +52,19 @@ export default {
     content() {
       const message = this.message;
 
-      return nl2br(e(message.content));
+      if (message.type === 'markdown') {
+        return marked(message.content, {
+          gfm: true,
+          tables: true,
+          breaks: true,
+          pedantic: false,
+          sanitize: true,
+          smartLists: true,
+          smartypants: true,
+        });
+      }
+
+      return nl2br(e(message.content.trim()));
     },
   },
   methods: {

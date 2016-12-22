@@ -74,7 +74,6 @@ export default {
   components: { ActivityBox, SettingCard },
   methods: {
     settingClicked(index) {
-      debugger;
       this.$router.push({ name: this.settingCards[index].path });
     },
   },

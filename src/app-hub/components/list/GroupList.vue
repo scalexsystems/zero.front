@@ -80,8 +80,11 @@ export default {
     joinGroupChannels() {
       each(this.groups, (group) => {
         if (this.joined[group.id] !== true) {
-          this.$echo.join(group.channel)
-                  .listen('NewMessage', message => this.onMessage({ groupId: group.id, message }));
+          this.$echo.join(group.channel).listen('NewMessage', (message) => {
+            this.$debug('New Message', message);
+            this.onMessage({ groupId: group.id, message });
+          });
+
           this.joined[group.id] = true;
         }
       });

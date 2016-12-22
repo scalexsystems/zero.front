@@ -121,7 +121,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $size: 6px;
 .pull-to-refresh {
   &-container {
@@ -412,42 +412,47 @@ $size: 6px;
           transform: translateY(0);
         }
         10% {
-          box-shadow: -$waveSize * 4 $waveWave 0 $waveColor,
+          box-shadow:
+          -$waveSize * 4 $waveWave 0 $waveColor,
           -$waveSize * 2 $waveNear 0 $waveNearColor,
-          $waveSize * 2 0 0 $waveNearColor,
-          $waveSize * 4 0 0 $waveNearColor;
+          $waveSize * 2  0         0 $waveNearColor,
+          $waveSize * 4  0         0 $waveNearColor;
           transform: translateY(0);
         }
         15% {
-          box-shadow: -$waveSize * 4 $waveAfter 0 $waveNearColor,
-          -$waveSize * 2 $waveWave - $waveNear 0 $waveColor,
-          $waveSize * 2 -$waveNear 0 $waveNearColor,
-          $waveSize * 4 -$waveNear 0 $waveNearColor;
+          box-shadow:
+          -$waveSize * 4  $waveAfter - $waveNear 0 $waveNearColor,
+          -$waveSize * 2  $waveWave - $waveNear  0 $waveColor,
+          $waveSize * 2   0 - $waveNear          0 $waveNearColor,
+          $waveSize * 4   0 - $waveNear          0 $waveNearColor;
           transform: translateY($waveNear);
           background-color: $waveNearColor;
         }
         20% {
-          box-shadow: -$waveSize * 4 -$waveWave 0 $waveNearColor,
-          -$waveSize * 2 $waveNear - $waveWave + $waveAfter 0 $waveNearColor,
-          $waveSize * 2 $waveNear - $waveWave 0 $waveNearColor,
-          $waveSize * 4 -$waveWave 0 $waveNearColor;
+          box-shadow:
+          -$waveSize * 4  0 - $waveWave                       0 $waveNearColor,
+          -$waveSize * 2  $waveAfter - $waveWave              0 $waveNearColor,
+          $waveSize * 2   $waveNear - $waveWave               0 $waveNearColor,
+          $waveSize * 4   0 - $waveWave                       0 $waveNearColor;
           transform: translateY($waveWave);
           background-color: $waveColor;
         }
         25% {
           $waveOffset: $waveNear + $waveAfter;
-          box-shadow: -$waveSize * 4 - $waveOffset 0 $waveNearColor,
-          -$waveSize * 2 - $waveOffset 0 $waveNearColor,
-          $waveSize * 2 $waveWave - $waveOffset 0 $waveColor,
-          $waveSize * 4 $waveNear - $waveOffset 0 $waveNearColor;
+          box-shadow:
+          -$waveSize * 4  0 - $waveOffset         0 $waveNearColor,
+          -$waveSize * 2  0 - $waveOffset         0 $waveNearColor,
+          $waveSize * 2   $waveWave - $waveOffset 0 $waveColor,
+          $waveSize * 4   $waveNear - $waveOffset 0 $waveNearColor;
           transform: translateY($waveOffset);
           background-color: $waveNearColor;
         }
         30% {
-          box-shadow: -$waveSize * 4 0 0 $waveNearColor,
-          -$waveSize * 2 0 0 $waveNearColor,
-          $waveSize * 2 $waveNear + $waveAfter 0 $waveNearColor,
-          $waveSize * 4 $waveWave 0 $waveColor;
+          box-shadow:
+          -$waveSize * 4  0                       0 $waveNearColor,
+          -$waveSize * 2  0                       0 $waveNearColor,
+          $waveSize * 2   $waveNear + $waveAfter  0 $waveNearColor,
+          $waveSize * 4   $waveWave               0 $waveColor;
           transform: translateY(0);
         }
         35% {
@@ -457,16 +462,18 @@ $size: 6px;
           $waveSize * 4 $waveNear + $waveAfter 0 $waveNearColor;
         }
         40% {
-          box-shadow: -$waveSize * 4 0 0 $waveNearColor,
+          box-shadow:
+          -$waveSize * 4 0 0 $waveNearColor,
           -$waveSize * 2 0 0 $waveNearColor,
-          $waveSize * 2 0 0 $waveNearColor,
-          $waveSize * 4 0 0 $waveNearColor;
+          $waveSize * 2  0 0 $waveNearColor,
+          $waveSize * 4  0 0 $waveNearColor;
         }
         100% {
-          box-shadow: -$waveSize * 4 0 0 $waveNearColor,
+          box-shadow:
+          -$waveSize * 4 0 0 $waveNearColor,
           -$waveSize * 2 0 0 $waveNearColor,
-          $waveSize * 2 0 0 $waveNearColor,
-          $waveSize * 4 0 0 $waveNearColor;
+          $waveSize * 2  0 0 $waveNearColor,
+          $waveSize * 4  0 0 $waveNearColor;
         }
       }
     }

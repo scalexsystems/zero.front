@@ -9,8 +9,8 @@
                @openPhoto="openTitle"
                @openTitle="openTitle">
     <message-list :messages="context.messages"
-                  @load-more="loadMore"
-                  @seen="markMessagesSeen"></message-list>
+                  @load-more="getOlderMessages"
+                  @seen="markMessagesSeen" ref="messages"></message-list>
 
     <message-editor slot="footer" ref="input" v-model="message" :dest="`groups/${context.id}/attachment`"
       @send="send" @focused="markMessagesSeen">
@@ -43,15 +43,12 @@ export default {
   },
   computed: {
     context() {
-      const route = this.$route;
-      const groupMap = this.groupMap;
       const groups = this.groups;
+      const id = int(this.$route.params.group);
 
-      const id = int(route.params.group);
-      const index = groupMap[id];
-      const group = groups[index];
+      this.$debug('Group Recomputed!');
 
-      return group;
+      return groups.find(group => group.id === id);
     },
     ...mapGetters({
       groups: getters.groups,
@@ -87,11 +84,13 @@ export default {
         this.getGroups({ q: id });
       }
     },
-    loadMore(loader) {
-      if (!this.context) {
-        loader.done();
+    getOlderMessages(loader) {
+      if (this.context.messages_loaded) {
+        loader.end();
+
         return;
       }
+
       this.getMessages({ groupId: this.context.id })
               .then(httpThen)
               .then((result) => {
@@ -102,6 +101,7 @@ export default {
 
                   if (message && message.unread === true) {
                     this.loadMore(loader);
+
                     return;
                   }
                 }
@@ -144,6 +144,25 @@ export default {
       this.message = window.localStorage.getItem(key) || '';
 
       return this.findGroup();
+    },
+    context(value) {
+      this.$debug('Group Updated.', value);
+
+      if (value && value.messages.length === 0) {
+        this.getOlderMessages({ done() {}, end() {} });
+      }
+
+      if (value && !value.messages_loaded) {
+        this.$nextTick(() => {
+          this.$refs.messages.$emit('reset');
+        });
+      }
+    },
+    groups: {
+      deep: true,
+      handler() {
+        this.$debug('Groups Updated.');
+      },
     },
   },
   beforeRouteEnter(to, from, next) {

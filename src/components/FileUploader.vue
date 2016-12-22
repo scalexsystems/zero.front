@@ -230,6 +230,7 @@ export default{
         case 'ods':
         case 'numbers':
         case 'xls':
+        case 'csv':
         case 'xlsx': return 'fa-file-excel-o';
         case 'odp':
         case 'keynote':

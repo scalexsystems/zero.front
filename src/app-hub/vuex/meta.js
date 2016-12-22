@@ -16,6 +16,7 @@ export const types = {
 
 export const actions = {
   // Groups.
+  findGroupById: 'hub/findGroupById',
   getGroups: 'hub/getGroups',
   setGroups: 'hub/setGroups',
   getMessagesFromGroup: 'hub/getMessagesFromGroup',

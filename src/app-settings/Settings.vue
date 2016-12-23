@@ -16,9 +16,10 @@
                                v-for="(setting,index) in settingCards" @cardClicked="settingClicked">
 
                  </setting-card>
+
             </div>
-</div>
-</div>
+    </div>
+    </div>
 </div>
 </activity-box>
 
@@ -41,7 +42,7 @@ export default {
         {
           title: 'Disciplines',
           text: '',
-          path: '/disciplines',
+          path: 'disciplines',
         },
         {
           title: 'Semesters',
@@ -51,7 +52,7 @@ export default {
         {
           title: 'Course Management/Administrator',
           text: '',
-          path: '/course-management',
+          path: 'course-management',
         },
         {
           title: 'Institute webmail domain',
@@ -61,7 +62,7 @@ export default {
         {
           title: 'Institute Details',
           text: '',
-          path: '/institute-details',
+          path: 'institute-details',
         },
         {
           title: 'Send invites',

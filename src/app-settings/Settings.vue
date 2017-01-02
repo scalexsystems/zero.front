@@ -5,18 +5,19 @@
               @close="$router.go(-1)">
 
     <template slot="icon">
-
+    
     </template>
 
         <div class="container py-2">
           <div class="row">
             <div class="col-xs-12 col-lg-8 offset-lg-2 text-xs-center">
-              <div class="my-2">
-                 <setting-card class="settings-card" :title="setting.title" :text="setting.text" v-bind="{ index }"
-                               v-for="(setting,index) in settingCards" @cardClicked="settingClicked">
+              <div class="row my-2">
+                 <div class="col-xs-12 col-lg-6 settings-items" v-for="(setting,index) in settingCards">
+                  <setting-card class="settings-card" :title="setting.title" :text="setting.text" v-bind="{ index }"
+                               @cardClicked="settingClicked">
 
                  </setting-card>
-
+            </div>
             </div>
     </div>
     </div>
@@ -82,7 +83,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/methods';
+
     a {
         color: inherit;
     }
+
+    .settings-card {
+       text-align: left;
+       min-height: rem(50px);
+    }
+
 </style>

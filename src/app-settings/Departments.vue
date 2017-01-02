@@ -22,15 +22,24 @@
             <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
             </div>
         </modal>
-
-        <settings-card v-for="(department, index) in departments" :title="department.name"
+        <div class="container py-2">
+          <div class="row">
+            <div class="col-xs-12 col-lg-8 offset-lg-2 text-xs-center">
+              <div class="row my-2">
+                <div class="col-xs-12 col-lg-6 settings-items">
+                <settings-card v-for="(department, index) in departments" :title="department.name"
                        :text="getText(department)" :additional="true">
-            <template slot="additional-text">
-                {{ department.stats.student || 0 }} students,
-                {{ department.stats.teachers || 0 }} teachers,
-                {{ department.stats.employees || 0 }} staff
-            </template>
-        </settings-card>
+                  <template slot="additional-text">
+                    {{ department.stats.student || 0 }} students,
+                    {{ department.stats.teachers || 0 }} teachers,
+                    {{ department.stats.employees || 0 }} staff
+                  </template>
+                </settings-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     </template>
 
 

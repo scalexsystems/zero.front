@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="card card-block" role="button" @click='$emit("cardClicked", index)'>
+  <div class="card card-block settings-card" role="button" @click='$emit("cardClicked", index)'>
       <div class="settings-card-title">
         <slot name="title">
             <span class="card-title"> {{ title }} </span>
@@ -51,13 +51,15 @@ export default{
 @import '../styles/methods';
 
 .settings-card {
+  height: inherit;
+  margin: rem(10px) 0;
+
   &-title {
 
   }
 
     &-text {
       text-align: left;
-      padding: 0 rem(10px);
   }
 
 

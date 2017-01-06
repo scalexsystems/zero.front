@@ -23,8 +23,6 @@
             </div>
         </modal>
         <div class="container py-2">
-          <div class="row">
-            <div class="col-xs-12 col-lg-8 offset-lg-2 text-xs-center">
               <div class="row my-2">
                 <div class="col-xs-12 col-lg-6 settings-items">
                 <settings-card v-for="(department, index) in departments" :title="department.name"
@@ -36,8 +34,6 @@
                   </template>
                 </settings-card>
             </div>
-          </div>
-        </div>
       </div>
     </div>
     </template>
@@ -70,6 +66,7 @@ export default{
         hod: '',
       },
       errors: {},
+      departments: {},
     };
   },
   computed: {
@@ -99,9 +96,8 @@ export default{
     },
     getText(department) {
       const hod = department.head.length ? department.head.name : 'Not assigned';
-      return `HOD: + ${hod}`;
+      return `HOD: ${hod}`;
     },
-
 
     ...mapActions({
       getDepartments: actions.getDepartments,

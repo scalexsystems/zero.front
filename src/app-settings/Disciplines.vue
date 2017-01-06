@@ -8,23 +8,27 @@
 
         <template slot="settings-body">
 
+
             <modal name="Add new disciplines" :show="onAdd">
                 <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
                 <input-text title="Discipline Acronym" v-model="discipline.acronym" :feedback="errors.acronym"></input-text>
+
 
                 <div class="card-footer bg-white pt-2 pb-1">
                     <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
                     <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
                 </div>
             </modal>
-
+            <div class="container py-2">
+                <div class="row my-2">
+                    <div class="col-xs-12 col-lg-6 settings-items">
             <settings-card v-for="(discipline, index) in disciplines" :title="discipline.name"
                            :text="discipline.acronym" :additional="true">
             </settings-card>
+                        </div>
+                    </div>
+                </div>
         </template>
-
-
-
     </settings-box>
 
 </template>
@@ -77,7 +81,6 @@ export default{
   },
 };
 </script>
-<style lang="scss">
-    body{
-    }
+<style lang="scss" scoped>
+
 </style>

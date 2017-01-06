@@ -27,32 +27,43 @@
 </template>
 
 <script lang="babel">
+import { mapGetters, mapActions } from 'vuex';
+import { getters, actions } from '../vuex/meta';
 import { ActivityBox } from '../components';
 import SettingCard from './SettingsCard.vue';
 
+
 export default {
+  created() {
+    if (this.departments.length === 0) {
+      this.getDepartments()
+        .then(() => {
+          this.departmentCount = this.departments.length;
+        });
+    }
+  },
   data() {
     return {
       title: 'Settings',
       settingCards: [
         {
           title: 'Departments',
-          text: 'test text',
+          text: this.departmentCount,
           path: 'departments',
         },
         {
           title: 'Disciplines',
-          text: '',
+          text: 'Add discipline here',
           path: 'disciplines',
         },
         {
           title: 'Semesters',
-          text: '',
+          text: 'Click to add semesters',
           path: '/semesters',
         },
         {
           title: 'Course Management/Administrator',
-          text: '',
+          text: 'Click here to assign',
           path: 'course-management',
         },
         {
@@ -62,22 +73,31 @@ export default {
         },
         {
           title: 'Institute Details',
-          text: '',
+          text: 'Enter institute details',
           path: 'institute-details',
         },
         {
           title: 'Send invites',
-          text: '',
+          text: 'Invite students and teachers',
           path: '/send-invites',
         },
       ],
+      departmentCount: 0,
     };
   },
   components: { ActivityBox, SettingCard },
+  computed: {
+    ...mapGetters({
+      departments: getters.departments,
+    }),
+  },
   methods: {
     settingClicked(index) {
       this.$router.push({ name: this.settingCards[index].path });
     },
+    ...mapActions({
+      getDepartments: actions.getDepartments,
+    }),
   },
 };
 </script>
@@ -89,9 +109,10 @@ export default {
         color: inherit;
     }
 
-    .settings-card {
+    .settings-items {
        text-align: left;
-       min-height: rem(50px);
+       height: rem(70px);
+       margin: rem(10px) 0;
     }
 
 </style>

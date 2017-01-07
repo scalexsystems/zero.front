@@ -3,7 +3,6 @@ import unique from 'lodash/uniqBy';
 import sort from 'lodash/sortBy';
 import Vue from 'vue';
 import { pushIf } from '../../util';
-import { actions, types, getters } from './meta';
 
 const bootedAt = Date.now();
 
@@ -13,15 +12,15 @@ export default {
     userMap: {},
   },
   getters: {
-    [getters.users](state) {
+    users(state) {
       return state.users;
     },
-    [getters.userMap](state) {
+    userMap(state) {
       return state.userMap;
     },
   },
   mutations: {
-    [types.ADD_USER](state, payload) {
+    ADD_USER(state, payload) {
       const users = (isArray(payload) ? payload : [payload])
           .map(user => ({
             messages: [],
@@ -33,13 +32,13 @@ export default {
 
       pushIf(state.users, users, state.userMap);
     },
-    [types.SET_MESSAGE_PAGE_TO_USER](state, { userId, paginator }) {
+    SET_MESSAGE_PAGE_TO_USER(state, { userId, paginator }) {
       if (!(userId in state.userMap)) return;
 
       const index = state.userMap[userId];
       state.users[index].messages_next_page = paginator.current_page + 1;
     },
-    [types.ADD_MESSAGE](state, { userId, messages }) {
+    ADD_MESSAGE(state, { userId, messages }) {
       if (!(userId in state.userMap)) return;
 
       const index = state.userMap[userId];
@@ -50,7 +49,7 @@ export default {
       user.unread_count = user.messages.filter(message => message.unread).length;
       user.has_unread = user.unread_count > 0;
     },
-    [types.READ_MESSAGE](state, { userId, message }) {
+    READ_MESSAGE(state, { userId, message }) {
       if (!(userId in state.userMap)) return;
 
       const index = state.userMap[userId];
@@ -65,7 +64,7 @@ export default {
       messageState.unread = false;
       user.has_unread = user.unread_count > 0;
     },
-    [types.STATUS_MESSAGE](state, { userId, message, payload, success }) {
+    STATUS_MESSAGE(state, { userId, message, payload, success }) {
       const index = state.userMap[userId];
       const messageIndex = state.users[index].messages.indexOf(message);
       if (success) {
@@ -77,17 +76,17 @@ export default {
     },
   },
   actions: {
-    [actions.getMessagedUsers]({ commit }, params = {}) {
+    getMessagedUsers({ commit }, params = {}) {
       return Vue.http.get('me/messages/users', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_USER, result.data);
+            commit('ADD_USER', result.data);
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.getMessagesFromUser]({ commit, state }, { userId, params }) {
+    getMessagesFromUser({ commit, state }, { userId, params }) {
       const index = state.userMap[userId];
       const user = state.users[index];
       const payload = {
@@ -101,29 +100,29 @@ export default {
       return Vue.http.get(`me/messages/users/${userId}`, payload)
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_MESSAGE, { userId, messages: result.data });
-            commit(types.SET_MESSAGE_PAGE_TO_USER, { userId, paginator: result._meta.pagination });
+            commit('ADD_MESSAGE', { userId, messages: result.data });
+            commit('SET_MESSAGE_PAGE_TO_USER', { userId, paginator: result._meta.pagination });
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.onNewMessageToUser]({ commit }, { userId, message }) {
+    onNewMessageToUser({ commit }, { userId, message }) {
       const senderId = userId === undefined
           ? message.sender.id
           : userId;
 
-      commit(types.ADD_MESSAGE, { userId: senderId, messages: [message] });
+      commit('ADD_MESSAGE', { userId: senderId, messages: [message] });
     },
-    [actions.sendMessageToUser]({ commit, rootState },
+    sendMessageToUser({ commit, rootState },
         { userId, content, params = {}, errors = [] }) {
       const message = { id: Date.now(), content, sending: true, sender: rootState.user.user };
-      commit(types.ADD_MESSAGE, { userId, messages: [message] });
+      commit('ADD_MESSAGE', { userId, messages: [message] });
 
       return Vue.http.post(`me/messages/users/${userId}`, { content, ...params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.STATUS_MESSAGE, {
+            commit('STATUS_MESSAGE', {
               userId,
               message,
               payload: { ...result, errors },
@@ -131,20 +130,20 @@ export default {
             });
           })
           .catch((response) => {
-            commit(types.STATUS_MESSAGE, { userId, message, success: false });
+            commit('STATUS_MESSAGE', { userId, message, success: false });
 
             return response;
           });
     },
-    [actions.sendMessageReadReceipt]({ commit, rootState }, { userId, message }) {
+    sendMessageReadReceipt({ commit, rootState }, { userId, message }) {
       if (message.sender_id === rootState.user.user.id) {
-        commit(types.READ_MESSAGE, { userId, message });
+        commit('READ_MESSAGE', { userId, message });
 
         return;
       }
 
       Vue.http.put(`me/messages/${message.id}/read`)
-          .then(() => commit(types.READ_MESSAGE, { userId, message }))
+          .then(() => commit('READ_MESSAGE', { userId, message }))
           .catch(response => response);
     },
   },

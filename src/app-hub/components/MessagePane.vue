@@ -142,7 +142,6 @@ export default {
   },
   watch: {
     messages(n, o) {
-      this.$debug('Group Messages Updated.');
       if (this.skipScroll) return;
 
       this.skipScroll = true;

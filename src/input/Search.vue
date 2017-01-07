@@ -228,8 +228,15 @@ export default {
         this.$emit('select', option);
       }
     },
+    unselect(option) {
+      const index = this.selected.indexOf(option);
+      if (index > -1) this.selected.splice(index, 1);
+    },
   },
   mixins: [input],
+  created() {
+    this.$on('unselect', item => this.unselect(item));
+  },
   destroyed() {
     document.body.removeEventListener('click', this.clickAway, false);
   },

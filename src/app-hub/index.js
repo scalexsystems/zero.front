@@ -6,6 +6,10 @@ import GroupDirectory from './GroupDirectory.vue';
 import GroupMessages from './GroupMessages.vue';
 import GroupPreview from './GroupPreview.vue';
 
+// import Course from './CoursePage.vue';
+import CourseDashboard from './CourseDashboard.vue';
+import CourseCreate from './CourseCreate.vue';
+
 import UserDirectory from './UserDirectory.vue';
 import UserMessages from './UserMessages.vue';
 import UserPreview from './UserPreview.vue';
@@ -20,6 +24,7 @@ export default function (Vue, { store, routes }) {
       path: '/hub',
       component: Hub,
       children: [
+        // Groups.
         { name: 'hub.group-create', path: 'groups/create', component: GroupCreate },
         { name: 'hub.group-preview', path: 'groups/:group/preview', component: GroupPreview },
         { name: 'hub.group-edit', path: 'groups/:group/edit', component: GroupEdit },
@@ -28,6 +33,10 @@ export default function (Vue, { store, routes }) {
         { name: 'hub.user-preview', path: 'people/:user/preview', component: UserPreview },
         { name: 'hub.users', path: 'people', component: UserDirectory },
         { name: 'hub.user', path: 'people/:user', component: UserMessages },
+        // Courses.
+        // { name: 'acad.course', path: 'courses/:course', component: Course },
+        { name: 'acad', path: 'courses', component: CourseDashboard },
+        { name: 'acad.create', path: 'courses/create', component: CourseCreate },
       ],
     },
     { path: '/', redirect: '/hub' },

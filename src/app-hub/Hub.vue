@@ -1,7 +1,11 @@
 <template>
 <div class="container hub-container">
   <div class="row hub-body">
-    <div class="col-xs-12 col-lg-2 hub-sidebar-left fl fl-ver" ref="sidebarLeft" @click="closeSidebar">
+    <div class="col-xs-12 col-lg-2 hub-sidebar-left fl fl-ver py-1" ref="sidebarLeft" @click="closeSidebar">
+      <router-link class="btn btn-secondary text-xs-left" :to="{ name: 'acad' }">
+        <i class="fa fa-fw fa-book"></i> Manage Courses
+      </router-link>
+
       <div class="btn-group my-1 d-block tab-buttons">
         <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" role="button" @click.stop.prevent="browseUsers = false">
           Groups <span v-if="countGroupMessages > 0" class="tag tag-default">{{ countGroupMessages }}</span>
@@ -26,8 +30,6 @@ import scrollbar from 'perfect-scrollbar';
 import { mapActions, mapGetters } from 'vuex';
 
 import * as components from './components';
-import { actions, getters } from './vuex/meta';
-import { getters as rootGetters } from '../vuex/meta';
 
 export default {
   name: 'Hub',
@@ -42,7 +44,8 @@ export default {
     countGroupMessages() {
       return this.groups.reduce((total, group) => total + group.unread_count, 0);
     },
-    ...mapGetters({ user: rootGetters.user, groups: getters.groups, users: getters.users }),
+    ...mapGetters('hub', ['groups', 'users']),
+    ...mapGetters(['user']),
   },
   data() {
     return {
@@ -74,7 +77,7 @@ export default {
         else if (link) link.click();
       }
     },
-    ...mapActions({ onMessage: actions.onNewMessageToUser }),
+    ...mapActions('hub', ['onNewMessageToUser']),
   },
   mounted() {
     this.$nextTick(() => {

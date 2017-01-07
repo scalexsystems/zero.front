@@ -3,8 +3,6 @@ import sort from 'lodash/sortBy';
 import unique from 'lodash/uniqBy';
 import Vue from 'vue';
 import { pushOrMerge } from '../../util';
-import { types as rootTypes } from '../../vuex/meta';
-import { actions, getters, types } from './meta';
 
 const bootedAt = Date.now();
 
@@ -13,10 +11,13 @@ export default {
     groups: [],
   },
   getters: {
-    [getters.groups](state) {
-      return state.groups;
+    groups(state) {
+      return state.groups.filter(group => group.type === 'group');
     },
-    [getters.groupMap](state) {
+    courseGroups(state) {
+      return state.groups.filter(group => group.type === 'course');
+    },
+    groupMap(state) {
       const map = {};
 
       state.groups.forEach((group, index) => {
@@ -27,20 +28,20 @@ export default {
     },
   },
   mutations: {
-    [types.ADD_GROUP](state, payload) {
+    ADD_GROUP(state, payload) {
       const groups = (isArray(payload) ? payload : [payload])
           .map(group => ({
+            ...group,
             messages: [],
             messages_next_page: 1,
             messages_loaded: false,
             has_unread: false,
             unread_count: 0,
-            ...group,
           }));
 
       pushOrMerge(state.groups, groups, ['messages', 'messages_loaded', 'messages_next_page', 'unread_count', 'has_unread']);
     },
-    [types.ADD_MESSAGE_TO_GROUP](state, { groupId, messages }) {
+    ADD_MESSAGE_TO_GROUP(state, { groupId, messages }) {
       const index = state.groups.findIndex(group => group.id === groupId);
 
       if (index === -1) return;
@@ -51,7 +52,7 @@ export default {
       group.unread_count = group.messages.filter(message => message.unread).length;
       group.has_unread = group.unread_count > 0;
     },
-    [types.READ_GROUP_MESSAGE](state, { groupId, message }) {
+    READ_GROUP_MESSAGE(state, { groupId, message }) {
       const index = state.groups.findIndex(group => group.id === groupId);
 
       if (index === -1) return;
@@ -67,7 +68,7 @@ export default {
       state.groups[index].messages[messageIndex].unread = false;
       state.groups[index].has_unread = group.unread_count > 0;
     },
-    [types.STATUS_GROUP_MESSAGE](state, { groupId, message, payload, success }) {
+    STATUS_GROUP_MESSAGE(state, { groupId, message, payload, success }) {
       const index = state.groups.findIndex(group => group.id === groupId);
 
       if (index === -1) return;
@@ -80,19 +81,19 @@ export default {
         state.groups[index].messages[messageIndex].sending = false;
       }
     },
-    [types.REMOVE_GROUP](state, { groupId }) {
+    REMOVE_GROUP(state, { groupId }) {
       const index = state.groups.findIndex(group => group.id === groupId);
 
       state.groups.splice(index, 1);
     },
-    [types.SET_VALUE_ON_GROUP](state, { groupId, key, value }) {
+    SET_VALUE_ON_GROUP(state, { groupId, key, value }) {
       const index = state.groups.findIndex(group => group.id === groupId);
 
       state.groups[index][key] = value;
     },
   },
   actions: {
-    [actions.findGroupById]({ state }, groupId) {
+    findGroupById({ state }, groupId) {
       const index = state.groups.findIndex(group => group.id === groupId);
 
       if (index in state.groups) {
@@ -101,22 +102,22 @@ export default {
 
       return null;
     },
-    [actions.setGroups]({ commit }, groups) {
-      commit(types.ADD_GROUP, groups);
-      commit(rootTypes.ADD_GROUP, groups);
+    setGroups({ commit }, groups) {
+      commit('ADD_GROUP', groups);
+      commit('school/ADD_GROUP', groups, { root: true });
     },
-    [actions.getGroups]({ commit }, params = {}) {
+    getGroups({ commit }, params = {}) {
       return Vue.http.get('me/groups', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_GROUP, result.data);
-            commit(rootTypes.ADD_GROUP, result.data);
+            commit('ADD_GROUP', result.data);
+            commit('school/ADD_GROUP', result.data, { root: true });
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.getMessagesFromGroup]({ commit, state }, { groupId, params = {} }) {
+    getMessagesFromGroup({ commit, state }, { groupId, params = {} }) {
       const index = state.groups.findIndex(group => group.id === groupId);
       const group = state.groups[index];
       const payload = {
@@ -131,7 +132,7 @@ export default {
         return new Promise((_, reject) => reject({ message: 'All messages loaded.' }));
       }
 
-      commit(types.SET_VALUE_ON_GROUP, {
+      commit('SET_VALUE_ON_GROUP', {
         groupId,
         key: 'messages_next_page',
         value: group.messages_next_page + 1,
@@ -140,10 +141,10 @@ export default {
       return Vue.http.get(`groups/${groupId}/messages`, payload)
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_MESSAGE_TO_GROUP, { groupId, messages: result.data });
+            commit('ADD_MESSAGE_TO_GROUP', { groupId, messages: result.data });
 
             if (result._meta.pagination.current_page === result._meta.pagination.total_pages) {
-              commit(types.SET_VALUE_ON_GROUP, {
+              commit('SET_VALUE_ON_GROUP', {
                 groupId,
                 key: 'messages_loaded',
                 value: true,
@@ -154,23 +155,23 @@ export default {
           })
           .catch(response => response);
     },
-    [actions.onNewMessageToGroup]({ commit }, { groupId, message }) {
+    onNewMessageToGroup({ commit }, { groupId, message }) {
       const receiverId = groupId === undefined
           ? message.receiver.id
           : groupId;
 
-      commit(types.ADD_MESSAGE_TO_GROUP, { groupId: receiverId, messages: [message] });
+      commit('ADD_MESSAGE_TO_GROUP', { groupId: receiverId, messages: [message] });
     },
-    [actions.sendMessageToGroup]({ commit, rootState },
+    sendMessageToGroup({ commit, rootState },
       { groupId, content, params = {}, errors = [] }) {
       const message = { id: Date.now(), content, sending: true, sender: rootState.user.user };
 
-      commit(types.ADD_MESSAGE_TO_GROUP, { groupId, messages: [message] });
+      commit('ADD_MESSAGE_TO_GROUP', { groupId, messages: [message] });
 
       return Vue.http.post(`groups/${groupId}/messages`, { content, ...params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.STATUS_GROUP_MESSAGE, {
+            commit('STATUS_GROUP_MESSAGE', {
               groupId,
               message,
               payload: { ...result, errors },
@@ -180,32 +181,32 @@ export default {
             return result;
           })
           .catch((response) => {
-            commit(types.STATUS_GROUP_MESSAGE, { groupId, message, success: false });
+            commit('STATUS_GROUP_MESSAGE', { groupId, message, success: false });
 
             return response;
           });
     },
-    [actions.sendMessageReadReceiptForGroup]({ commit, rootState }, { groupId, message }) {
+    sendMessageReadReceiptForGroup({ commit, rootState }, { groupId, message }) {
       if (message.sender_id === rootState.user.user.id) {
-        commit(types.READ_GROUP_MESSAGE, { groupId, message });
+        commit('READ_GROUP_MESSAGE', { groupId, message });
 
         return;
       }
 
       Vue.http.put(`groups/${groupId}/messages/${message.id}/read`)
-          .then(() => commit(types.READ_GROUP_MESSAGE, { groupId, message }))
+          .then(() => commit('READ_GROUP_MESSAGE', { groupId, message }))
           .catch(response => response);
     },
-    [actions.joinGroup]({ commit }, { groupId }) {
-      commit(rootTypes.SET_USER_IS_MEMBER, { groupId, isMember: true });
+    joinGroup({ commit }, { groupId }) {
+      commit('school/SET_USER_IS_MEMBER', { groupId, isMember: true }, { root: true });
     },
-    [actions.leaveGroup]({ commit }, { groupId }) {
-      commit(types.REMOVE_GROUP, { groupId });
-      commit(rootTypes.SET_VALUE_ON_GROUP, { groupId, key: 'is_member', value: false });
+    leaveGroup({ commit }, { groupId }) {
+      commit('REMOVE_GROUP', { groupId });
+      commit('school/SET_VALUE_ON_GROUP', { groupId, key: 'is_member', value: false }, { root: true });
     },
-    [actions.updateGroupPhoto]({ commit }, { groupId, photo }) {
-      commit(types.SET_VALUE_ON_GROUP, { groupId, key: 'photo', value: photo });
-      commit(rootTypes.SET_VALUE_ON_GROUP, { groupId, key: 'photo', value: photo });
+    updateGroupPhoto({ commit }, { groupId, photo }) {
+      commit('SET_VALUE_ON_GROUP', { groupId, key: 'photo', value: photo });
+      commit('school/SET_VALUE_ON_GROUP', { groupId, key: 'photo', value: photo }, { root: true });
     },
   },
 };

@@ -2,6 +2,7 @@ import group from './group';
 import user from './user';
 
 export default {
+  namespaced: true,
   state: {
     ...group.state,
     ...user.state,

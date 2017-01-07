@@ -2,15 +2,13 @@
 <settings-box title="Institute Details">
 
     <template slot="settings-body">
+        <div class="container py-1 text-xs-center">
         <photo-holder class="group-preview-photo round"
                       :dest="``"
                       @uploaded="">
             <!--<img :src="group.photo" class="group-preview-photo">-->
         </photo-holder>
 
-        <div class="container py-1">
-            <div class="my-2 text-xs-center">
-            </div>
             <div class="row">
                 <div class="col-xs-12 col-lg-8 offset-lg-2">
                     <input-text title="Name of the institute" required v-model="institute.name" :feedback="errors.name"></input-text>

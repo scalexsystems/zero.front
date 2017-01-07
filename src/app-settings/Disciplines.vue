@@ -21,13 +21,11 @@
             </modal>
             <div class="container py-2">
                 <div class="row my-2">
-                    <div class="col-xs-12 col-lg-6 settings-items">
-            <settings-card v-for="(discipline, index) in disciplines" :title="discipline.name"
-                           :text="discipline.acronym" :additional="true">
-            </settings-card>
-                        </div>
-                    </div>
+                    <settings-card class="col-xs-12 col-lg-6" v-for="(discipline, index) in disciplines" :title="discipline.name"
+                                   :text="discipline.acronym">
+                    </settings-card>
                 </div>
+            </div>
         </template>
     </settings-box>
 

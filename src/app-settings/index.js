@@ -3,6 +3,7 @@ import Departments from './Departments.vue';
 import Disciplines from './Disciplines.vue';
 import CourseManagement from './CourseManagement.vue';
 import InstituteDetails from './InstituteDetails.vue';
+import Invite from './Invite.vue';
 
 
 export default function (Vue, { routes }) {
@@ -31,6 +32,11 @@ export default function (Vue, { routes }) {
       name: 'institute-details',
       path: '/settings/institute-details',
       component: InstituteDetails,
+    },
+    {
+      name: 'send-invites',
+      path: '/settings/send-invites',
+      component: Invite,
     },
   ]);
 }

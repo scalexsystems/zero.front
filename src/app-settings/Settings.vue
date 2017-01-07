@@ -10,11 +10,12 @@
 
         <div class="container py-2">
           <div class="row">
-            <div class="col-xs-12 col-lg-8 offset-lg-2 text-xs-center">
+            <div class="col-xs-12 col-lg-8 offset-lg-2">
               <div class="row my-2">
                  <div class="col-xs-12 col-lg-6 settings-items" v-for="(setting,index) in settingCards">
                   <setting-card class="settings-card" :title="setting.title" :text="setting.text" v-bind="{ index }"
                                @cardClicked="settingClicked">
+
 
                  </setting-card>
             </div>
@@ -79,7 +80,7 @@ export default {
         {
           title: 'Send invites',
           text: 'Invite students and teachers',
-          path: '/send-invites',
+          path: 'send-invites',
         },
       ],
       departmentCount: 0,

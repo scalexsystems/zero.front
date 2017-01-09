@@ -2,12 +2,14 @@
 <settings-box title="Institute Details">
 
     <template slot="settings-body">
-        <div class="container py-1 text-xs-center">
-        <photo-holder class="group-preview-photo round"
+        <div class="container py-1">
+           <div class="text-xs-center">
+             <photo-holder class="group-preview-photo round"
                       :dest="``"
                       @uploaded="">
             <!--<img :src="group.photo" class="group-preview-photo">-->
-        </photo-holder>
+            </photo-holder>
+            </div>
 
             <div class="row">
                 <div class="col-xs-12 col-lg-8 offset-lg-2">

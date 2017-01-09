@@ -8,7 +8,7 @@
 
                         <div class="invite-input input-group input-group-lg">
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input class="form-control" type="search" v-model="q" @keyup="search">
+                        <input class="form-control" type="search" v-model="students">
                     </div>
 
                 <div class="row">
@@ -17,12 +17,12 @@
 
                   </div>
                   <div class="col-xs-12 col-lg-4 text-muted text-lg-right">
-                  invited
+                  {{ invited.students }} invited
                   </div>
                 </div>
                     <div class="institute-details-actions ">
                         <div class="btn btn-default" role="button"> Cancel </div>
-                        <div class="btn btn-primary" role="button" @click="saveInstitute"> Send Invite  </div>
+                        <div class="btn btn-primary" role="button" @click="sendStudentsInvite"> Send Invite  </div>
                     </div>
                   </div>
                 </div>
@@ -32,7 +32,7 @@
 
                         <div class="invite-input input-group input-group-lg">
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input class="form-control" type="search" v-model="q" @keyup="search">
+                        <input class="form-control" type="search" v-model="teachers">
                     </div>
 
                 <div class="row">
@@ -46,7 +46,7 @@
                 </div>
                     <div class="institute-details-actions ">
                         <div class="btn btn-default" role="button"> Cancel </div>
-                        <div class="btn btn-primary" role="button" @click="saveInstitute"> Send Invite  </div>
+                        <div class="btn btn-primary" role="button" @click="sendTeachersInvite"> Send Invite  </div>
                     </div>
                   </div>
                 </div>
@@ -56,7 +56,7 @@
 
                         <div class="invite-input input-group input-group-lg">
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input class="form-control" type="search" v-model="q" @keyup="search">
+                        <input class="form-control" type="search" v-model="employees">
                     </div>
 
                 <div class="row">
@@ -70,7 +70,7 @@
                 </div>
                     <div class="institute-details-actions ">
                         <div class="btn btn-default" role="button"> Cancel </div>
-                        <div class="btn btn-primary" role="button" @click="saveInstitute"> Send Invite  </div>
+                        <div class="btn btn-primary" role="button" @click="sendEmployeesInvite"> Send Invite  </div>
                     </div>
                   </div>
                 </div>
@@ -81,7 +81,6 @@
 </template>
 <script lang="babel">
 import SettingsBox from './SettingsBox.vue';
-import SettingsCard from './SettingsCard.vue';
 
 export default{
   created() {
@@ -90,16 +89,49 @@ export default{
     return {
       onAdd: false,
       loaded: false,
-      discipline: {
-        name: '',
-        acronym: '',
+      students: '',
+      teachers: '',
+      employees: '',
+      invited: {
+        students: 0,
+        teachers: 0,
+        employees: 0,
       },
       errors: {},
     };
   },
   computed: {
   },
-  components: { SettingsBox, SettingsCard },
+  methods: {
+    sendStudentsInvite() {
+      this.sendInvite('students');
+    },
+
+    sendTeachersInvite() {
+      this.sendInvite('teachers');
+    },
+
+    sendEmployeesInvite() {
+      this.sendInvite('employees');
+    },
+
+    sendInvite(type) {
+      const emails = this[type];
+      if (emails) {
+        const entries = this.getArrayFromString(this[type]);
+        this.$http.post(`people/${type}/invite`, { [type]: entries })
+         .then(() => {
+           this.invited[type] += 1;
+           this[type] = '';
+         });
+      }
+    },
+
+    getArrayFromString(string) {
+      return string.split(' ');
+    },
+  },
+  components: { SettingsBox },
 };
 </script>
 <style lang="scss" scoped>

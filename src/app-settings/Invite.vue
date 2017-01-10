@@ -1,5 +1,18 @@
 <template>
     <settings-box title="Invites">
+
+        <template slot="header-image">
+            <img src="../assets/settings/invites.svg">
+        </template>
+
+        <template slot="name">
+            Send Invites
+        </template>
+
+        <template slot="description">
+            Invite students, teachers and employees of the institute
+        </template>
+
         <template slot="settings-body">
             <div class="container py-2">
                 <div class="row my-2">

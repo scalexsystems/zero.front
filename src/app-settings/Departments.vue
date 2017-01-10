@@ -5,21 +5,36 @@
         <div role="button" class="btn btn-primary" @click="addDepartment"> Add new department </div>
     </template>
 
+      <template slot="header-image">
+            <img src="../assets/settings/departments.svg">
+      </template>
+
+      <template slot="name">
+          Academic and Administrative Departments
+       </template>
+
+       <template slot="description">
+           Academic Departments: e.g. Computer Science, Mechanical, Electronics etc. <br>
+           Administrative Departments: e.g. Finance, Academic, Maintenance, HR, security etc.
+        </template>
 
     <template slot="settings-body">
-
         <modal name="Add new department" :show="onAdd">
-            <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
-            <input-text title="Department acronym" v-model="department.acronym" :feedback="errors.acronym"></input-text>
-            <input-text title="Head of Department" v-model="department.hod" :feedback="errors.hod"></input-text>
+                <div class="header-wrapper">
+                  <div class="department-modal-title"> Add New Department </div>
+            </div>
+            <div class="department-modal-body">
+                <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
+                <input-text title="Department acronym" v-model="department.acronym" :feedback="errors.acronym"></input-text>
+                <input-text title="Head of Department" v-model="department.hod" :feedback="errors.hod"></input-text>
 
-            <label> Department Type </label>
-            <input type="radio" name="type" id="type-academic" class="form-control" value="academic" v-model="department.type"> Academic
-            <input type="radio" name="type" id="type-non-academic" class="form-control" value="academic" v-model="department.type"> Non-Academic/Administrative
+                <input-radio title="Department Type" required v-model="department.type" :options="departmentTypes"
+                             :feedback="errors.type"></input-radio>
 
-            <div class="card-footer bg-white pt-2 pb-1">
-            <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
-            <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                <div class="card-footer pt-2 pb-1">
+                <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
+                <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                </div>
             </div>
         </modal>
         <div class="container py-2">
@@ -65,6 +80,14 @@ export default{
       },
       errors: {},
       departments: {},
+      departmentTypes: {
+        academic: 'academic',
+      },
+      header: {
+        name: 'Academic and Administrative Departments',
+        description: '',
+      },
+
     };
   },
   computed: {
@@ -103,7 +126,28 @@ export default{
   },
 };
 </script>
-<style lang="scss">
-    body{
-    }
+<style lang="scss" scoped>
+  @import '../styles/variables';
+  @import '../styles/methods';
+
+  .form-control-label {
+    color: white;
+
+  }
+
+  .c-indicator {
+    color: inherit;
+  }
+
+  .department-modal-title {
+   font-size: 1.28571rem;
+   padding: rem(20px) 0;
+   color: $brand-primary;
+   width: rem(550px);
+   margin: 0;
+  }
+
+  .card-footer {
+    background-color: inherit;
+  }
 </style>

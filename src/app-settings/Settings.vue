@@ -1,13 +1,18 @@
 <template>
 
-<activity-box class="hub-group-preview"
-              v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
+<settings-box class="settings"
+              v-bind="{ title }"
               @close="$router.go(-1)">
 
     <template slot="icon">
-    
     </template>
 
+
+    <template slot="header-image">
+        <img src="../assets/settings/admin-settings.svg">
+    </template>
+
+    <template slot="settings-body">
         <div class="container py-2">
           <div class="row">
             <div class="col-xs-12 col-lg-8 offset-lg-2">
@@ -20,18 +25,19 @@
                  </setting-card>
             </div>
             </div>
-    </div>
-    </div>
-</div>
-</activity-box>
+        </div>
+        </div>
+        </div>
+    </template>
+</settings-box>
 
 </template>
 
 <script lang="babel">
 import { mapGetters, mapActions } from 'vuex';
 import { getters, actions } from '../vuex/meta';
-import { ActivityBox } from '../components';
 import SettingCard from './SettingsCard.vue';
+import SettingsBox from './SettingsBox.vue';
 
 
 export default {
@@ -86,7 +92,7 @@ export default {
       departmentCount: 0,
     };
   },
-  components: { ActivityBox, SettingCard },
+  components: { SettingsBox, SettingCard },
   computed: {
     ...mapGetters({
       departments: getters.departments,

@@ -7,6 +7,17 @@
         </template>
 
 
+      <template slot="header-image">
+          <img src="../assets/settings/course-admin.svg">
+      </template>
+
+      <template slot="name">
+          Course Manager / Administrator
+      </template>
+
+      <template slot="description">
+          He/she is responsible to add courses and assign teachers/coordinator to respective courses
+      </template>
         <template slot="settings-body">
 
             <div class="col-xs-12 col-lg-8 offset-lg-2">

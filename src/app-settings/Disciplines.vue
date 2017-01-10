@@ -6,10 +6,25 @@
         </template>
 
 
+        <template slot="header-image">
+            <img src="../assets/settings/discipline.svg">
+        </template>
+
+        <template slot="name">
+            Semesters
+        </template>
+
+        <template slot="description">
+            e.g. B.Tech, M.Tech, MBA, B.E, M.E, etc
+        </template>
+
         <template slot="settings-body">
-
-
             <modal name="Add new disciplines" :show="onAdd">
+                <div class="discipline-modal-header">
+                    <div class="header-wrapper">
+                        <div class="discipline-modal-title"> Add New Discipline </div>
+                    </div>
+                </div>
                 <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
                 <input-text title="Discipline Acronym" v-model="discipline.acronym" :feedback="errors.acronym"></input-text>
 

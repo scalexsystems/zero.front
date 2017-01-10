@@ -91,7 +91,6 @@ export default {
   },
   actions: {
     findGroupById({ dispatch }, groupId) {
-      console.log('Yo find group');
       Vue.http.get(`me/groups/${groupId}`)
           .then(response => response.json())
           .then(result => dispatch('setGroups', result))

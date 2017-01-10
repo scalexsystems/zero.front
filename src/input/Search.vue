@@ -9,10 +9,9 @@
        ref="body">
 
     <div class="search-query" @click.stop="open">
-      <input :id="uid"
+      <input :id="id"
              :name="identifier"
              :placeholder="searchHelpText"
-             :data-autofocus="autofocus"
              autocomplete="off"
              type="search"
              ref="input"
@@ -44,7 +43,7 @@
   </div>
 
   <div class="form-control-feedback" v-if="is(feedback)">{{ feedback }}</div>
-  <small :id="helpId" class="form-text text-muted" v-if="is(subtitle)">{{ subtitle }}</small>
+  <small :id="`${id}-help`" class="form-text text-muted" v-if="is(subtitle)">{{ subtitle }}</small>
 </div>
 </template>
 

@@ -50,11 +50,9 @@ export default {
   },
   created() {
     this.$on('show', () => {
-      this.$debug(`SHOW MODAL ${this.name}`);
       this.state = true;
     });
     this.$on('hide', () => {
-      this.$debug(`HIDE MODAL ${this.name}`);
       this.state = false;
     });
   },

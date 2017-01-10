@@ -51,9 +51,11 @@
                 v-model="qi" v-bind="{ suggestions: teachers }" @suggest="findInstructor"
                             @select="addInstructor"></input-search>
             </div>
+          </div>
+          <div class="row">
             <div class="col-xs-12 col-lg-6" v-for="instructor in instructors" :key="instructor.id">
               <person-card :item="instructor">
-                <a slot="actions" class="text-muted" href="#" v-tooltip="Remove"
+                <a slot="actions" class="text-muted" href="#" v-tooltip="'Remove'"
                    @click.stop.prevent="removeInstructor(instructor)"
                 ><i class="fa fa-fw fa-trash-o"></i></a>
               </person-card>
@@ -84,7 +86,7 @@
                   <h6>{{ course.name }}</h6>
                   <small class="text-muted">{{ course.code }}</small>
                 </div>
-                <a class="text-muted" href="#" v-tooltip="Remove"
+                <a class="text-muted" href="#" v-tooltip="'Remove'"
                    @click.stop.prevent="removePreRequisiteCourse(courses)"
                 ><i class="fa fa-fw fa-trash-o"></i></a>
               </div>
@@ -107,6 +109,7 @@ import { actions, getters } from '../vuex/meta';
 import { ActivityBox, PersonCard } from '../components';
 
 export default {
+  name: 'CourseCreate',
   data() {
     return {
       qi: '',
@@ -149,9 +152,10 @@ export default {
       this.findTeachers({ q: value }).then(end);
     }, 400),
     addInstructor(teacher) {
-      if (this.instructors.indexOf(teacher) > -1) return;
-
-      this.instructors.push(teacher);
+      // if (this.instructors.indexOf(teacher) > -1) return;
+      // this.instructors.push(teacher);
+      if (this.instructors.length) this.removeInstructor(this.instructors[0]);
+      this.instructors.splice(0, 1, teacher);
     },
     removeInstructor(teacher) {
       const index = this.instructors.indexOf(teacher);

@@ -12,10 +12,7 @@ export default {
   },
   getters: {
     groups(state) {
-      return state.groups.filter(group => group.type === 'group');
-    },
-    courseGroups(state) {
-      return state.groups.filter(group => group.type === 'course');
+      return state.groups;
     },
     groupMap(state) {
       const map = {};
@@ -93,25 +90,24 @@ export default {
     },
   },
   actions: {
-    findGroupById({ state }, groupId) {
-      const index = state.groups.findIndex(group => group.id === groupId);
-
-      if (index in state.groups) {
-        return state.groups[index];
-      }
-
-      return null;
+    findGroupById({ dispatch }, groupId) {
+      console.log('Yo find group');
+      Vue.http.get(`me/groups/${groupId}`)
+          .then(response => response.json())
+          .then(result => dispatch('setGroups', result))
+          .catch(response => response);
     },
     setGroups({ commit }, groups) {
       commit('ADD_GROUP', groups);
       commit('school/ADD_GROUP', groups, { root: true });
+
+      return groups;
     },
-    getGroups({ commit }, params = {}) {
+    getGroups({ commit, dispatch }, params = {}) {
       return Vue.http.get('me/groups', { params })
           .then(response => response.json())
           .then((result) => {
-            commit('ADD_GROUP', result.data);
-            commit('school/ADD_GROUP', result.data, { root: true });
+            dispatch('setGroups', result.data);
 
             return result;
           })
@@ -164,7 +160,7 @@ export default {
     },
     sendMessageToGroup({ commit, rootState },
       { groupId, content, params = {}, errors = [] }) {
-      const message = { id: Date.now(), content, sending: true, sender: rootState.user.user };
+      const message = { id: Date.now(), content, sending: true, sender: rootState.user };
 
       commit('ADD_MESSAGE_TO_GROUP', { groupId, messages: [message] });
 

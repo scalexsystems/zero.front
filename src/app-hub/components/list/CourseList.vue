@@ -1,20 +1,16 @@
 <template>
-<div class="group-list">
-  <router-link :to="{ name: 'hub.groups' }"
-               class="btn text-muted"
-  ><i class="fa fa-plus-square-o fa-fw"></i> Join a Group
-  </router-link>
-  <div class="group-list-container">
-    <div class="group-list-item" v-for="(group, index) of sortedGroups"
-         :class="{ active: activeId === group.id }" :key="index"
-         @click="onGroupSelected(group, index, $event)">
-      <img class="group-list-photo" :src="group.photo">
-      <div class="group-list-name" :class="{ unread: group.has_unread }">
-        {{ group.name }}
+<div class="course-list my-1" v-if="courses.length">
+  <div class="course-list-container">
+    <div class="course-list-item" v-for="(course, index) of courses"
+         :class="{ active: activeId === course.id }" :key="course.id"
+         @click="onGroupSelected(course, index, $event)">
+      <img class="course-list-photo" :src="course.session.group.photo">
+      <div class="course-list-name" :class="{ unread: course.session.group.has_unread }">
+        <span v-tooltip:right="course.name">{{ course.code }}</span>
       </div>
-      <div class="group-list-unread-count" v-if="group.unread_count > 0">
+      <div class="course-list-unread-count" v-if="course.session.group.unread_count > 0">
         <span class="tag tag-default">
-          {{ group.unread_count }}
+          {{ course.session.group.unread_count }}
         </span>
       </div>
     </div>
@@ -30,19 +26,16 @@ import int from 'lodash/toInteger';
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
 
-import { httpThen } from '../../../util';
-import { actions, getters } from '../../vuex/meta';
-
 export default {
   created() {
-    if (!this.loaded) {
-      this.getAllGroups();
-      this.loaded = true;
-    }
+    this.getCourses();
   },
   computed: {
+    groups() {
+      return this.courses.map(course => course.session.group);
+    },
     sortedGroups() {
-      const groups = this.groups.filter(group => group.type === 'group');
+      const groups = this.groups;
 
       return sort(groups, (group) => {
         const message = first(group.messages);
@@ -60,9 +53,7 @@ export default {
 
       return -1;
     },
-    ...mapGetters({
-      groups: getters.groups,
-    }),
+    ...mapGetters('hub', ['courses']),
   },
   data() {
     return {
@@ -71,10 +62,10 @@ export default {
     };
   },
   methods: {
-    onGroupSelected(group) {
+    onGroupSelected({ id }) {
       this.$router.push({
-        name: 'hub.group',
-        params: { group: group.id },
+        name: 'acad.course',
+        params: { course: id },
       });
     },
     joinGroupChannels() {
@@ -89,23 +80,11 @@ export default {
         }
       });
     },
-    getAllGroups() {
-      return this.getGroups()
-              .then(httpThen)
-              .then((result) => {
-                const paginator = result._meta.pagination;
-
-                if (paginator.current_page < paginator.total_pages) {
-                  setTimeout(() => this.getAllGroups(), 0);
-                }
-              })
-              .catch(response => response);
-    },
-    ...mapActions({
-      getGroups: actions.getGroups,
-      sendMessage: actions.sendMessageToGroup,
-      onMessage: actions.onNewMessageToGroup,
+    ...mapActions('hub', {
+      sendMessage: 'sendMessageToGroup',
+      onMessage: 'onNewMessageToGroup',
     }),
+    ...mapActions('hub', ['getCourses']),
   },
   watch: {
     groups() {
@@ -125,7 +104,7 @@ $group-list-item-border-radius: rem(2px) !default;
 $group-list-photo-size: rem(28px) !default;
 $group-list-photo-border-radius: rem(28px) !default;
 
-.group-list {
+.course-list {
   &-container {
 
   }

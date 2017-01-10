@@ -6,6 +6,8 @@
         <i class="fa fa-fw fa-book"></i> Manage Courses
       </router-link>
 
+      <course-list></course-list>
+
       <div class="btn-group my-1 d-block tab-buttons">
         <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" role="button" @click.stop.prevent="browseUsers = false">
           Groups <span v-if="countGroupMessages > 0" class="tag tag-default">{{ countGroupMessages }}</span>

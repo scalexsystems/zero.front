@@ -78,7 +78,9 @@ export default {
       if (!message) return;
 
       const element = document.getElementById(`message-${message.id}`);
-      element.scrollIntoView(true);
+      if (element) {
+        element.scrollIntoView(true);
+      }
     },
     decorator(message, index) {
       let type = 'message';
@@ -96,7 +98,7 @@ export default {
 
       const prevMessage = this.messages[index - 1];
 
-      if (message.sender.id === prevMessage.sender.id
+      if (prevMessage.sender && message.sender.id === prevMessage.sender.id
               && moment(message.received_at).diff(moment(prevMessage.received_at), 'minutes') < 2) {
         return `continued-${type}`;
       }

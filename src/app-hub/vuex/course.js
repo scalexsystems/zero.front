@@ -1,41 +1,38 @@
 import Vue from 'vue';
+import { pushOrMerge } from '../../util';
 
 export default {
   state: {
     courses: [],
-    courses_next_page: 1,
   },
   getters: {
-    courses ({ state }) {
+    courses(state) {
       return state.courses;
     },
   },
   mutations: {
-    SET_COURSES_PAGE({ state }, value) {
-      state.courses_next_page = value;
-    }
+    ADD_COURSE(state, courses) {
+      pushOrMerge(state.courses, courses);
+    },
   },
   actions: {
-    getCourses({ commit, state, dispatch }, params = {}) {
-      const payload = {
-        page: state.courses_next_page,
-        with: 'group',
-        ...params,
-      };
-
-      commit(mutations.SET_COURSES_PAGE, state.courses_next_page + 1);
-
-      return Vue.http.get('me/courses', { params: payload })
+    getCourses({ dispatch }) {
+      return Vue.http.get('me/courses')
         .then(response => response.json())
-        .then((result) => {
-          commit('school/ADD_COURSE', result.data, { root: true });
-          dispatch('setGroups', result.data.map(course => course.group));
-        })
-        .catch(response => response); // TODO: Retry to handle fail safe.
+        .then(result => dispatch('setCourses', result.data))
+        .catch(response => response);
     },
-    setCourses({ commit, dispatch }, courses) {
+    find({ dispatch }, id) {
+      return Vue.http.get(`me/courses/${id}`)
+        .then(response => response.json())
+        .then(course => dispatch('setCourses', [course]))
+        .catch(response => response);
+    },
+    setCourses({ commit, dispatch, state }, courses) {
       commit('ADD_COURSE', courses);
-      dispatch('setGroups', result.data.map(course => course.group));
-    }
+      dispatch('setGroups', state.courses.map(course => course.session.group));
+
+      return courses;
+    },
   },
 };

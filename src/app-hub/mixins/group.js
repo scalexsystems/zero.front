@@ -47,9 +47,8 @@ export default {
     },
     findGroup() {
       const id = this.groupId;
-
       if (id && !(id in this.groupMap)) {
-        this.getGroups({ q: id });
+        this.findGroupById(id);
       }
     },
     getOlderMessages(loader) {
@@ -93,11 +92,11 @@ export default {
       each(messages, message => this.readMessage({ groupId, message }));
     },
     ...mapActions({
-      getGroups: actions.getGroups,
       getMessages: actions.getMessagesFromGroup,
       readMessage: actions.sendMessageReadReceiptForGroup,
       sendMessage: actions.sendMessageToGroup,
     }),
+    ...mapActions('hub', ['findGroupById']),
   },
   watch: {
     context(value) {
@@ -113,5 +112,6 @@ export default {
         });
       }
     },
+    groupId: 'findGroup',
   },
 };

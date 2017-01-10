@@ -114,8 +114,7 @@ export default {
 
       commit('ADD_MESSAGE', { userId: senderId, messages: [message] });
     },
-    sendMessageToUser({ commit, rootState },
-        { userId, content, params = {}, errors = [] }) {
+    sendMessageToUser({ commit, rootState }, { userId, content, params = {}, errors = [] }) {
       const message = { id: Date.now(), content, sending: true, sender: rootState.user.user };
       commit('ADD_MESSAGE', { userId, messages: [message] });
 

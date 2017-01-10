@@ -35,7 +35,7 @@
       <div class="card card-block" v-if="course">
         <div class="card-title text-primary">{{ course.name }}</div>
         <div class="small">
-          {{ department }} &centerdot; {{ discipline }} &centerdot; {{ course.year }} &centerdot; {{ course.semester }}
+          {{ department }} &centerdot; {{ discipline }} &centerdot; {{ course.year_text }} &centerdot; {{ course.semester_text }}
         </div>
 
         <div class="text-muted pt-2">
@@ -47,12 +47,12 @@
           </div>
         </div>
 
-        <div v-if="course.prequisites.data.length">
+        <div v-if="course.prerequisites.data.length">
           <div class="text-muted pt-2">
             Course Prerequisites
           </div>
           <div class="row">
-            <div class="col-xs-12 col-lg-6" v-for="p in course.prequisites.data">
+            <div class="col-xs-12 col-lg-6" v-for="p in course.prerequisites.data">
               <div class="card card-block">
                 <h6>{{ p.course.name }}</h6>
                 <small class="text-muted d-block">{{ p.course.code }}</small>
@@ -62,7 +62,7 @@
         </div>
 
         <div class="pt-2">
-          <router-link class="btn btn-secondary" to='/'>Update Details</router-link>
+          <router-link class="btn btn-secondary" :to="{ name: 'acad.edit', params: { course: course.id } }">Update Details</router-link>
         </div>
       </div>
     </modal>

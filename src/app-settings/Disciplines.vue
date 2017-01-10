@@ -25,8 +25,10 @@
                         <div class="discipline-modal-title"> Add New Discipline </div>
                     </div>
                 </div>
-                <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
-                <input-text title="Discipline Acronym" v-model="discipline.acronym" :feedback="errors.acronym"></input-text>
+                <div class="discipline-modal-body">
+                    <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
+                    <input-text title="Discipline Acronym" v-model="discipline.acronym" :feedback="errors.acronym"></input-text>
+                </div>
 
 
                 <div class="card-footer bg-white pt-2 pb-1">
@@ -95,5 +97,20 @@ export default{
 };
 </script>
 <style lang="scss" scoped>
-
+@import '../styles/variables';
+@import '../styles/methods';
+.discipline-modal-body {
+        color: white;
+}
+.discipline-modal-title {
+    font-size: 1.28571rem;
+    padding: rem(20px) 0;
+    color: $brand-primary;
+    width: rem(550px);
+    margin: 0;
+}
+.card-footer {
+    background-color: inherit;
+    padding: 0
+}
 </style>

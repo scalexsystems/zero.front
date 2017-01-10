@@ -8,6 +8,8 @@ export const types = {
   SET_VALUE_ON_GROUP: 'school/SET_VALUE_ON_GROUP',
   SET_DISCIPLINES: 'school/SET_DISCIPLINES',
   SET_DEPARTMENTS: 'school/SET_DEPARTMENTS',
+  ADD_DEPARTMENT: 'school/ADD_DEPARTMENT',
+  ADD_DISCIPLINE: 'school/ADD_DISCIPLINE',
 
   SET_USER: 'me/SET_USER',
 };
@@ -21,7 +23,8 @@ export const actions = {
   getDepartments: 'school/getDepartments',
   getDisciplines: 'school/getDisciplines',
   findStudent: 'school/findStudent',
-
+  addDepartment: 'school/AddDepartment',
+  addDiscipline: 'school/AddDiscipline',
   getUser: 'me/getUser',
 };
 

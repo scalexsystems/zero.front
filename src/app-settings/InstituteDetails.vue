@@ -22,23 +22,23 @@
                     <input-text title="Institute Email" required v-model="institute.email" :feedback="errors.email"></input-text>
                 </div>
                 <div class="col-xs-12 col-lg-4 offset-lg-2">
-                    <input-text title="University" required v-model="institute.username" :feedback="errors.university"></input-text>
+                    <input-text title="University" required v-model="institute.university" :feedback="errors.university"></input-text>
                 </div>
                 <div class="col-xs-12 col-lg-4">
                     <input-text title="Institute Type" required v-model="institute.type" :feedback="errors.type"></input-text>
                 </div>
                 <div class="institute-details-actions col-xs-12 col-lg-4 offset-lg-2">
                     <div class="btn btn-default" role="button"> Cancel </div>
-                    <div class="btn btn-primary" role="button"> Save </div>
+                    <div class="btn btn-primary" role="button" @click="saveInstitute"> Save </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 col-lg-8 offset-lg-2">
-                    <input-text title="Address Line 1" required v-model="contact.addressline1" :feedback="errors.address1"></input-text>
+                    <input-text title="Address Line 1" required v-model="contact.address1" :feedback="errors.address1"></input-text>
                 </div>
                 <div class="col-xs-12 col-lg-4 offset-lg-2">
-                    <input-text title="Address Line 2" required v-model="contact.addressline2" :feedback="errors.address2"></input-text>
+                    <input-text title="Address Line 2" required v-model="contact.address2" :feedback="errors.address2"></input-text>
                 </div>
                 <div class="col-xs-12 col-lg-4">
                     <input-text title="Landmark" v-model="contact.landmark" :feedback="errors.landmark"></input-text>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="institute-details-actions col-xs-12 col-lg-4 offset-lg-2">
                     <div class="btn btn-default" role="button"> Cancel </div>
-                    <div class="btn btn-primary" role="button" @click="saveInstitute"> Save </div>
+                    <div class="btn btn-primary" role="button" @click="saveContact"> Save </div>
                 </div>
             </div>
         </div>
@@ -66,10 +66,8 @@
 
 </template>
 <script lang="babel">
-import { mapActions } from 'vuex';
 import SettingsBox from './SettingsBox.vue';
 import PhotoHolder from '../components/ProfilePhotoUploader.vue';
-import { actions } from '../vuex/meta';
 
 export default{
   data() {
@@ -98,13 +96,12 @@ export default{
   },
   components: { SettingsBox, PhotoHolder },
   methods: {
-    onCancel() {
-      this.onAdd = false;
+    saveInstitute() {
+      this.$http.put('school', { institute: this.institute })
+        .then(() => {
+          this.institute = '';
+        });
     },
-    onSave() {},
-    ...mapActions({
-      getEmployees: actions.getEmployees,
-    }),
   },
 };
 </script>

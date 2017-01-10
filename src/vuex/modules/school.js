@@ -83,6 +83,12 @@ export default {
     [types.SET_DISCIPLINES](state, disciplines) {
       state.disciplines = disciplines;
     },
+    [types.ADD_DEPARTMENT](state, departments) {
+      pushIf(state.departments, departments, { }, []);
+    },
+    [types.ADD_DISCIPLINE](state, disciplines) {
+      pushIf(state.disciplines, disciplines, { }, []);
+    },
   },
   actions: {
     [actions.getStudents]({ commit }, params = {}) {
@@ -168,6 +174,12 @@ export default {
       }
 
       return null;
+    },
+    [actions.addDepartment]({ commit }, department) {
+      commit(types.ADD_DEPARTMENT, { department });
+    },
+    [actions.addDiscipline]({ commit }, discipline) {
+      commit(types.ADD_DISCIPLINE, { discipline });
     },
   },
 };

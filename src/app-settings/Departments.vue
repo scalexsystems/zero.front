@@ -83,11 +83,6 @@ export default{
       departmentTypes: {
         academic: 'academic',
       },
-      header: {
-        name: 'Academic and Administrative Departments',
-        description: '',
-      },
-
     };
   },
   computed: {
@@ -112,7 +107,10 @@ export default{
     onSubmit() {
       this.$http.post('departments', this.department)
           .then(response => response.json())
-          .then(() => {})
+          .then(() => {
+            this.addDepartment(this.department);
+            this.onAdd = false;
+          })
           .catch(() => {});
     },
     getText(department) {
@@ -122,6 +120,7 @@ export default{
 
     ...mapActions({
       getDepartments: actions.getDepartments,
+      addDepartment: actions.addDepartment,
     }),
   },
 };
@@ -133,6 +132,10 @@ export default{
   .form-control-label {
     color: white;
 
+  }
+
+  .department-modal-body {
+     color: white;
   }
 
   .c-indicator {

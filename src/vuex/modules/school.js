@@ -51,6 +51,17 @@ export default {
     [getters.disciplines](state) {
       return state.disciplines;
     },
+    [getters.departmentsByType](state) {
+      const departments = state.departments;
+      if (departments.length) {
+        const groupedDepartments = group(departments, (department => department.academic));
+        return {
+          academic: groupedDepartments.true,
+          nonAcademic: groupedDepartments.false,
+        };
+      }
+      return {};
+    },
   },
   mutations: {
     [types.ADD_USER](state, users) {

@@ -1,4 +1,4 @@
-// import Settings from './Settings.vue';
+import Settings from './Settings.vue';
 import Departments from './Departments.vue';
 import Disciplines from './Disciplines.vue';
 import CourseManagement from './CourseManagement.vue';
@@ -10,10 +10,14 @@ import AdminSettings from './AdminSettings.vue';
 export default function (Vue, { routes }) {
   routes.push(...[
     {
-      name: 'settings',
       path: '/settings',
       component: AdminSettings,
       children: [
+        {
+          name: 'settings',
+          path: '/',
+          component: Settings,
+        },
         {
           name: 'departments',
           path: '/settings/departments',
@@ -39,5 +43,6 @@ export default function (Vue, { routes }) {
           path: '/settings/send-invites',
           component: Invite,
         },
+
       ] }]);
 }

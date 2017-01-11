@@ -37,6 +37,6 @@ export const getters = {
   teachers: 'school/teachers',
   departments: 'school/departments',
   disciplines: 'school/disciplines',
-
+  departmentsByType: 'school/departmentsByType',
   user: 'me/user',
 };

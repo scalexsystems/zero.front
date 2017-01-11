@@ -2,7 +2,7 @@
 <settings-box title="Departments">
 
     <template slot="actions">
-        <div role="button" class="btn btn-primary" @click="addDepartment"> Add new department </div>
+        <div role="button" class="btn btn-primary" @click="showAddDepartment"> Add new department </div>
     </template>
 
       <template slot="header-image">
@@ -28,8 +28,8 @@
                 <input-text title="Department acronym" v-model="department.acronym" :feedback="errors.acronym"></input-text>
                 <input-text title="Head of Department" v-model="department.hod" :feedback="errors.hod"></input-text>
 
-                <input-radio title="Department Type" required v-model="department.type" :options="departmentTypes"
-                             :feedback="errors.type"></input-radio>
+                <input-radio title="Department Type" required v-model="department.academic"  :options="departmentTypes"
+                             :feedback="errors.academic"></input-radio>
 
                 <div class="card-footer pt-2 pb-1">
                 <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
@@ -38,8 +38,9 @@
             </div>
         </modal>
         <div class="container py-2">
-              <div class="row my-2">
-                <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in departments" :title="department.name"
+            <div class="text-xs-center"> ACADEMIC DEPARTMENTS </div>
+            <div class="row my-2">
+                <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in academic" :title="department.name"
                        :text="getText(department)" :additional="true">
                   <template slot="additional-text">
                     {{ department.stats.student || 0 }} students,
@@ -47,7 +48,18 @@
                     {{ department.stats.employees || 0 }} staff
                   </template>
                 </settings-card>
-      </div>
+              </div>
+            <div class="text-xs-center"> NON-ACADEMIC DEPARTMENTS </div>
+            <div class="row my-2">
+                <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in nonAcademic" :title="department.name"
+                       :text="getText(department)" :additional="true">
+                  <template slot="additional-text">
+                    {{ department.stats.student || 0 }} students,
+                    {{ department.stats.teachers || 0 }} teachers,
+                    {{ department.stats.employees || 0 }} staff
+                  </template>
+                </settings-card>
+              </div>
     </div>
     </template>
 
@@ -65,7 +77,7 @@ import { actions, getters } from '../vuex/meta';
 
 export default{
   created() {
-    if (this.departments.length === 0) {
+    if (Object.keys(this.departmentsByType).length === 0) {
       this.getDepartments();
     }
   },
@@ -77,12 +89,9 @@ export default{
         name: '',
         acronym: '',
         hod: '',
+        academic: '',
       },
       errors: {},
-      departments: {},
-      departmentTypes: {
-        academic: 'academic',
-      },
     };
   },
   computed: {
@@ -92,24 +101,34 @@ export default{
         nonAcademic: 'Non-Academic/Administrative',
       };
     },
+    academic() {
+      return this.departmentsByType.academic;
+    },
+
+    nonAcademic() {
+      return this.departmentsByType.nonAcademic;
+    },
     ...mapGetters({
-      departments: getters.departments,
+      departmentsByType: getters.departmentsByType,
     }),
   },
   components: { SettingsBox, Modal, SettingsCard },
   methods: {
-    addDepartment() {
+    showAddDepartment() {
       this.onAdd = true;
     },
     onCancel() {
       this.onAdd = false;
     },
     onSubmit() {
+      const type = this.department.academic;
+      this.department.academic = type === 'academic';
       this.$http.post('departments', this.department)
-          .then(response => response.json())
           .then(() => {
-            this.addDepartment(this.department);
             this.onAdd = false;
+            debugger;
+            this.departmentsByType[type].push(this.department);
+            this.addDepartment(this.department);
           })
           .catch(() => {});
     },

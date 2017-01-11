@@ -1,6 +1,6 @@
 <template>
 
-    <activity-box class="hub-group-preview"
+    <activity-box class="settings-box"
                   v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
                   @close="$router.go(-1)">
 

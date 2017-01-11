@@ -44,7 +44,7 @@ export default {
     teachers(state) {
       return state.teachers;
     },
-    users(state) {
+    [getters.users](state) {
       return state.users;
     },
     departments(state) {
@@ -53,8 +53,16 @@ export default {
     disciplines(state) {
       return state.disciplines;
     },
-    courses(state) {
-      return state.courses;
+    [getters.departmentsByType](state) {
+      const departments = state.departments;
+      if (departments.length) {
+        const groupedDepartments = group(departments, (department => department.academic));
+        return {
+          academic: groupedDepartments.true,
+          nonAcademic: groupedDepartments.false,
+        };
+      }
+      return {};
     },
   },
   mutations: {

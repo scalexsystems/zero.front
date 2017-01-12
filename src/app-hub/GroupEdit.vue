@@ -29,7 +29,7 @@
         <div class="row">
           <div class="col-xs-12 col-lg-6" v-for="(member, key) in members" :key="key">
             <person-card :item="member">
-              <a slot="actions" class="text-muted" href="#" v-tooltip="'Remove'"
+              <a slot="actions" class="text-muted" href="#" v-tooltip="'Remove'" v-if="!isAdmin(member)"
                  @click.stop.prevent="removeMember(member)"
               ><i class="fa fa-fw fa-trash-o"></i></a>
             </person-card>
@@ -51,7 +51,7 @@ import { mapGetters, mapActions } from 'vuex';
 import throttle from 'lodash/throttle';
 import InfiniteScroll from 'vue-infinite-loading';
 
-import { pushIf, isValidationException, normalizeValidationErrors as normalize } from '../util';
+import { pushOrMerge as set, isLastRecord, isValidationException, normalizeValidationErrors as normalize } from '../util';
 import { actions } from './vuex/meta';
 import { getters as rootGetters, actions as rootActions } from '../vuex/meta';
 import { LoadingPlaceholder, ActivityBox, PersonCard } from '../components';
@@ -82,6 +82,7 @@ export default {
 
       return group;
     },
+    ...mapGetters(['user']),
     ...mapGetters({
       groups: rootGetters.groups,
       groupMap: rootGetters.groupMap,
@@ -93,7 +94,11 @@ export default {
   },
   data() {
     return {
-      values: null,
+      values: {
+        name: '',
+        type: undefined,
+        description: '',
+      },
       errors: {},
       query: '',
       page: 0,
@@ -180,21 +185,28 @@ export default {
     },
     search: throttle(function search() {
       this.page = 0;
-      this.onInfinite();
+      this.onInfinite(true);
     }),
-    onInfinite() {
-      this.$http.get(`groups/${this.group.id}/members`, { params: { q: this.query, page: this.page + 1 } })
+    onInfinite(fromInfinite = true) {
+      const infinite = {
+        loaded: () => this.$refs.infinite.$emit('$InfiniteLoading:loaded'),
+        complete: () => this.$refs.infinite.$emit('$InfiniteLoading:complete'),
+        reset: () => this.$refs.infinite.$emit('$InfiniteLoading:reset'),
+      };
+
+      if (!fromInfinite) infinite.reset();
+      this.page += 1;
+      this.$http.get(`groups/${this.group.id}/members`, { params: { q: this.query } })
               .then(response => response.json())
               .then((result) => {
-                pushIf(this.members, result.data, this.ids);
-                this.page = result._meta.pagination.current_page;
-                if (this.page < result._meta.pagination.total_pages) {
-                  this.$refs.infinite.$emit('$InfiniteLoading:loaded');
+                set(this.members, result.data, this.ids);
+                if (isLastRecord(result)) {
+                  infinite.complete();
                 } else {
-                  this.$refs.infinite.$emit('$InfiniteLoading:complete');
+                  infinite.loaded();
                 }
               })
-              .catch(() => this.$refs.infinite.$emit('$InfiniteLoading:loaded'));
+              .catch(() => infinite.complete());
     },
     setGroup() {
       if (this.group) {
@@ -213,6 +225,9 @@ export default {
       } else {
         this.setGroup();
       }
+    },
+    isAdmin(member) {
+      return this.group.is_admin && this.user.id === member.id;
     },
     ...mapActions({
       getGroup: rootActions.getGroups,

@@ -67,6 +67,7 @@ export default {
           this.$refs.enroll.classList.remove('disabled');
           this.selected = [];
           this.message = { success: true, message: 'All students enrolled.' };
+          this.$emit('enrolled');
         })
         .catch(() => {
           this.$refs.enroll.classList.remove('disabled');

@@ -16,7 +16,7 @@
               <h2 class="text-xs-center my-2">{{ course.name }}</h2>
 
               <div class="text-xs-center">
-                <a v-if="isInstructor" class="btn btn-primary" @click="onAction" role="button" tabindex>Enroll Students</a>
+                <a v-if="isInstructor" class="btn btn-primary" @click="onAction" @enrolled="resetInfinite()" role="button" tabindex>Enroll Students</a>
               </div>
 
               <p></p>
@@ -132,6 +132,10 @@ export default {
     },
     onAction() {
       this.$refs.enroll.$emit('open', this.course);
+    },
+    resetInfinite() {
+      this.page = 0;
+      this.onInfinite(false);
     },
     onInfinite(fromInfinite = true) {
       const actions = {

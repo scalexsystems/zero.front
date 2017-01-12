@@ -4,7 +4,7 @@
     <img src="../assets/person.jpg" :src="item.photo" class="person-card-img" :class="[item._type]">
     <div class="person-card-info-container">
       <div class="person-card-name">{{ item.name }}</div>
-      <div class="person-card-meta-container">
+      <div class="person-card-meta-container fl">
         <slot>
           <div class="person-card-bio">{{ item.bio }}</div>
         </slot>

@@ -27,6 +27,10 @@
   .fl-auto {
     flex: 1;
   }
+
+  &.fl-middle {
+    align-items: center;
+  }
 }
 
 [role=button] {

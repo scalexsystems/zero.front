@@ -34,28 +34,18 @@
 </template>
 
 <script lang="babel">
-import Vue from 'vue';
-import first from 'lodash/first';
 import { mapGetters, mapActions } from 'vuex';
 
 import { LoadingPlaceholder, ActivityBox } from '../components';
-import { getters, actions } from '../vuex/meta';
 
 export default {
-  name: 'userPreview',
-  beforeRouteEnter(to, from, next) {
-    Vue.http.get(`people/${to.params.user}`)
-            .then(response => response.json())
-            .then((result) => {
-              next((vm) => {
-                Vue.set(vm, 'user', result);
-              });
-            })
-            .catch(() => {
-              // TODO: Redirect to 404!
-            });
-  },
+  name: 'UserPreview',
   components: { LoadingPlaceholder, ActivityBox },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.user = null;
+    });
+  },
   computed: {
     title() {
       const user = this.user || {};
@@ -67,7 +57,7 @@ export default {
 
       return user.bio || 'User Profile';
     },
-    ...mapGetters({ departments: getters.departments }),
+    ...mapGetters('school', ['departments']),
   },
   data() {
     return {
@@ -78,15 +68,27 @@ export default {
     if (!this.departments.length) {
       this.getDepartments();
     }
+    this.fetchUser();
   },
   methods: {
     close() {
       window.history.back();
     },
     department(value) {
-      return (first(this.departments.filter(d => d.id === value)) || {}).name;
+      return (this.departments.find(d => d.id === value) || {}).name;
     },
-    ...mapActions({ getDepartments: actions.getDepartments }),
+    fetchUser() {
+      this.$http.get(`people/${this.$route.params.user}`)
+            .then(response => response.json())
+            .then(user => this.$set(this, 'user', user))
+            .catch(() => {
+              // TODO: Redirect to 404!
+            });
+    },
+    ...mapActions('school', ['getDepartments']),
+  },
+  watch: {
+    $route: 'fetchUser',
   },
 };
 </script>

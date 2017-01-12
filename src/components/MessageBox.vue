@@ -1,5 +1,5 @@
 <template>
-<layout-box v-bind="{ actions, disableFooter }">
+<layout-box v-bind="{ disableFooter }">
   <template slot="context">
   <img class="message-box-photo" src="../assets/person.jpg" :src="photo" :class="[typeClass]"
        @click="$emit('openPhoto')">
@@ -15,6 +15,10 @@
 
   <template slot="footer">
   <slot name="footer"></slot>
+  </template>
+
+  <template slot="actions">
+  <slot name="actions"></slot>
   </template>
 
   <slot></slot>

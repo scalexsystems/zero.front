@@ -4,6 +4,7 @@ export const types = {
   ADD_STUDENT: 'school/ADD_STUDENT',
   ADD_TEACHER: 'school/ADD_TEACHER',
   ADD_GROUP: 'school/ADD_GROUP',
+  ADD_COURSE: 'school/ADD_COURSE',
   SET_USER_IS_MEMBER: 'school/SET_USER_IS_MEMBER',
   SET_VALUE_ON_GROUP: 'school/SET_VALUE_ON_GROUP',
   SET_DISCIPLINES: 'school/SET_DISCIPLINES',
@@ -23,16 +24,17 @@ export const actions = {
   getEmployees: 'school/getEmployees',
   getDepartments: 'school/getDepartments',
   getDisciplines: 'school/getDisciplines',
+  getCourses: 'school/getCourses',
   findStudent: 'school/findStudent',
-  addDepartment: 'school/AddDepartment',
-  addDiscipline: 'school/AddDiscipline',
-  getUser: 'me/getUser',
+
+  getUser: 'getUser',
 };
 
 export const getters = {
   groups: 'school/groups',
   groupMap: 'school/groupMap',
   users: 'school/users',
+  courses: 'school/courses',
   employees: 'school/employees',
   students: 'school/students',
   teachers: 'school/teachers',

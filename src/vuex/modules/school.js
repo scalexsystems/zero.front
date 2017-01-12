@@ -1,17 +1,18 @@
 import map from 'lodash/map';
+import isArray from 'lodash/isArray';
 import group from 'lodash/groupBy';
 import first from 'lodash/first';
 import Vue from 'vue';
-import { types, getters, actions } from '../meta';
-import { pushIf } from '../../util';
+import { pushIf, pushOrMerge } from '../../util';
 
 const commitUsers = (result, commit) => {
   if ('user' in first(result.data)) {
-    commit(types.ADD_USER, map(result.data, person => ({ person, ...person.user })));
+    commit('ADD_USER', map(result.data, person => ({ person, ...person.user })));
   }
 };
 
 export default {
+  namespaced: true,
   state: {
     employees: [],
     employeeMap: {},
@@ -25,77 +26,71 @@ export default {
     userMap: {},
     departments: [],
     disciplines: [],
-    semesters: [],
+    courses: [],
   },
   getters: {
-    [getters.employees](state) {
+    employees(state) {
       return state.employees;
     },
-    [getters.groups](state) {
+    groups(state) {
       return state.groups;
     },
-    [getters.groupMap](state) {
+    groupMap(state) {
       return state.groupMap;
     },
-    [getters.students](state) {
+    students(state) {
       return state.students;
     },
-    [getters.teachers](state) {
+    teachers(state) {
       return state.teachers;
     },
-    [getters.users](state) {
+    users(state) {
       return state.users;
     },
-    [getters.departments](state) {
+    departments(state) {
       return state.departments;
     },
-    [getters.disciplines](state) {
+    disciplines(state) {
       return state.disciplines;
     },
-    [getters.departmentsByType](state) {
-      const departments = state.departments;
-      if (departments.length) {
-        const groupedDepartments = group(departments, (department => department.academic));
-        return {
-          academic: groupedDepartments.true,
-          nonAcademic: groupedDepartments.false,
-        };
-      }
-      return {};
-    },
-    [getters.semesters](state) {
-      return state.semesters;
+    courses(state) {
+      return state.courses;
     },
   },
   mutations: {
-    [types.ADD_USER](state, users) {
+    ADD_USER(state, users) {
       pushIf(state.users, users, state.userMap, []);
     },
-    [types.ADD_STUDENT](state, students) {
+    ADD_STUDENT(state, students) {
       pushIf(state.students, students, state.studentMap, []);
     },
-    [types.ADD_TEACHER](state, teachers) {
+    ADD_TEACHER(state, teachers) {
       pushIf(state.teachers, teachers, state.teacherMap, []);
     },
-    [types.ADD_EMPLOYEE](state, employees) {
+    ADD_EMPLOYEE(state, employees) {
       pushIf(state.employees, employees, state.employeeMap, []);
     },
-    [types.ADD_GROUP](state, groups) {
+    ADD_GROUP(state, groups) {
       pushIf(state.groups, groups, state.groupMap, []);
     },
-    [types.SET_USER_IS_MEMBER](state, { groupId, isMember }) {
+    ADD_COURSE(state, courses) {
+      const items = isArray(courses) ? courses : [courses];
+
+      pushOrMerge(state.courses, items);
+    },
+    SET_USER_IS_MEMBER(state, { groupId, isMember }) {
       const mappedIndex = state.groupMap[groupId];
       state.groups[mappedIndex].is_member = isMember;
     },
-    [types.SET_VALUE_ON_GROUP](state, { groupId, key, value }) {
+    SET_VALUE_ON_GROUP(state, { groupId, key, value }) {
       const mappedIndex = state.groupMap[groupId];
 
       state.groups[mappedIndex][key] = value;
     },
-    [types.SET_DEPARTMENTS](state, departments) {
+    SET_DEPARTMENTS(state, departments) {
       state.departments = departments;
     },
-    [types.SET_DISCIPLINES](state, disciplines) {
+    SET_DISCIPLINES(state, disciplines) {
       state.disciplines = disciplines;
     },
     [types.SET_SEMESTERS](state, semesters) {
@@ -112,90 +107,101 @@ export default {
     },
   },
   actions: {
-    [actions.getStudents]({ commit }, params = {}) {
+    getStudents({ commit }, params = {}) {
       return Vue.http.get('people/students', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_STUDENT, result.data);
+            commit('ADD_STUDENT', result.data);
             commitUsers(result, commit);
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.getEmployees]({ commit }, params = {}) {
+    getEmployees({ commit }, params = {}) {
       return Vue.http.get('people/employees', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_EMPLOYEE, result.data);
+            commit('ADD_EMPLOYEE', result.data);
             commitUsers(result, commit);
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.getTeachers]({ commit }, params = {}) {
+    getTeachers({ commit }, params = {}) {
       return Vue.http.get('people/teachers', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_TEACHER, result.data);
+            commit('ADD_TEACHER', result.data);
             commitUsers(result, commit);
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.getGroups]({ commit }, params = {}) {
+    getGroups({ commit }, params = {}) {
       return Vue.http.get('groups', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.ADD_GROUP, result.data);
+            commit('ADD_GROUP', result.data);
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.getUsers]({ commit }, params = {}) {
+    getUsers({ commit }, params = {}) {
       return Vue.http.get('people', { params })
           .then(response => response.json())
           .then((result) => {
             const groups = group(result.data, 'person_type');
 
-            commit(types.ADD_USER, result.data);
+            commit('ADD_USER', result.data);
 
-            if ('student' in groups) commit(types.ADD_STUDENT, groups.student);
-            if ('employee' in groups) commit(types.ADD_EMPLOYEE, groups.employee);
-            if ('teacher' in groups) commit(types.ADD_TEACHER, groups.teacher);
+            if ('student' in groups) commit('ADD_STUDENT', groups.student);
+            if ('employee' in groups) commit('ADD_EMPLOYEE', groups.employee);
+            if ('teacher' in groups) commit('ADD_TEACHER', groups.teacher);
 
             return result;
           })
           .catch(response => response);
     },
-    [actions.getDepartments]({ commit }, params = {}) {
+    getDepartments({ commit }, params = {}) {
       return Vue.http.get('departments', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.SET_DEPARTMENTS, result.data);
+            commit('SET_DEPARTMENTS', result.data);
           })
           .catch(response => response);
     },
-    [actions.getDisciplines]({ commit }, params = {}) {
+    getDisciplines({ commit }, params = {}) {
       return Vue.http.get('disciplines', { params })
           .then(response => response.json())
           .then((result) => {
-            commit(types.SET_DISCIPLINES, result.data);
+            commit('SET_DISCIPLINES', result.data);
           })
           .catch(response => response);
     },
-    [actions.getSemesters]({ commit }, params = {}) {
+    getCourses({ commit }, params = {}) {
+      return Vue.http.get('courses', { params })
+        .then(response => response.json())
+        .then((result) => {
+          commit('ADD_COURSE', result.data);
+
+          return result;
+        })
+        .catch(response => response);
+    },
+    getSemesters({ commit }, params = {}) {
       return Vue.http.get('semesters', { params })
-          .then(response => response.json())
-          .then((result) => {
-            commit(types.SET_SEMESTERS, result.data);
-          })
-          .catch(response => response);
+        .then(response => response.json())
+        .then((result) => {
+          commit('SET_SEMESTERS', result.data);
+        })
+        .catch(response => response);
     },
-    [actions.findStudent]({ state }, id) {
+
+    findStudent({ state }, id) {
       const index = state.studentMap[id];
 
       if (index > -1) {

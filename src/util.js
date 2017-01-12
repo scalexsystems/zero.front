@@ -103,3 +103,10 @@ export const httpThen = (response) => {
 
   return response;
 };
+
+export const isLastRecord = ({ _meta, pagination }) => {
+  /* eslint-disable no-param-reassign, next */
+  if (_meta) pagination = _meta.pagination;
+
+  return pagination && pagination.current_page === pagination.total_pages;
+};

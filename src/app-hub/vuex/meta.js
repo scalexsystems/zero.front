@@ -23,6 +23,8 @@ export const actions = {
   sendMessageToGroup: 'hub/sendMessageToGroup',
   sendMessageReadReceiptForGroup: 'hub/sendMessageReadReceiptForGroup',
   onNewMessageToGroup: 'hub/onNewMessageToGroup',
+  // Courses.
+  getCourses: 'hub/getCourses',
   // Users.
   getMessagedUsers: 'hub/getMessagedUsers',
   getMessagesFromUser: 'hub/getMessagesFromUser',
@@ -36,7 +38,10 @@ export const actions = {
 
 export const getters = {
   groups: 'hub/groups',
+  courseGroups: 'hub/courseGroups',
   groupMap: 'hub/groupMap',
+
+  courses: 'hub/courses',
 
   users: 'hub/users',
   userMap: 'hub/userMap',

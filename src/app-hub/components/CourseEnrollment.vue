@@ -9,8 +9,8 @@
                 @click.prevent="enroll">Enroll Now</button>
       </h4>
       <div class="card-block">
-        <div class="alert alert-warning" v-if="message">
-          {{ message }}
+        <div class="alert" v-if="message" :class="[ message.success ? 'alert-success' : 'alert-danger' ]">
+          {{ message.message }}
         </div>
         <input-search v-model="query"
           title="Student"
@@ -62,16 +62,16 @@ export default {
       if (!ids.length) return;
 
       this.$refs.enroll.classList.add('disabled');
-      this.$http.post(`courses/${this.courseId}/enroll`, { students: ids, session_id: this.course.session.id })
+      this.$http.post(`courses/${this.course.id}/enroll`, { students: ids, session_id: this.course.session.id })
         .then(() => {
           this.$refs.enroll.classList.remove('disabled');
           this.selected = [];
-          this.message = 'All students enrolled.';
+          this.message = { success: true, message: 'All students enrolled.' };
         })
         .catch(() => {
           this.$refs.enroll.classList.remove('disabled');
 
-          this.message = 'Failed to enroll these students.';
+          this.message = { success: false, message: 'Failed to enroll these students.' };
         });
     },
     onSelect(student) {

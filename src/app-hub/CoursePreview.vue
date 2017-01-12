@@ -2,7 +2,7 @@
 <div>
   <activity-box v-if="course" class="course-preview"
                 v-bind="{ title, subtitle, disableFooter: true }"
-                @close="$router.push({ name: 'hub.course', params: { course: course.id } })">
+                @close="$router.push({ name: 'acad.course', params: { course: course.id } })">
 
     <div class="container py-2">
       <div class="row">
@@ -62,7 +62,7 @@ import throttle from 'lodash/throttle';
 import InfiniteScroll from 'vue-infinite-loading';
 
 import CourseEnrollment from './components/CourseEnrollment.vue';
-import { pushOrMerge as set } from '../util';
+import { pushOrMerge as set, isLastRecord } from '../util';
 import { LoadingPlaceholder, ActivityBox, PersonCard as ItemCard, ActionMenu, PhotoHolder } from '../components';
 
 export default {
@@ -142,11 +142,22 @@ export default {
 
       if (!fromInfinite) actions.reset();
 
-      this.$http.get(`me/courses/${this.course.id}/enrolled`)
+      this.page += 1;
+
+      this.$http.get(`me/courses/${this.course.id}/enrolled`, { page: this.page })
         .then(response => response.json())
-        .then(result => set(this.students, result.data))
-        .catch(() => actions.complete())
-        .then(() => actions.loaded());
+        .then((result) => {
+          set(this.students, result.data);
+          if (isLastRecord(result)) {
+            actions.complete();
+          } else {
+            actions.loaded();
+          }
+        })
+        .catch(() => actions.complete());
+    },
+    openProfile(student) {
+      this.$router.push({ name: 'hub.user-preview', params: { user: student.user.id } });
     },
     ...mapActions('hub', { find: 'findCourse' }),
   },

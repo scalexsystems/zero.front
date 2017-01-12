@@ -25,7 +25,7 @@
             </div>
             <div class="department-modal-body">
                 <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
-                <input-text title="Department acronym" v-model="department.acronym" :feedback="errors.acronym"></input-text>
+                <input-text title="Department acronym" v-model="department.short_form" :feedback="errors.short_form"></input-text>
                 <input-text title="Head of Department" v-model="department.hod" :feedback="errors.hod"></input-text>
 
                 <input-radio title="Department Type" required v-model="department.academic"  :options="departmentTypes"
@@ -41,7 +41,7 @@
             <div class="text-xs-center"> ACADEMIC DEPARTMENTS </div>
             <div class="row my-2">
                 <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in academic" :title="department.name"
-                       :text="getText(department)" :additional="true">
+                       :text="getText(department)" :additional="true" @cardClicked="departmentClicked" context="academic">
                   <template slot="additional-text">
                     {{ department.stats.student || 0 }} students,
                     {{ department.stats.teachers || 0 }} teachers,
@@ -52,7 +52,7 @@
             <div class="text-xs-center"> NON-ACADEMIC DEPARTMENTS </div>
             <div class="row my-2">
                 <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in nonAcademic" :title="department.name"
-                       :text="getText(department)" :additional="true">
+                       :text="getText(department)" :additional="true" @cardClicked="departmentClicked" context="nonAcademic">
                   <template slot="additional-text">
                     {{ department.stats.student || 0 }} students,
                     {{ department.stats.teachers || 0 }} teachers,
@@ -87,9 +87,13 @@ export default{
       loaded: false,
       department: {
         name: '',
-        acronym: '',
-        hod: '',
+        short_form: ' ',
+        hod: ' ',
         academic: '',
+      },
+      editReference: {
+        id: false,
+        index: false,
       },
       errors: {},
     };
@@ -123,18 +127,37 @@ export default{
     onSubmit() {
       const type = this.department.academic;
       this.department.academic = type === 'academic';
+      const call = this.editReference.id ? 'updateDepartment' : 'addNewDepartment';
+      this[call](type);
+    },
+    addNewDepartment(type) {
       this.$http.post('departments', this.department)
-          .then(() => {
-            this.onAdd = false;
-            debugger;
-            this.departmentsByType[type].push(this.department);
-            this.addDepartment(this.department);
-          })
-          .catch(() => {});
+      .then(() => {
+        this.onAdd = false;
+        this.departmentsByType[type].push(this.department);
+        this.addDepartment(this.department);
+      })
+       .catch(() => {});
+    },
+    updateDepartment(type) {
+      this.$http.put(`departments/${this.editReference.id}`, this.department)
+        .then(() => {
+          this.onAdd = false;
+          this.departmentsByType[type][this.editReference.index] = this.department;
+        });
     },
     getText(department) {
       const hod = department.head.length ? department.head.name : 'Not assigned';
       return `HOD: ${hod}`;
+    },
+    departmentClicked(index, context) {
+      const department = this.departmentsByType[context][index];
+      this.editReference = {
+        id: department.id,
+        index,
+      };
+      this.department = department;
+      this.onAdd = true;
     },
 
     ...mapActions({

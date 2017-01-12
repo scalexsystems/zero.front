@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="card settings-card" role="button" @click='$emit("cardClicked", index)'>
+  <div class="card settings-card" role="button" @click='$emit("cardClicked", index, context)'>
       <div class="card-block">
       <div class="settings-card-title">
         <slot name="title">
@@ -39,6 +39,10 @@ export default{
       default: 0,
     },
     additional: {
+      default: false,
+    },
+    context: {
+      type: String,
       default: false,
     },
   },

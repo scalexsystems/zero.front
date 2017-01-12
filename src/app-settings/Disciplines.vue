@@ -11,7 +11,7 @@
         </template>
 
         <template slot="name">
-            Semesters
+            Disciplines
         </template>
 
         <template slot="description">
@@ -39,7 +39,7 @@
             <div class="container py-2">
                 <div class="row my-2">
                     <settings-card class="col-xs-12 col-lg-6" v-for="(discipline, index) in disciplines" :title="discipline.name"
-                                   :text="discipline.acronym">
+                                   :text="discipline.short_name" @cardClicked="disciplineClicked">
                     </settings-card>
                 </div>
             </div>
@@ -85,7 +85,7 @@ export default{
       this.onAdd = false;
     },
     onSubmit() {
-      this.$http.post('disciplines', this.department)
+      this.$http.post('disciplines', this.discipline)
         .then(response => response.json())
         .then(() => {})
         .catch(() => {});

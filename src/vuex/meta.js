@@ -8,9 +8,10 @@ export const types = {
   SET_VALUE_ON_GROUP: 'school/SET_VALUE_ON_GROUP',
   SET_DISCIPLINES: 'school/SET_DISCIPLINES',
   SET_DEPARTMENTS: 'school/SET_DEPARTMENTS',
+  SET_SEMESTERS: 'school/SET_SEMESTERS',
   ADD_DEPARTMENT: 'school/ADD_DEPARTMENT',
   ADD_DISCIPLINE: 'school/ADD_DISCIPLINE',
-
+  ADD_SEMESTER: 'school/ADD_SEMESTER',
   SET_USER: 'me/SET_USER',
 };
 
@@ -37,6 +38,7 @@ export const getters = {
   teachers: 'school/teachers',
   departments: 'school/departments',
   disciplines: 'school/disciplines',
+  semesters: 'school/semesters',
   departmentsByType: 'school/departmentsByType',
   user: 'me/user',
 };

@@ -25,6 +25,7 @@ export default {
     userMap: {},
     departments: [],
     disciplines: [],
+    semesters: [],
   },
   getters: {
     [getters.employees](state) {
@@ -62,6 +63,9 @@ export default {
       }
       return {};
     },
+    [getters.semesters](state) {
+      return state.semesters;
+    },
   },
   mutations: {
     [types.ADD_USER](state, users) {
@@ -94,11 +98,17 @@ export default {
     [types.SET_DISCIPLINES](state, disciplines) {
       state.disciplines = disciplines;
     },
+    [types.SET_SEMESTERS](state, semesters) {
+      state.semesters = semesters;
+    },
     [types.ADD_DEPARTMENT](state, departments) {
       pushIf(state.departments, departments, { }, []);
     },
     [types.ADD_DISCIPLINE](state, disciplines) {
       pushIf(state.disciplines, disciplines, { }, []);
+    },
+    [types.ADD_SEMESTER](state, semesters) {
+      pushIf(state.semesters, semesters, { }, []);
     },
   },
   actions: {
@@ -177,6 +187,14 @@ export default {
           })
           .catch(response => response);
     },
+    [actions.getSemesters]({ commit }, params = {}) {
+      return Vue.http.get('semesters', { params })
+          .then(response => response.json())
+          .then((result) => {
+            commit(types.SET_SEMESTERS, result.data);
+          })
+          .catch(response => response);
+    },
     [actions.findStudent]({ state }, id) {
       const index = state.studentMap[id];
 
@@ -191,6 +209,9 @@ export default {
     },
     [actions.addDiscipline]({ commit }, discipline) {
       commit(types.ADD_DISCIPLINE, { discipline });
+    },
+    [actions.addSemester]({ commit }, semester) {
+      commit(types.ADD_SEMESTER, { semester });
     },
   },
 };

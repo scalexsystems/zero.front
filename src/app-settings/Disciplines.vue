@@ -2,7 +2,7 @@
     <settings-box title="Disciplines">
 
         <template slot="actions">
-            <div role="button" class="btn btn-primary" @click="addDiscipline"> Add new disciplines </div>
+            <div role="button" class="btn btn-primary" @click="showAddDiscipline"> Add new disciplines </div>
         </template>
 
 
@@ -82,7 +82,7 @@ export default{
   },
   components: { SettingsBox, Modal, SettingsCard },
   methods: {
-    addDiscipline() {
+    showAddDiscipline() {
       this.onAdd = true;
     },
     onCancel() {

@@ -66,7 +66,7 @@ export default {
         {
           title: 'Semesters',
           text: 'Click to add semesters',
-          path: '/semesters',
+          path: 'semesters',
         },
         {
           title: 'Course Management/Administrator',

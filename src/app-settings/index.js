@@ -1,6 +1,7 @@
 import Settings from './Settings.vue';
 import Departments from './Departments.vue';
 import Disciplines from './Disciplines.vue';
+import Semesters from './Semesters.vue';
 import CourseManagement from './CourseManagement.vue';
 import InstituteDetails from './InstituteDetails.vue';
 import Invite from './Invite.vue';
@@ -27,6 +28,11 @@ export default function (Vue, { routes }) {
           name: 'disciplines',
           path: '/settings/disciplines',
           component: Disciplines,
+        },
+        {
+          name: 'semesters',
+          path: '/settings/semesters',
+          component: Semesters,
         },
         {
           name: 'course-management',

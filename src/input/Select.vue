@@ -5,8 +5,8 @@
   <select :type="type" :id="id" class="form-control custom-select" :class="[formControlState]"
          :described-by="helpId" :name="identifier" :value="value"
          @input="$emit('input', $event.target.value)">
-         <option selected disabled>{{ title }}</option>
-         <option v-for="option in options" :value="option[optionKey]">{{ option[optionDisplayKey] }}</option>
+         <option :selected="!value" disabled>{{ title }}</option>
+         <option v-for="option in options" :value="option[optionKey]" :selected="option[optionKey] === value">{{ option[optionDisplayKey] }}</option>
    </select>
 
   <div class="form-control-feedback" v-if="is(feedback)">{{ feedback }}</div>

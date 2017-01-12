@@ -12,6 +12,5 @@ export { default as WindowBox } from './Window.vue';
 export { default as InfiniteLoader } from './InfiniteLoader.vue';
 export { default as Modal } from './Modal.vue';
 export { default as MessageAction } from './MessageAction.vue';
-export { default as Popup } from './Popup.vue';
+// export { default as Popup } from './Popup.vue';
 export { default as FileUploader } from './FileUploader.vue';
-

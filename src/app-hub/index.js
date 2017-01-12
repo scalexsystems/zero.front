@@ -10,6 +10,7 @@ import Course from './CoursePage.vue';
 import CourseDashboard from './CourseDashboard.vue';
 import CourseCreate from './CourseCreate.vue';
 import CourseEdit from './CourseEdit.vue';
+import CoursePreview from './CoursePreview.vue';
 
 import UserDirectory from './UserDirectory.vue';
 import UserMessages from './UserMessages.vue';
@@ -39,6 +40,7 @@ export default function (Vue, { store, routes }) {
         { name: 'acad.create', path: 'courses/create', component: CourseCreate },
         { name: 'acad.edit', path: 'courses/:course/edit', component: CourseEdit },
         { name: 'acad.course', path: 'courses/:course', component: Course },
+        { name: 'acad.course-preview', path: 'courses/:course/preview', component: CoursePreview },
       ],
     },
     { path: '/', redirect: '/hub' },

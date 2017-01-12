@@ -90,7 +90,10 @@ export default {
     });
   },
   created() {
-    this.$echo.private(this.user.channel).listen('NewMessage', message => this.onMessage({ message }));
+    if (this.user.channel) {
+      this.$echo.private(this.user.channel)
+        .listen('NewMessage', message => this.onMessage({ message }));
+    }
     this.$root.$on('sidebar', () => this.toggleSidebar());
   },
   beforeRouteEnter(to, from, next) {

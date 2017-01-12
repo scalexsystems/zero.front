@@ -3,8 +3,9 @@
   <div v-if="isSpaceAvailable" class="action-menu-actions">
     <template v-for="(action, index) of collapsedActions">
     <slot :name="'action-menu-'+index">
-      <a href="#" class="action-menu-action" @click.prevent="click($event, action, index)">
+      <a href="#" class="action-menu-action" @click.prevent="click($event, action.action, index)" :class="[action.action.class]">
         <i class="fa fa-fw" :class="[`fa-${action.action.icon}`]"></i>
+        <span v-if="action.action.showFull">{{ action.action.name }}</span>
       </a>
     </slot>
     </template>

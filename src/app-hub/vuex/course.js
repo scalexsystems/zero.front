@@ -22,7 +22,7 @@ export default {
         .then(result => dispatch('setCourses', result.data))
         .catch(response => response);
     },
-    find({ dispatch }, id) {
+    findCourse({ dispatch }, id) {
       return Vue.http.get(`me/courses/${id}`)
         .then(response => response.json())
         .then(course => dispatch('setCourses', [course]))

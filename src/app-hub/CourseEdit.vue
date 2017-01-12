@@ -24,10 +24,10 @@
               </div>
 
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Discipline" required v-model="course.discipline_id" :feedback="errors.discipline_id" :options="disciplines"></input-select>
+                <input-select title="Discipline" required v-model.number="course.discipline_id" :feedback="errors.discipline_id" :options="disciplines"></input-select>
               </div>
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Year" required v-model="course.year" :feedback="errors.year" :options="years"></input-select>
+                <input-select title="Year" required v-model.number="course.year" :feedback="errors.year" :options="years"></input-select>
               </div>
               <div class="col-xs-12 col-lg-4">
                 <input-select title="Semester" required v-model="course.semester" :feedback="errors.semester" :options="semesters"></input-select>

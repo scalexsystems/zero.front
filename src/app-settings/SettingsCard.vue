@@ -43,7 +43,7 @@ export default{
     },
     context: {
       type: String,
-      default: false,
+      default: '',
     },
   },
   methods: {

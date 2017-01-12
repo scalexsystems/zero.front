@@ -27,7 +27,7 @@
                 </div>
                 <div class="discipline-modal-body">
                     <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
-                    <input-text title="Discipline Acronym" v-model="discipline.acronym" :feedback="errors.acronym"></input-text>
+                    <input-text title="Discipline Acronym" v-model="discipline.short_name" :feedback="errors.acronym"></input-text>
                 </div>
 
 
@@ -66,7 +66,11 @@ export default{
       loaded: false,
       discipline: {
         name: '',
-        acronym: '',
+        short_name: '',
+      },
+      editReference: {
+        id: false,
+        index: false,
       },
       errors: {},
     };
@@ -85,10 +89,33 @@ export default{
       this.onAdd = false;
     },
     onSubmit() {
+      const call = this.editReference.id ? 'updateDiscipline' : 'addNewDiscipline';
+      this[call]();
+    },
+    addNewDiscipline() {
       this.$http.post('disciplines', this.discipline)
-        .then(response => response.json())
-        .then(() => {})
-        .catch(() => {});
+      .then(() => {
+        this.onAdd = false;
+        this.disciplines.push(this.discipline);
+        this.addDiscipline(this.discipline);
+      })
+      .catch(() => {});
+    },
+    updateDiscipline() {
+      this.$http.put(`disciplines/${this.editReference.id}`, this.discipline)
+      .then(() => {
+        this.onAdd = false;
+        this.disciplines[this.editReference.index] = this.discipline;
+      });
+    },
+    disciplineClicked(index) {
+      const discipline = this.disciplines[index];
+      this.editReference = {
+        id: discipline.id,
+        index,
+      };
+      this.discipline = discipline;
+      this.onAdd = true;
     },
     ...mapActions({
       getDisciplines: actions.getDisciplines,
@@ -100,7 +127,7 @@ export default{
 @import '../styles/variables';
 @import '../styles/methods';
 .discipline-modal-body {
-        color: white;
+    color: white;
 }
 .discipline-modal-title {
     font-size: 1.28571rem;

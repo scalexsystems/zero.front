@@ -95,6 +95,7 @@ export default{
       };
     },
     addNewSemester() {
+      debugger;
       this.$http.post('semesters', this.semester)
       .then(() => {
         this.onAdd = false;

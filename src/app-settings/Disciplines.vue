@@ -91,6 +91,10 @@ export default{
     onSubmit() {
       const call = this.editReference.id ? 'updateDiscipline' : 'addNewDiscipline';
       this[call]();
+      this.editReference = {
+        id: false,
+        index: false,
+      };
     },
     addNewDiscipline() {
       this.$http.post('disciplines', this.discipline)

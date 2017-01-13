@@ -24,6 +24,7 @@ export const actions = {
   getEmployees: 'school/getEmployees',
   getDepartments: 'school/getDepartments',
   getDisciplines: 'school/getDisciplines',
+  getSemesters: 'school/getSemesters',
   getCourses: 'school/getCourses',
   findStudent: 'school/findStudent',
   addDepartment: 'school/AddDepartment',

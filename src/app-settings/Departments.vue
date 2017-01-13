@@ -26,7 +26,8 @@
             <div class="department-modal-body">
                 <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
                 <input-text title="Department acronym" v-model="department.short_form" :feedback="errors.short_form"></input-text>
-                <input-text title="Head of Department" v-model="department.hod" :feedback="errors.hod"></input-text>
+                <input-search class="form-control" title="" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
+                              @select="onSelect"></input-search>
 
                 <input-radio title="Department Type" required v-model="department.academic"  :options="departmentTypes"
                              :feedback="errors.academic"></input-radio>
@@ -70,6 +71,7 @@
 </template>
 <script lang="babel">
 import { mapActions, mapGetters } from 'vuex';
+import throttle from 'lodash/throttle';
 import SettingsBox from './SettingsBox.vue';
 import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
@@ -95,6 +97,7 @@ export default{
         id: false,
         index: false,
       },
+      query: {},
       errors: {},
     };
   },
@@ -114,6 +117,8 @@ export default{
     },
     ...mapGetters({
       departmentsByType: getters.departmentsByType,
+      suggestions: getters.teachers,
+
     }),
   },
   components: { SettingsBox, Modal, SettingsCard },
@@ -129,6 +134,17 @@ export default{
       this.department.academic = type === 'academic';
       const call = this.editReference.id ? 'updateDepartment' : 'addNewDepartment';
       this[call](type);
+      this.editReference = {
+        id: false,
+        index: false,
+      };
+    },
+    onSuggest: throttle(function onSuggest({ value, start, end }) {
+      start();
+      this.getTeachers({ q: value }).then(end);
+    }, 400),
+    onSelect(teacher) {
+      this.department.hod = teacher;
     },
     addNewDepartment(type) {
       this.$http.post('departments', this.department)

@@ -54,7 +54,7 @@
 
                   </div>
                   <div class="col-xs-12 col-lg-4 text-muted text-lg-right">
-                  invited
+                  {{ invited.teachers }} invited
                   </div>
                 </div>
                     <div class="institute-details-actions ">
@@ -78,7 +78,7 @@
 
                   </div>
                   <div class="col-xs-12 col-lg-4 text-muted text-lg-right">
-                  invited
+                  {{ invited.employees }} invited
                   </div>
                 </div>
                     <div class="institute-details-actions ">
@@ -131,17 +131,18 @@ export default{
     sendInvite(type) {
       const emails = this[type];
       if (emails) {
+        debugger;
         const entries = this.getArrayFromString(this[type]);
         this.$http.post(`people/${type}/invite`, { [type]: entries })
          .then(() => {
-           this.invited[type] += 1;
+           this.invited[type] += entries.length;
            this[type] = '';
          });
       }
     },
 
     getArrayFromString(string) {
-      return string.split(' ');
+      return string.split(new RegExp([' ', '///,', ';'].join('|'), 'g')).filter(email => email !== '');
     },
   },
   components: { SettingsBox },

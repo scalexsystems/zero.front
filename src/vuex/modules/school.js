@@ -26,6 +26,7 @@ export default {
     userMap: {},
     departments: [],
     disciplines: [],
+    semesters: []
     courses: [],
   },
   getters: {
@@ -44,7 +45,7 @@ export default {
     teachers(state) {
       return state.teachers;
     },
-    [getters.users](state) {
+    users(state) {
       return state.users;
     },
     departments(state) {
@@ -53,7 +54,7 @@ export default {
     disciplines(state) {
       return state.disciplines;
     },
-    [getters.departmentsByType](state) {
+    departmentsByType(state) {
       const departments = state.departments;
       if (departments.length) {
         const groupedDepartments = group(departments, (department => department.academic));
@@ -63,6 +64,9 @@ export default {
         };
       }
       return {};
+    },
+    semesters(state) {
+      return state.semesters;
     },
   },
   mutations: {
@@ -202,13 +206,12 @@ export default {
     },
     getSemesters({ commit }, params = {}) {
       return Vue.http.get('semesters', { params })
-        .then(response => response.json())
-        .then((result) => {
-          commit('SET_SEMESTERS', result.data);
-        })
-        .catch(response => response);
+          .then(response => response.json())
+          .then((result) => {
+            commit('SET_SEMESTERS', result.data);
+          })
+          .catch(response => response);
     },
-
     findStudent({ state }, id) {
       const index = state.studentMap[id];
 
@@ -218,14 +221,14 @@ export default {
 
       return null;
     },
-    [actions.addDepartment]({ commit }, department) {
-      commit(types.ADD_DEPARTMENT, { department });
+    addDepartment({ commit }, department) {
+      commit('ADD_DEPARTMENT', { department });
     },
-    [actions.addDiscipline]({ commit }, discipline) {
-      commit(types.ADD_DISCIPLINE, { discipline });
+    addDiscipline({ commit }, discipline) {
+      commit('ADD_DISCIPLINE', { discipline });
     },
-    [actions.addSemester]({ commit }, semester) {
-      commit(types.ADD_SEMESTER, { semester });
+    addSemester({ commit }, semester) {
+      commit('ADD_SEMESTER', { semester });
     },
   },
 };

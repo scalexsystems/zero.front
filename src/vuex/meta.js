@@ -26,7 +26,8 @@ export const actions = {
   getDisciplines: 'school/getDisciplines',
   getCourses: 'school/getCourses',
   findStudent: 'school/findStudent',
-
+  addDepartment: 'school/AddDepartment',
+  addDiscipline: 'school/AddDiscipline',
   getUser: 'getUser',
 };
 
@@ -42,5 +43,5 @@ export const getters = {
   disciplines: 'school/disciplines',
   semesters: 'school/semesters',
   departmentsByType: 'school/departmentsByType',
-  user: 'me/user',
+  user: 'user',
 };

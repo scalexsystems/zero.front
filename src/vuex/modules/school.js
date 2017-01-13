@@ -105,16 +105,16 @@ export default {
     SET_DISCIPLINES(state, disciplines) {
       state.disciplines = disciplines;
     },
-    [types.SET_SEMESTERS](state, semesters) {
+    SET_SEMESTERS(state, semesters) {
       state.semesters = semesters;
     },
-    [types.ADD_DEPARTMENT](state, departments) {
+    ADD_DEPARTMENT(state, departments) {
       pushIf(state.departments, departments, { }, []);
     },
-    [types.ADD_DISCIPLINE](state, disciplines) {
+    ADD_DISCIPLINE(state, disciplines) {
       pushIf(state.disciplines, disciplines, { }, []);
     },
-    [types.ADD_SEMESTER](state, semesters) {
+    ADD_SEMESTER(state, semesters) {
       pushIf(state.semesters, semesters, { }, []);
     },
   },

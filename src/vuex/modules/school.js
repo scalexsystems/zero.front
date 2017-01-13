@@ -26,7 +26,7 @@ export default {
     userMap: {},
     departments: [],
     disciplines: [],
-    semesters: []
+    semesters: [],
     courses: [],
   },
   getters: {
@@ -67,6 +67,9 @@ export default {
     },
     semesters(state) {
       return state.semesters;
+    },
+    courses(state) {
+      return state.courses;
     },
   },
   mutations: {

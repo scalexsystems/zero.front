@@ -2,7 +2,7 @@
   <settings-box title="Course Manager/Administrator">
 
         <template slot="actions">
-            <div role="button" class="btn btn-primary" @click="onCancel"> Cancel </div>
+            <div role="button" class="btn btn-default" @click=""> Cancel </div>
             <div role="button" class="btn btn-primary" @click="onSave"> Save </div>
         </template>
 
@@ -22,16 +22,16 @@
 
             <div class="col-xs-12 col-lg-8 offset-lg-2">
                 <div class="input-group input-group-lg">
-                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input class="form-control" type="search" v-model="q" @keyup="search">
+                    <input-search class="form-control" title="" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
+                                  @select="onSelect"></input-search>
                 </div>
             </div>
 
-            <div class="col-xs-12 col-lg-8 offset-lg-2">
+            <div class="col-xs-12 col-lg-8 offset-lg-2 manager-list">
                 <div class="row">
-                    <div class="col-xs-12 col-lg-6" v-for="(member, index) of members">
-                        <item-card :item="member"
-                                   @open="openMemberProfile(member, index)"></item-card>
+                    <div class="col-xs-12 col-lg-6" v-for="(manager, index) of managers">
+                        <item-card :item="manager"
+                                   @open="openMemberProfile(manager, index)"></item-card>
                     </div>
                 </div>
             </div>
@@ -45,42 +45,87 @@
 </template>
 <script lang="babel">
 import { mapActions, mapGetters } from 'vuex';
+import throttle from 'lodash/throttle';
 import SettingsBox from './SettingsBox.vue';
 import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
 import { actions, getters } from '../vuex/meta';
+import { PersonCard as ItemCard } from '../components';
 
 export default{
   created() {
-    if (this.employees.length === 0) {
-      this.getEmployees();
+    if (this.managers.length === 0) {
+      this.getManagers();
     }
   },
   data() {
     return {
       loaded: false,
-      employees: {},
       errors: {},
+      managers: [],
+      query: '',
+      addedManagers: [],
     };
   },
   computed: {
+    suggestions() {
+      return [
+        ...this.teachers,
+        ...this.employees,
+      ];
+    },
     ...mapGetters({
+      teachers: getters.teachers,
       employees: getters.employees,
     }),
   },
-  components: { SettingsBox, Modal, SettingsCard },
+  components: { SettingsBox, Modal, SettingsCard, ItemCard },
   methods: {
-    onCancel() {
-      this.onAdd = false;
+    getManagers() {
+      this.$http.get('people/roles/course-manager')
+        .then((response) => {
+          this.managers = response.body.data;
+        });
     },
-    onSave() {},
+    onSuggest: throttle(function onSuggest({ value, start, end }) {
+      start();
+      this.getTeachers({ q: value }).then(end);
+    }, 400),
+    search() {},
     ...mapActions({
-      getEmployees: actions.getEmployees,
+      getTeachers: actions.getTeachers,
+    }),
+    onSelect(teacher) {
+      if (this.addedManagers.indexOf(teacher.id) < 0) {
+        this.addedManagers.push(teacher);
+        this.managers.push(teacher);
+      }
+    },
+    onSave() {
+      const managers = this.addedManagers;
+      this.$http.post('people/roles/course-manager', { managers })
+        .then(() => {
+        });
+    },
+    ...mapActions({
+      addManager: actions.addManager,
     }),
   },
 };
 </script>
-<style lang="scss">
-    body{
-    }
+<style lang="scss" scoped>
+@import '../styles/variables';
+@import '../styles/methods';
+.btn-default{
+  border: solid 1px $gray;
+  }
+.btn {
+  margin: 0 rem(10px);
+  width: rem(80px);
+}
+
+.manager-list {
+  padding: rem(20px) 0;
+}
+
 </style>

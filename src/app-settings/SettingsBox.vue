@@ -49,6 +49,10 @@ export default{
       type: String,
       required: true,
     },
+    subtitle: {
+      type: String,
+      default: '',
+    },
   },
   components: { ActivityBox },
 };

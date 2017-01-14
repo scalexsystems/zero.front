@@ -2,7 +2,7 @@
   <settings-box title="Course Manager/Administrator">
 
         <template slot="actions">
-            <div role="button" class="btn btn-default" @click=""> Cancel </div>
+            <div role="button" class="btn btn-default" @click="onCancel"> Cancel </div>
             <div role="button" class="btn btn-primary" @click="onSave"> Save </div>
         </template>
 
@@ -20,20 +20,22 @@
       </template>
         <template slot="settings-body">
 
-            <div class="col-xs-12 col-lg-8 offset-lg-2">
+            <div class="col-xs-12 col-lg-8 offset-lg-2 search-wrapper">
                 <div class="input-group input-group-lg">
-                    <input-search class="form-control" title="" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
+                    <input-search class="form-control teacher-search" title="" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
                                   @select="onSelect"></input-search>
                 </div>
-            </div>
 
-            <div class="col-xs-12 col-lg-8 offset-lg-2 manager-list">
+            <div class="manager-list">
                 <div class="row">
                     <div class="col-xs-12 col-lg-6" v-for="(manager, index) of managers">
                         <item-card :item="manager"
-                                   @open="openMemberProfile(manager, index)"></item-card>
+                                   @open="openMemberProfile(manager, index)">
+                            <div class="person-card-bio" v-if="!manager.bio"> Profile not updated </div>
+                        </item-card>
                     </div>
                 </div>
+            </div>
             </div>
 
         </template>
@@ -45,7 +47,7 @@
 </template>
 <script lang="babel">
 import { mapActions, mapGetters } from 'vuex';
-import throttle from 'lodash/throttle';
+import { throttle, difference } from 'lodash';
 import SettingsBox from './SettingsBox.vue';
 import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
@@ -75,8 +77,7 @@ export default{
       ];
     },
     ...mapGetters({
-      teachers: getters.teachers,
-      employees: getters.employees,
+      suggestions: getters.teachers,
     }),
   },
   components: { SettingsBox, Modal, SettingsCard, ItemCard },
@@ -95,17 +96,26 @@ export default{
     ...mapActions({
       getTeachers: actions.getTeachers,
     }),
-    onSelect(teacher) {
-      if (this.addedManagers.indexOf(teacher.id) < 0) {
-        this.addedManagers.push(teacher);
-        this.managers.push(teacher);
+    onSelect(person) {
+      if (this.managers.indexOf(person.id) < 0) {
+        this.addedManagers.push(person);
+        this.managers.push(person);
       }
     },
     onSave() {
       const managers = this.addedManagers;
-      this.$http.post('people/roles/course-manager', { managers })
+      if (managers.length) {
+        this.$http.post('people/roles/course-manager', { managers })
         .then(() => {
+          this.addedManagers = [];
         });
+      }
+    },
+    onCancel() {
+      if (this.addedManagers.length > this.managers.length) {
+        this.managers = difference(this.addedManagers, this.managers);
+        this.addedManagers = [];
+      }
     },
     ...mapActions({
       addManager: actions.addManager,
@@ -126,6 +136,21 @@ export default{
 
 .manager-list {
   padding: rem(20px) 0;
+}
+
+.person-card-bio {
+    flex: 1;
+    font-size: 0.85714rem;
+    color: $gray;
+}
+
+.teacher-search {
+   border: 0;
+   padding: 0;
+}
+
+.search-wrapper {
+   padding: 0;
 }
 
 </style>

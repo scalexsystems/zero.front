@@ -58,8 +58,9 @@ export default{
 @import "../styles/variables";
 
 .settings-card {
-  height: inherit;
+  min-height: rem(70px);
   margin: rem(10px) 0;
+
 
   &-title {
 

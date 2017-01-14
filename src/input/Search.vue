@@ -1,6 +1,6 @@
 <template>
 <div class="form-group" :class="[feedbackState]">
-  <label class="form-control-label" :for="id" v-if="is(title)">{{ title }}</label>
+  <label class="form-control-label" :for="id" v-if="title">{{ title }}</label>
 
   <div :tabindex="isOpen ? -1 : 0"
        :class="{ open: isOpen }"

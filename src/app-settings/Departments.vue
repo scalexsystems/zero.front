@@ -26,7 +26,7 @@
             <div class="department-modal-body">
                 <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
                 <input-text title="Department acronym" v-model="department.short_form" :feedback="errors.short_form"></input-text>
-                <input-search class="form-control" title="" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
+                <input-search class="form-control" title="Head of Department" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
                               @select="onSelect"></input-search>
 
                 <input-radio title="Department Type" required v-model="department.academic"  :options="departmentTypes"
@@ -71,7 +71,7 @@
 </template>
 <script lang="babel">
 import { mapActions, mapGetters } from 'vuex';
-import throttle from 'lodash/throttle';
+import { clone, throttle } from 'lodash';
 import SettingsBox from './SettingsBox.vue';
 import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
@@ -81,6 +81,9 @@ export default{
   created() {
     if (Object.keys(this.departmentsByType).length === 0) {
       this.getDepartments();
+    }
+    if (this.suggestions.length === 0) {
+      this.getTeachers();
     }
   },
   data() {
@@ -97,7 +100,7 @@ export default{
         id: false,
         index: false,
       },
-      query: {},
+      query: '',
       errors: {},
     };
   },
@@ -143,6 +146,7 @@ export default{
       start();
       this.getTeachers({ q: value }).then(end);
     }, 400),
+    search() {},
     onSelect(teacher) {
       this.department.hod = teacher;
     },
@@ -172,13 +176,14 @@ export default{
         id: department.id,
         index,
       };
-      this.department = department;
+      this.department = clone(department);
       this.onAdd = true;
     },
 
     ...mapActions({
       getDepartments: actions.getDepartments,
       addDepartment: actions.addDepartment,
+      getTeachers: actions.getTeachers,
     }),
   },
 };

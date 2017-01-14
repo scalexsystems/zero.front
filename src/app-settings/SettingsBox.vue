@@ -17,8 +17,9 @@
         </template>
 
         <div class="settings-pane">
+
             <div class="text-xs-center">
-                <div class="settings-header-image">
+                <div class="settings-header-image" v-if="withHeader">
                     <slot name="header-image"></slot>
                  </div>
                  <div class="settings-header-name">
@@ -30,9 +31,15 @@
 
                 </div>
             </div>
-        <slot name="settings-body">
-        </slot>
-        </div>
+            <div class="container py-2">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-8 offset-lg-2">
+                        <div class="row my-2">
+                            <slot name="settings-body"></slot>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     </activity-box>
 </template>
@@ -52,6 +59,10 @@ export default{
     subtitle: {
       type: String,
       default: '',
+    },
+    withHeader: {
+      type: Boolean,
+      default: true,
     },
   },
   components: { ActivityBox },

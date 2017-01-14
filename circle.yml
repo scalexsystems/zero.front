@@ -5,7 +5,7 @@ machine:
 dependencies:
   pre:
     - sudo curl -s --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
-    - curl -s -o- -L https://yarnpkg.com/install.sh | bash
+    - type -P yarn &> /dev/null || curl -o- -s -L https://yarnpkg.com/install.sh | bash
   cache_directories:
     - "~/.yarn-cache"
   override:

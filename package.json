@@ -19,7 +19,7 @@
   "dependencies": {
     "Validator": "^1.0.3",
     "autosize": "^3.0.20",
-    "bootstrap": "~4.0.0-alpha",
+    "bootstrap": "4.0.0-alpha.5",
     "debug": "^2.6.0",
     "es6-promise": "^4.0.5",
     "filesize": "^3.3.0",

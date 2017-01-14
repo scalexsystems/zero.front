@@ -30,8 +30,6 @@ export const actions = {
   findStudent: 'school/findStudent',
   addDepartment: 'school/AddDepartment',
   addDiscipline: 'school/AddDiscipline',
-  getCourses: 'school/getCourses',
-  findStudent: 'school/findStudent',
   getUser: 'getUser',
 };
 

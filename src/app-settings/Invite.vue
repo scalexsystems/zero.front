@@ -131,7 +131,6 @@ export default{
     sendInvite(type) {
       const emails = this[type];
       if (emails) {
-        debugger;
         const entries = this.getArrayFromString(this[type]);
         this.$http.post(`people/${type}/invite`, { [type]: entries })
          .then(() => {

@@ -16,6 +16,14 @@ import UserDirectory from './UserDirectory.vue';
 import UserMessages from './UserMessages.vue';
 import UserPreview from './UserPreview.vue';
 
+import Settings from './Settings.vue';
+import Departments from './Departments.vue';
+import Disciplines from './Disciplines.vue';
+import Semesters from './Semesters.vue';
+import CourseManagement from './CourseManagement.vue';
+import InstituteDetails from './InstituteDetails.vue';
+import Invite from './Invite.vue';
+
 import hubStore from './vuex/store';
 
 export default function (Vue, { store, routes }) {
@@ -41,6 +49,14 @@ export default function (Vue, { store, routes }) {
         { name: 'acad.edit', path: 'courses/:course/edit', component: CourseEdit },
         { name: 'acad.course', path: 'courses/:course', component: Course },
         { name: 'acad.course-preview', path: 'courses/:course/preview', component: CoursePreview },
+        // Settings.
+        { name: 'settings', path: 'settings', component: Settings },
+        { name: 'departments', path: 'settings/departments', component: Departments },
+        { name: 'disciplines', path: 'settings/disciplines', component: Disciplines },
+        { name: 'semesters', path: 'settings/semesters', component: Semesters },
+        { name: 'course-management', path: 'settings/courses', component: CourseManagement },
+        { name: 'institute-details', path: 'settings/institute', component: InstituteDetails },
+        { name: 'send-invites', path: 'settings/invites', component: Invite },
       ],
     },
     { path: '/', redirect: '/hub' },

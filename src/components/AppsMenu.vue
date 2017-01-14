@@ -55,6 +55,7 @@ export default {
     apps: () => [
       { name: 'Hub', icon: hub, link: '/' },
       { name: 'People', icon: people, link: '/people' },
+      { name: 'Settings', icon: people, link: '/hub/settings' },
       { name: 'Academics', icon: academics, link: '/academics', locked: true },
       { name: 'Finances', icon: finances, link: '/finances', locked: true },
     ],

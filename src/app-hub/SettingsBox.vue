@@ -1,41 +1,38 @@
 <template>
 
     <activity-box class="settings-box"
-                  v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
-                  @close="$router.go(-1)">
+                  v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }">
 
         <template slot="icon">
             <slot name="icon">
-            <a class="activity-box-dismiss" role="button" @click.prevent.stop="$emit('close')">
-                <img src="../assets/cross.svg">
-            </a>
+              <a class="activity-box-dismiss" role="button" @click.prevent.stop="$router.go(-1)">
+                  <img src="../assets/cross.svg">
+              </a>
             </slot>
         </template>
 
         <template slot="actions">
-            <slot name="actions"></slot>
+            <slot name="actions" />
         </template>
 
         <div class="settings-pane">
 
             <div class="text-xs-center">
                 <div class="settings-header-image" v-if="withHeader">
-                    <slot name="header-image"></slot>
+                    <slot name="header-image" />
                  </div>
                  <div class="settings-header-name">
-                    <slot name="name"></slot>
+                    <slot name="name" />
                  </div>
                  <div class="settings-header-description">
-                 <slot name="description">
-                 </slot>
-
+                   <slot name="description" />
                 </div>
             </div>
             <div class="container py-2">
                 <div class="row">
                     <div class="col-xs-12 col-lg-8 offset-lg-2">
                         <div class="row my-2">
-                            <slot name="settings-body"></slot>
+                            <slot name="settings-body" />
                         </div>
                     </div>
                 </div>
@@ -58,7 +55,7 @@ export default{
     },
     subtitle: {
       type: String,
-      default: '',
+      default: '  ',
     },
     withHeader: {
       type: Boolean,

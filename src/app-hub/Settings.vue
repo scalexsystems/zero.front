@@ -18,14 +18,10 @@
     </template>
 
     <template slot="settings-body">
-
-                 <div class="col-xs-12 col-lg-6 settings-items" v-for="(setting,index) in settingCards">
-                  <setting-card class="settings-card" :title="setting.title" :text="setting.text" v-bind="{ index }"
-                               @cardClicked="settingClicked">
-
-
-                 </setting-card>
-            </div>
+       <div class="col-xs-12 col-lg-6 settings-items" v-for="(setting,index) in settingCards">
+            <setting-card class="settings-card" :title="setting.title" :text="setting.text" v-bind="{ index }"
+                         @cardClicked="settingClicked" />
+      </div>
     </template>
 </settings-box>
 

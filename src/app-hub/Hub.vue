@@ -2,7 +2,7 @@
 <div class="container hub-container">
   <div class="row hub-body">
     <div class="col-xs-12 col-lg-2 hub-sidebar-left fl fl-ver py-1" ref="sidebarLeft" @click="closeSidebar">
-      <router-link class="btn btn-secondary text-xs-left" :to="{ name: 'acad' }">
+      <router-link class="btn btn-text text-xs-left" :to="{ name: 'acad' }">
         <i class="fa fa-fw fa-book"></i> Manage Courses
       </router-link>
 
@@ -111,6 +111,10 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/variables';
 @import '../styles/mixins';
+
+.btn-text {
+  color: inherit;
+}
 
 .tab-buttons {
   > a {

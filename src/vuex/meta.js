@@ -13,7 +13,8 @@ export const types = {
   ADD_DEPARTMENT: 'school/ADD_DEPARTMENT',
   ADD_DISCIPLINE: 'school/ADD_DISCIPLINE',
   ADD_SEMESTER: 'school/ADD_SEMESTER',
-  SET_USER: 'me/SET_USER',
+
+  SET_USER: 'SET_USER',
 };
 
 export const actions = {
@@ -29,6 +30,8 @@ export const actions = {
   findStudent: 'school/findStudent',
   addDepartment: 'school/AddDepartment',
   addDiscipline: 'school/AddDiscipline',
+  getCourses: 'school/getCourses',
+  findStudent: 'school/findStudent',
   getUser: 'getUser',
 };
 

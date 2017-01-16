@@ -28,8 +28,8 @@ export const actions = {
   getSemesters: 'school/getSemesters',
   getCourses: 'school/getCourses',
   findStudent: 'school/findStudent',
-  addDepartment: 'school/AddDepartment',
-  addDiscipline: 'school/AddDiscipline',
+  addDepartment: 'school/addDepartment',
+  addDiscipline: 'school/addDiscipline',
   getUser: 'getUser',
 };
 

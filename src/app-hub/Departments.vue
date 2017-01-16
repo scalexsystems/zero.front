@@ -41,7 +41,14 @@
         </modal>
 
         <div class="container py-2">
-            <div class="text-xs-center"> ACADEMIC DEPARTMENTS </div>
+            <div class="fl fl-middle">
+                <hr class="fl-auto">
+                <small class="px-1 text-uppercase">
+                    Academic Departments
+                </small>
+                <hr class="fl-auto">
+            </div>
+
             <div class="row my-2">
                 <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in academic" :title="department.name"
                        :text="getText(department)" :additional="true" :index="index"
@@ -53,7 +60,14 @@
                   </template>
                 </settings-card>
               </div>
-            <div class="text-xs-center"> NON-ACADEMIC/ADMIN DEPARTMENTS </div>
+            <div class="fl fl-middle">
+                <hr class="fl-auto">
+                <small class="px-1 text-uppercase">
+                    Non-Academic / Administrative Departments
+                </small>
+                <hr class="fl-auto">
+            </div>
+
             <div class="row my-2">
                 <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in nonAcademic" :title="department.name"
                        :text="getText(department)" :additional="true" :index="index"

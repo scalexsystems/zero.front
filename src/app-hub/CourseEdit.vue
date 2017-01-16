@@ -20,17 +20,17 @@
                 <input-text title="Course code" required v-model="course.code" :feedback="errors.code"></input-text>
               </div>
               <div class="col-xs-12 col-lg-6">
-                <input-select title="Department" required v-model="course.department_id" :feedback="errors.department_id" :options="departments"></input-select>
+                <input-select title="Department" required v-model.number="course.department_id" :feedback="errors.department_id" :options="departments" />
               </div>
 
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Discipline" required v-model.number="course.discipline_id" :feedback="errors.discipline_id" :options="disciplines"></input-select>
+                <input-select title="Discipline" required v-model.number="course.discipline_id" :feedback="errors.discipline_id" :options="disciplines" />
               </div>
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Year" required v-model.number="course.year" :feedback="errors.year" :options="years"></input-select>
+                <input-select title="Year" required v-model.number="course.year_id" :feedback="errors.year_id" :options="years" />
               </div>
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Semester" required v-model="course.semester" :feedback="errors.semester" :options="semesters"></input-select>
+                <input-select title="Semester" required v-model.number="course.semester_id" :feedback="errors.semester_id" :options="semesters" />
               </div>
             </div>
           </div>
@@ -138,12 +138,6 @@ export default {
         { id: 4, name: 'Fourth Year' },
       ];
     },
-    semesters() {
-      return [
-        { id: 1, name: 'Semester 1' },
-        { id: 2, name: 'Semester 2' },
-      ];
-    },
     departments() {
       return this.allDepartments.filter(department => department.academic);
     },
@@ -153,6 +147,7 @@ export default {
       disciplines: getters.disciplines,
       allDepartments: getters.departments,
     }),
+    ...mapGetters('school', ['semesters']),
   },
   methods: {
     findInstructor: throttle(function findInstructor({ value, start, end }) {
@@ -190,7 +185,7 @@ export default {
     updateCourse() {
       // TODO: Add validation.
       const payload = {
-        ...mapObject(this.course, ['name', 'code', 'department_id', 'discipline_id', 'year', 'semester']),
+        ...mapObject(this.course, ['name', 'code', 'department_id', 'discipline_id', 'year_id', 'semester_id']),
         instructors: this.instructors.map(instructor => instructor.id),
         prerequisites: this.prerequisites.map(course => course.id),
       };
@@ -227,8 +222,6 @@ export default {
     ...mapActions({
       findTeachers: actions.getTeachers,
       findCourses: actions.getCourses,
-      getDisciplines: actions.getDisciplines,
-      getDepartments: actions.getDepartments,
     }),
   },
   watch: {
@@ -237,12 +230,6 @@ export default {
     },
   },
   created() {
-    if (!this.departments.length) {
-      this.getDepartments();
-    }
-    if (!this.disciplines.length) {
-      this.getDisciplines();
-    }
     if (!this.courses.length) {
       this.findCourses();
     }

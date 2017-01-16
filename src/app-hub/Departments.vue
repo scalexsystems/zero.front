@@ -167,7 +167,6 @@ export default{
     updateDepartment(type) {
       this.$http.put(`departments/${this.editReference.id}`, this.department)
         .then(() => {
-          debugger;
           this.onAdd = false;
           this.departmentsByType[type][this.editReference.index] = clone(this.department);
           this.resetReference();

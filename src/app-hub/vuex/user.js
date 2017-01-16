@@ -115,7 +115,7 @@ export default {
       commit('ADD_MESSAGE', { userId: senderId, messages: [message] });
     },
     sendMessageToUser({ commit, rootState }, { userId, content, params = {}, errors = [] }) {
-      const message = { id: Date.now(), content, sending: true, sender: rootState.user.user };
+      const message = { id: Date.now(), content, sending: true, sender: rootState.user };
       commit('ADD_MESSAGE', { userId, messages: [message] });
 
       return Vue.http.post(`me/messages/users/${userId}`, { content, ...params })

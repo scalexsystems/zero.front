@@ -7,26 +7,28 @@
     <img src="../assets/campus-directory-icon.svg">
   </template>
 
-  <div class="directory-header row">
-    <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
-      <div class="input-group input-group-lg">
-        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-        <input class="form-control" type="search" v-model="q" @keyup="$emit('search', q)">
+  <div class="container">
+    <div class="directory-header row">
+      <div class="col-xs-12 col-lg-8 offset-lg-2 my-2">
+        <div class="input-group input-group-lg">
+          <span class="input-group-addon"><i class="fa fa-search"></i></span>
+          <input class="form-control" type="search" v-model="q" @keyup="$emit('search', q)">
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="row directory-results-container">
-    <div class="col-xs-12 col-lg-8 offset-lg-2">
-      <div class="row">
-        <div class="col-xs-12 directory-results-description">{{ resultMessage }}</div>
-      </div>
-      <div class="row">
-        <div v-for="(item, index) of filtered" class="col-xs-12 col-md-6">
-          <div :is="component" :item="item" @open="$emit('item', item, index)"></div>
+    <div class="row directory-results-container">
+      <div class="col-xs-12 col-lg-8 offset-lg-2">
+        <div class="row">
+          <div class="col-xs-12 directory-results-description">{{ resultMessage }}</div>
         </div>
+        <div class="row">
+          <div v-for="(item, index) of filtered" class="col-xs-12 col-md-6">
+            <div :is="component" :item="item" @open="$emit('item', item, index)"></div>
+          </div>
 
-        <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" spinner="waveDots" ref="infinite"></infinite-scroll>
+          <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" spinner="waveDots" ref="infinite"></infinite-scroll>
+        </div>
       </div>
     </div>
   </div>

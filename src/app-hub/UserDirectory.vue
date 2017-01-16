@@ -1,12 +1,11 @@
 <template>
-<directory title="Campus Directory"
-           subtitle="You can message any member of the institute."
-           v-bind="{ items: users }"
-           @load-more="onInfinite"
-           @close="onClose"
-           @search="onSearch"
-           @item="onPersonSelected">
-</directory>
+  <directory title="Campus Directory"
+             subtitle="You can message any member of the institute."
+             v-bind="{ items: users }"
+             @load-more="onInfinite"
+             @close="onClose"
+             @search="onSearch"
+             @item="onPersonSelected" />
 </template>
 
 <script lang="babel">

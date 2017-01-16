@@ -19,27 +19,26 @@
         </template>
 
         <template slot="settings-body">
-            <modal name="Add new semesters" :show="onAdd">
-                <div class="semester-modal-header">
-                    <div class="header-wrapper">
-                        <div class="semester-modal-title"> Add New Semester </div>
+            <modal name="Add new semesters" :show="onAdd" :dismissable="false">
+                <div class="card">
+                  <h4 class="card-header bg-white">Add New Semester</h4>
+
+                  <div class="card-block">
+                    <input-text title="Name of the discipline" required v-model="semester.name" :feedback="errors.name" />
+
+                    <div class="float-xs-right">
+                      <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
+                      <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
                     </div>
-                </div>
-                <div class="semester-modal-body">
-                    <input-text title="Name of the discipline" required v-model="semester.name" :feedback="errors.name"></input-text>
-                </div>
-
-
-                <div class="card-footer bg-white pt-2 pb-1">
-                    <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
-                    <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                  </div>
                 </div>
             </modal>
             <div class="container py-2">
                 <div class="row my-2">
-                    <settings-card class="col-xs-12 col-lg-6" v-for="(semester, index) in semesters" :title="semester.name"
-                                   :text="semester.short_name" @cardClicked="semesterClicked">
-                    </settings-card>
+                    <settings-card v-for="(semester, index) in semesters"
+                                   class="col-xs-12 col-lg-6"
+                                   :title="semester.name"
+                                   @cardClicked="semesterClicked" />
                 </div>
             </div>
         </template>

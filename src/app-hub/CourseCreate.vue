@@ -25,10 +25,10 @@
               <input-select title="Discipline" required v-model="course.discipline_id" :feedback="errors.discipline_id" :options="disciplines"></input-select>
             </div>
             <div class="col-xs-12 col-lg-4">
-              <input-select title="Year" required v-model.number="course.year" :feedback="errors.year" :options="years"></input-select>
+              <input-select title="Year" required v-model="course.year_id" :feedback="errors.year_id" :options="years"></input-select>
             </div>
             <div class="col-xs-12 col-lg-4">
-              <input-select title="Semester" required v-model.number="course.semester" :feedback="errors.semester" :options="semesters"></input-select>
+              <input-select title="Semester" required v-model="course.semester_id" :feedback="errors.semester_id" :options="semesters"></input-select>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ export default {
     return {
       qi: '',
       qc: '',
-      course: { name: '', code: '', department_id: null, discipline_id: null, year: null, semester: null },
+      course: { name: '', code: '', department_id: '', discipline_id: '', year_id: '', semester_id: '' },
       instructors: [],
       prerequisites: [],
       errors: {},
@@ -130,12 +130,6 @@ export default {
         { id: 4, name: 'Fourth Year' },
       ];
     },
-    semesters() {
-      return [
-        { id: 1, name: 'Semester 1' },
-        { id: 2, name: 'Semester 2' },
-      ];
-    },
     departments() {
       return this.allDepartments.filter(department => department.academic);
     },
@@ -145,6 +139,7 @@ export default {
       disciplines: getters.disciplines,
       allDepartments: getters.departments,
     }),
+    ...mapGetters('school', ['semesters']),
   },
   methods: {
     findInstructor: throttle(function findInstructor({ value, start, end }) {
@@ -202,22 +197,14 @@ export default {
         .catch(response => response.json())
         .then(result => this.$set(this, 'errors', result.errors))
         .catch(error => error)
-        .then(() => this.$refs.action.classList.remove('disabled'));
+        .then(() => this.$refs.action && this.$refs.action.classList.remove('disabled'));
     },
     ...mapActions({
       findTeachers: actions.getTeachers,
       findCourses: actions.getCourses,
-      getDisciplines: actions.getDisciplines,
-      getDepartments: actions.getDepartments,
     }),
   },
   created() {
-    if (!this.departments.length) {
-      this.getDepartments();
-    }
-    if (!this.disciplines.length) {
-      this.getDisciplines();
-    }
     if (!this.courses.length) {
       this.findCourses();
     }

@@ -35,7 +35,7 @@
       <div class="card card-block" v-if="course">
         <div class="card-title text-primary">{{ course.name }}</div>
         <div class="small">
-          {{ department }} &centerdot; {{ discipline }} &centerdot; {{ course.year_text }} &centerdot; {{ course.semester_text }}
+          {{ department }} &centerdot; {{ discipline }} &centerdot; {{ course.year_text }} &centerdot; {{ semester }}
         </div>
 
         <div class="text-muted pt-2">
@@ -84,12 +84,6 @@ export default {
     if (!this.courses.length) {
       this.getCourses();
     }
-    if (!this.departments.length) {
-      this.getDepartments();
-    }
-    if (!this.disciplines.length) {
-      this.getDisciplines();
-    }
   },
   computed: {
     showCourse() {
@@ -100,9 +94,7 @@ export default {
       const departments = this.departments;
 
       if (course) {
-        const department = departments.filter(d => course.department_id === d.id)[0];
-
-        if (department) return department.name;
+        return (departments.find(d => course.department_id === d.id) || {}).name;
       }
 
       return '';
@@ -112,20 +104,28 @@ export default {
       const disciplines = this.disciplines;
 
       if (course) {
-        const discipline = disciplines.filter(d => course.discipline_id === d.id)[0];
-
-        if (discipline) return discipline.name;
+        return (disciplines.find(d => course.discipline_id === d.id) || {}).name;
       }
 
       return '';
     },
-    ...mapGetters('school', ['courses', 'departments', 'disciplines']),
+    semester() {
+      const course = this.course;
+      const semesters = this.semesters;
+
+      if (course) {
+        return (semesters.find(semester => semester.id === course.semester_id) || {}).name;
+      }
+
+      return '';
+    },
+    ...mapGetters('school', ['courses', 'departments', 'disciplines', 'semesters']),
   },
   methods: {
     openCourse(course) {
       this.course = course;
     },
-    ...mapActions('school', ['getCourses', 'getDepartments', 'getDisciplines']),
+    ...mapActions('school', ['getCourses']),
   },
 };
 </script>

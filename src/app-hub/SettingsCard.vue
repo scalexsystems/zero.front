@@ -1,25 +1,24 @@
 <template>
-<div>
-  <div class="card settings-card" role="button" @click='$emit("cardClicked", index, context)'>
-      <div class="card-block">
-      <div class="settings-card-title">
-        <slot name="title">
-            <span class="card-title"> {{ title }} </span>
-        </slot>
-   </div>
-    <div class="settings-card-text">
-          <slot name="text">
-          <small class="card-text text-muted">{{ text }} </small>
-          </slot>
-    </div>
-    </div>
+ <div><!--Wrapper as whole code base is pushing classes to this component. -->
+    <div class="card settings-card" role="button" @click='$emit("cardClicked", index, context)'>
+        <div class="card-block">
+            <div class="settings-card-title">
+                <slot name="title">
+                    <span class="card-title"> {{ title }} </span>
+                </slot>
+            </div>
+            <div class="settings-card-text" v-if="text">
+                <slot name="text">
+                    <small class="card-text text-muted">{{ text }} </small>
+                </slot>
+            </div>
+        </div>
 
-    <div class="settings-card-additional-text" v-if="additional">
-        <slot name="additional-text">
-        </slot>
+        <div class="settings-card-additional-text" v-if="additional">
+            <slot name="additional-text" />
+        </div>
     </div>
   </div>
- </div>
 </template>
 <script lang="babel">
 export default{
@@ -58,7 +57,8 @@ export default{
 @import "../styles/variables";
 
 .settings-card {
-  min-height: rem(70px);
+  // min-height: rem(70px);
+  // height: 100%;
   margin: rem(10px) 0;
 
 

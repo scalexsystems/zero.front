@@ -5,6 +5,7 @@
               @close="$router.go(-1)">
 
     <template slot="icon">
+        <img src="../assets/settings/icon-settings.svg">
     </template>
 
 
@@ -49,7 +50,7 @@ export default {
       subtitle: 'Institute Admin Settings',
       settingCards: [
         {
-          title: 'Academic & Administrative Departments',
+          title: 'Departments',
           text: this.departmentCount,
           path: 'departments',
         },

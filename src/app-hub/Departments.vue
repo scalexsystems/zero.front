@@ -1,4 +1,4 @@
-<template>
+    <template>
 <settings-box title="Departments">
 
     <template slot="actions">
@@ -21,11 +21,11 @@
     <template slot="settings-body">
         <modal name="Add new department" :show="onAdd">
                 <div class="header-wrapper">
-                  <div class="department-modal-title"> Add New Department </div>
+                  <div class="department-modal-title"> {{ title }} </div>
             </div>
             <div class="department-modal-body">
                 <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
-                <input-text title="Department acronym" v-model="department.short_form" :feedback="errors.short_form"></input-text>
+                <input-text title="Department acronym" v-model="department.short_name" :feedback="errors.short_name"></input-text>
                 <input-search class="form-control" title="Head of Department" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
                               @select="onSelect"></input-search>
 
@@ -42,7 +42,8 @@
             <div class="text-xs-center"> ACADEMIC DEPARTMENTS </div>
             <div class="row my-2">
                 <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in academic" :title="department.name"
-                       :text="getText(department)" :additional="true" @cardClicked="departmentClicked" context="academic">
+                       :text="getText(department)" :additional="true" :index="index"
+                       @cardClicked="departmentClicked" context="academic">
                   <template slot="additional-text">
                     {{ department.stats.student || 0 }} students,
                     {{ department.stats.teachers || 0 }} teachers,
@@ -50,10 +51,11 @@
                   </template>
                 </settings-card>
               </div>
-            <div class="text-xs-center"> NON-ACADEMIC DEPARTMENTS </div>
+            <div class="text-xs-center"> NON-ACADEMIC/ADMIN DEPARTMENTS </div>
             <div class="row my-2">
                 <settings-card class="col-xs-12 col-lg-6" v-for="(department, index) in nonAcademic" :title="department.name"
-                       :text="getText(department)" :additional="true" @cardClicked="departmentClicked" context="nonAcademic">
+                       :text="getText(department)" :additional="true" :index="index"
+                       @cardClicked="departmentClicked" context="nonAcademic">
                   <template slot="additional-text">
                     {{ department.stats.student || 0 }} students,
                     {{ department.stats.teachers || 0 }} teachers,
@@ -92,8 +94,8 @@ export default{
       loaded: false,
       department: {
         name: '',
-        short_form: ' ',
-        hod: ' ',
+        short_name: '',
+        hod: '',
         academic: '',
       },
       editReference: {
@@ -118,6 +120,9 @@ export default{
     nonAcademic() {
       return this.departmentsByType.nonAcademic;
     },
+    title() {
+      return this.editReference.id ? 'Edit Department' : 'Add Department';
+    },
     ...mapGetters({
       departmentsByType: getters.departmentsByType,
       suggestions: getters.teachers,
@@ -131,16 +136,13 @@ export default{
     },
     onCancel() {
       this.onAdd = false;
+      this.resetReference();
     },
     onSubmit() {
       const type = this.department.academic;
       this.department.academic = type === 'academic';
       const call = this.editReference.id ? 'updateDepartment' : 'addNewDepartment';
       this[call](type);
-      this.editReference = {
-        id: false,
-        index: false,
-      };
     },
     onSuggest: throttle(function onSuggest({ value, start, end }) {
       start();
@@ -156,14 +158,17 @@ export default{
         this.onAdd = false;
         this.departmentsByType[type].push(this.department);
         this.addDepartment(this.department);
+        this.resetReference();
       })
        .catch(() => {});
     },
     updateDepartment(type) {
       this.$http.put(`departments/${this.editReference.id}`, this.department)
         .then(() => {
+          debugger;
           this.onAdd = false;
-          this.departmentsByType[type][this.editReference.index] = this.department;
+          this.departmentsByType[type][this.editReference.index] = clone(this.department);
+          this.resetReference();
         });
     },
     getText(department) {
@@ -179,7 +184,15 @@ export default{
       this.department = clone(department);
       this.onAdd = true;
     },
-
+    resetReference() {
+      Object.keys(this.department).forEach((key) => {
+        this.department[key] = '';
+      });
+      this.editReference = {
+        id: false,
+        index: false,
+      };
+    },
     ...mapActions({
       getDepartments: actions.getDepartments,
       addDepartment: actions.addDepartment,

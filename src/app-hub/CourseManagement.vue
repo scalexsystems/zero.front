@@ -20,7 +20,7 @@
       </template>
         <template slot="settings-body">
 
-            <div class="col-xs-12 col-lg-8 offset-lg-2 search-wrapper">
+            <div class="col-xs-12 col-lg-12 search-wrapper">
                 <div class="input-group input-group-lg">
                     <input-search class="form-control teacher-search" title="" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
                                   @select="onSelect"></input-search>
@@ -112,8 +112,8 @@ export default{
       }
     },
     onCancel() {
-      if (this.addedManagers.length > this.managers.length) {
-        this.managers = difference(this.addedManagers, this.managers);
+      if (this.addedManagers.length) {
+        this.managers = difference(this.managers, this.addedManagers);
         this.addedManagers = [];
       }
     },

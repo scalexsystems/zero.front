@@ -6,7 +6,7 @@
         <template slot="icon">
             <slot name="icon">
               <a class="activity-box-dismiss" role="button" @click.prevent.stop="$router.go(-1)">
-                  <img src="../assets/cross.svg">
+                  <img src="../assets/settings/back.svg">
               </a>
             </slot>
         </template>

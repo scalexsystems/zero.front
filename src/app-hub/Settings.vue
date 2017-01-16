@@ -5,6 +5,7 @@
               @close="$router.go(-1)">
 
     <template slot="icon">
+        <img src="../assets/settings/icon-settings.svg">
     </template>
 
 
@@ -35,22 +36,19 @@ import SettingsBox from './SettingsBox.vue';
 
 
 export default {
-  created() {
-    if (this.departments.length === 0) {
-      this.getDepartments()
-        .then(() => {
-          this.departmentCount = this.departments.length;
-        });
-    }
-  },
   data() {
     return {
       title: 'Settings',
       subtitle: 'Institute Admin Settings',
-      settingCards: [
+    };
+  },
+  components: { SettingsBox, SettingCard },
+  computed: {
+    settingCards() {
+      return [
         {
-          title: 'Academic & Administrative Departments',
-          text: this.departmentCount,
+          title: 'Departments',
+          text: `${this.departments.length} departments added`,
           path: 'departments',
         },
         {
@@ -83,12 +81,8 @@ export default {
           text: 'Invite students and teachers',
           path: 'send-invites',
         },
-      ],
-      departmentCount: 0,
-    };
-  },
-  components: { SettingsBox, SettingCard },
-  computed: {
+      ];
+    },
     ...mapGetters({
       departments: getters.departments,
     }),

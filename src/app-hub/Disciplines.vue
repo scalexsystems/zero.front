@@ -37,7 +37,7 @@
             <div class="container py-2">
                 <div class="row my-2">
                     <settings-card class="col-xs-12 col-lg-6" v-for="(discipline, index) in disciplines" :title="discipline.name"
-                                   :text="discipline.short_name" @cardClicked="disciplineClicked">
+                                   :index="index" :text="discipline.short_name" @cardClicked="disciplineClicked">
                     </settings-card>
                 </div>
             </div>
@@ -47,6 +47,7 @@
 </template>
 <script lang="babel">
 import { mapActions, mapGetters } from 'vuex';
+import { clone } from 'lodash';
 import SettingsBox from './SettingsBox.vue';
 import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
@@ -85,6 +86,7 @@ export default{
     },
     onCancel() {
       this.onAdd = false;
+      this.resetReference();
     },
     onSubmit() {
       const call = this.editReference.id ? 'updateDiscipline' : 'addNewDiscipline';
@@ -100,6 +102,7 @@ export default{
         this.onAdd = false;
         this.disciplines.push(this.discipline);
         this.addDiscipline(this.discipline);
+        this.resetReference();
       })
       .catch(() => {});
     },
@@ -107,7 +110,8 @@ export default{
       this.$http.put(`disciplines/${this.editReference.id}`, this.discipline)
       .then(() => {
         this.onAdd = false;
-        this.disciplines[this.editReference.index] = this.discipline;
+        this.disciplines[this.editReference.index] = clone(this.discipline);
+        this.resetReference();
       });
     },
     disciplineClicked(index) {
@@ -116,8 +120,17 @@ export default{
         id: discipline.id,
         index,
       };
-      this.discipline = discipline;
+      this.discipline = clone(discipline);
       this.onAdd = true;
+    },
+    resetReference() {
+      Object.keys(this.discipline).forEach((key) => {
+        this.discipline[key] = '';
+      });
+      this.editReference = {
+        id: false,
+        index: false,
+      };
     },
     ...mapActions({
       getDisciplines: actions.getDisciplines,

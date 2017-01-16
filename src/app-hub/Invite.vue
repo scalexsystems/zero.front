@@ -17,11 +17,17 @@
             <div class="container py-2">
                 <div class="row my-2">
                     <div class="col-xs-12 col-lg-12">
-                        <div class="text-xs-center"> INVITE STUDENTS </div>
+                        <div class="fl fl-middle">
+                            <hr class="fl-auto">
+                            <small class="px-1 text-uppercase">
+                                Invite Students
+                            </small>
+                            <hr class="fl-auto">
+                        </div>
+
 
                         <div class="invite-input input-group input-group-lg">
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input class="form-control" type="search" v-model="students">
+                        <input class="form-control" type="text" v-model="students">
                     </div>
 
                 <div class="row">
@@ -33,7 +39,7 @@
                   {{ invited.students }} invited
                   </div>
                 </div>
-                    <div class="institute-details-actions ">
+                    <div class="invite-actions">
                         <div class="btn btn-default" role="button"> Cancel </div>
                         <div class="btn btn-primary" role="button" @click="sendStudentsInvite"> Send Invite  </div>
                     </div>
@@ -41,11 +47,16 @@
                 </div>
                 <div class="row my-2">
                     <div class="col-xs-12 col-lg-12">
-                        <div class="text-xs-center"> INVITE TEACHERS </div>
+                        <div class="fl fl-middle">
+                            <hr class="fl-auto">
+                            <small class="px-1 text-uppercase">
+                                Invite Teachers
+                            </small>
+                            <hr class="fl-auto">
+                        </div>
 
                         <div class="invite-input input-group input-group-lg">
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input class="form-control" type="search" v-model="teachers">
+                        <input class="form-control" type="text" v-model="teachers">
                     </div>
 
                 <div class="row">
@@ -57,7 +68,7 @@
                   {{ invited.teachers }} invited
                   </div>
                 </div>
-                    <div class="institute-details-actions ">
+                    <div class="invite-actions">
                         <div class="btn btn-default" role="button"> Cancel </div>
                         <div class="btn btn-primary" role="button" @click="sendTeachersInvite"> Send Invite  </div>
                     </div>
@@ -65,11 +76,16 @@
                 </div>
                 <div class="row my-2">
                     <div class="col-xs-12 col-lg-12">
-                        <div class="text-xs-center"> INVITE NON-TEACHING EMPLOYEES </div>
+                        <div class="fl fl-middle">
+                            <hr class="fl-auto">
+                            <small class="px-1 text-uppercase">
+                                Invite Non-Teaching Employees
+                            </small>
+                            <hr class="fl-auto">
+                        </div>
 
                         <div class="invite-input input-group input-group-lg">
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input class="form-control" type="search" v-model="employees">
+                        <input class="form-control" type="text" v-model="employees">
                     </div>
 
                 <div class="row">
@@ -81,7 +97,7 @@
                   {{ invited.employees }} invited
                   </div>
                 </div>
-                    <div class="institute-details-actions ">
+                    <div class="invite-actions">
                         <div class="btn btn-default" role="button"> Cancel </div>
                         <div class="btn btn-primary" role="button" @click="sendEmployeesInvite"> Send Invite  </div>
                     </div>
@@ -149,10 +165,23 @@ export default{
 </script>
 <style lang="scss" scoped>
 @import '../styles/methods';
+@import '../styles/variables';
 .invite {
   &-input {
    padding: rem(20px) 0 rem(10px);
  }
+
+  &-actions {
+   padding: rem(20px) 0;
+  }
+
+}
+.btn-default{
+  border: solid 1px $gray;
+}
+.btn {
+  margin: 0 rem(2px);
+  width: rem(100px);
 }
 
 </style>

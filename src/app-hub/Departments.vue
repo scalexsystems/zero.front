@@ -19,25 +19,27 @@
         </template>
 
     <template slot="settings-body">
-        <modal name="Add new department" :show="onAdd">
-                <div class="header-wrapper">
-                  <div class="department-modal-title"> {{ title }} </div>
-            </div>
-            <div class="department-modal-body">
-                <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
-                <input-text title="Department acronym" v-model="department.short_name" :feedback="errors.short_name"></input-text>
-                <input-search class="form-control" title="Head of Department" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
-                              @select="onSelect"></input-search>
+        <modal name="Add new department" :show="onAdd" @hide="onCancel">
+            <div class="card">
+                <h4 class="card-header bg-white">{{ title }} </h4>
 
-                <input-radio title="Department Type" required v-model="department.academic"  :options="departmentTypes"
-                             :feedback="errors.academic"></input-radio>
+                <div class="card-block">
+                    <input-text title="Name of the department" required v-model="department.name" :feedback="errors.name"></input-text>
+                    <input-text title="Department acronym" v-model="department.short_name" :feedback="errors.short_name"></input-text>
+                    <input-search title="Head of Department" v-model="query" v-bind="{suggestions}" @suggest="onSuggest"
+                                  @select="onSelect"></input-search>
 
-                <div class="card-footer pt-2 pb-1">
-                <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
-                <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                    <input-radio title="Department Type" required v-model="department.academic"  :options="departmentTypes"
+                                 :feedback="errors.academic"></input-radio>
+
+                    <div class="float-xs-right mt-1">
+                        <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
+                        <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                    </div>
                 </div>
             </div>
         </modal>
+
         <div class="container py-2">
             <div class="text-xs-center"> ACADEMIC DEPARTMENTS </div>
             <div class="row my-2">
@@ -205,15 +207,6 @@ export default{
   @import '../styles/variables';
   @import '../styles/methods';
 
-  .form-control-label {
-    color: white;
-
-  }
-
-  .department-modal-body {
-     color: white;
-  }
-
   .c-indicator {
     color: inherit;
   }
@@ -224,6 +217,10 @@ export default{
    color: $brand-primary;
    width: rem(550px);
    margin: 0;
+  }
+
+  .department-modal-body {
+    color: white;
   }
 
   .card-footer {

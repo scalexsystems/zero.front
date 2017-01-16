@@ -1,6 +1,7 @@
 <template>
   <div>
     <activity-box title="Edit Course" subtitle="This would update course details." @close="$router.push({ name: 'acad' })" v-show="hasCourse">
+
       <template slot="actions">
         <a class="btn btn-primary" role="button" tabindex @click.prevent.stop="updateCourse" ref="action">
           <i class="fa fa-fw fa-save hidden-lg-up" v-tooltip:bottom="'Update Course'"></i> <span class="hidden-md-down">Update Course</span>

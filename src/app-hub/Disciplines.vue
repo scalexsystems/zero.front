@@ -19,18 +19,18 @@
         </template>
 
         <template slot="settings-body">
-            <modal name="Add new disciplines" :show="onAdd">
+            <modal name="Add new disciplines" :show="onAdd" :dismissable="false">
                 <div class="card">
                   <h4 class="card-header bg-white">Add New Discipline</h4>
 
                   <div class="card-block">
-                    <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
-                    <input-text title="Discipline Acronym" v-model="discipline.short_name" :feedback="errors.acronym"></input-text>
+                      <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
+                      <input-text title="Discipline Acronym" v-model="discipline.short_name" :feedback="errors.acronym"></input-text>
 
-                    <div class="float-xs-right mt-1">
-                      <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
-                      <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
-                    </div>
+                      <div class="mt-1 float-xs-right">
+                        <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
+                        <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                      </div>
                   </div>
                 </div>
             </modal>

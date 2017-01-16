@@ -3,7 +3,7 @@
     <template slot="context">
       <slot name="icon">
         <a class="activity-box-dismiss" role="button" @click.prevent.stop="$emit('close')">
-          <img src="../assets/cross.svg">
+          <img src="../assets/back.svg">
         </a>
       </slot>
       <div class="activity-box-title-container">

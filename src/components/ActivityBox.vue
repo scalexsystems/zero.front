@@ -36,7 +36,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../styles/methods';
 
 $border-radius-sm: 0.2rem !default;

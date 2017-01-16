@@ -1,22 +1,23 @@
 <template>
-  <settings-box title="Course Manager/Administrator">
+  <settings-box title="Course Manager" subtitle="Add manager">
 
-        <template slot="actions">
-            <div role="button" class="btn btn-default" @click="onCancel"> Cancel </div>
-            <div role="button" class="btn btn-primary" @click="onSave"> Save </div>
-        </template>
-
+      <template slot="actions" v-if="addedManagers.length">
+          <div role="button" class="btn btn-default" @click="onCancel"> Cancel </div>
+          <div role="button" class="btn btn-primary" @click="onSave"> Save </div>
+      </template>
 
       <template slot="header-image">
           <img src="../assets/settings/course-admin.svg">
       </template>
 
       <template slot="name">
-          Course Manager / Administrator
+          Course Manager
       </template>
 
       <template slot="description">
-          He/she is responsible to add courses and assign teachers/coordinator to respective courses
+          He/she is responsible to add courses and assign teachers/coordinator to respective courses.
+
+          <div class="alert alert-danger" v-if="message">{{ message }}</div>
       </template>
         <template slot="settings-body">
 
@@ -26,38 +27,53 @@
                                   @select="onSelect"></input-search>
                 </div>
 
-            <div class="manager-list">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-6" v-for="(manager, index) of managers">
-                        <item-card :item="manager"
-                                   @open="openMemberProfile(manager, index)">
-                            <div class="person-card-bio" v-if="!manager.bio"> Profile not updated </div>
-                        </item-card>
-                    </div>
+                <div class="manager-list my-1" v-if="addedManagers.length">
+                  <div class="mb-1">
+                    <small class="text-muted">Add new Course Manager</small>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-xs-12 col-lg-6" v-for="(manager, index) of addedManagers">
+                          <item-card :item="manager"
+                                     @open="openMemberProfile(manager, index)">
+                              <div class="person-card-bio" v-if="!manager.bio"> Profile not updated </div>
+                          </item-card>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="manager-list my-1">
+                  <div class="mb-1">
+                    <small class="text-muted" v-if="addedManagers.length">Existing Course Manager</small>
+                  </div>
+                  <div class="row">
+                      <div class="col-xs-12 col-lg-6" v-for="(manager, index) of managers">
+                          <item-card :item="manager"
+                                     @open="openMemberProfile(manager, index)">
+                              <div class="person-card-bio" v-if="!manager.bio"> Profile not updated </div>
+                          </item-card>
+                      </div>
+                  </div>
                 </div>
             </div>
-            </div>
-
         </template>
-
-
-
     </settings-box>
-
 </template>
 <script lang="babel">
 import { mapActions, mapGetters } from 'vuex';
-import { throttle, difference } from 'lodash';
+import { throttle } from 'lodash';
 import SettingsBox from './SettingsBox.vue';
 import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
-import { actions, getters } from '../vuex/meta';
 import { PersonCard as ItemCard } from '../components';
 
 export default{
   created() {
     if (this.managers.length === 0) {
       this.getManagers();
+    }
+    if (!this.teachers.length) {
+      this.getTeachers();
     }
   },
   data() {
@@ -66,19 +82,15 @@ export default{
       errors: {},
       managers: [],
       query: '',
+      message: undefined,
       addedManagers: [],
     };
   },
   computed: {
     suggestions() {
-      return [
-        ...this.teachers,
-        ...this.employees,
-      ];
+      return [].concat(this.teachers);
     },
-    ...mapGetters({
-      suggestions: getters.teachers,
-    }),
+    ...mapGetters('school', ['teachers']),
   },
   components: { SettingsBox, Modal, SettingsCard, ItemCard },
   methods: {
@@ -92,34 +104,33 @@ export default{
       start();
       this.getTeachers({ q: value }).then(end);
     }, 400),
-    search() {},
-    ...mapActions({
-      getTeachers: actions.getTeachers,
-    }),
     onSelect(person) {
       if (this.managers.indexOf(person.id) < 0) {
         this.addedManagers.push(person);
-        this.managers.push(person);
       }
     },
     onSave() {
-      const managers = this.addedManagers;
+      const managers = this.addedManagers.map(m => ({ id: m.id, type: m._type }));
       if (managers.length) {
-        this.$http.post('people/roles/course-manager', { managers })
+        this.$http.post('people/roles', { managers, role: 'course-manager' })
         .then(() => {
+          this.managers = this.managers.concat(this.addedManagers);
+          this.message = undefined;
           this.addedManagers = [];
+        })
+        .catch(response => response.json())
+        .then(({ message }) => {
+          this.message = message;
         });
       }
     },
     onCancel() {
       if (this.addedManagers.length) {
-        this.managers = difference(this.managers, this.addedManagers);
         this.addedManagers = [];
+        this.message = undefined;
       }
     },
-    ...mapActions({
-      addManager: actions.addManager,
-    }),
+    ...mapActions('school', ['getTeachers']),
   },
 };
 </script>
@@ -132,10 +143,6 @@ export default{
 .btn {
   margin: 0 rem(10px);
   width: rem(80px);
-}
-
-.manager-list {
-  padding: rem(20px) 0;
 }
 
 .person-card-bio {

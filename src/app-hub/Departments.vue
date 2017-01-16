@@ -1,22 +1,22 @@
     <template>
 <settings-box title="Departments">
 
-    <template slot="actions">
-        <div role="button" class="btn btn-primary" @click="showAddDepartment"> Add new department </div>
-    </template>
+  <template slot="actions">
+    <div role="button" class="btn btn-primary" @click="showAddDepartment"> Add new department </div>
+  </template>
 
-      <template slot="header-image">
-            <img src="../assets/settings/departments.svg">
-      </template>
+  <template slot="header-image">
+    <img src="../assets/settings/departments.svg">
+  </template>
 
-      <template slot="name">
-          Academic and Administrative Departments
-       </template>
+  <template slot="name">
+     Academic and Administrative Departments
+  </template>
 
-       <template slot="description">
-           Academic Departments: e.g. Computer Science, Mechanical, Electronics etc. <br>
-           Administrative Departments: e.g. Finance, Academic, Maintenance, HR, security etc.
-        </template>
+  <template slot="description">
+     Academic Departments: e.g. Computer Science, Mechanical, Electronics etc. <br>
+     Administrative Departments: e.g. Finance, Academic, Maintenance, HR, security etc.
+  </template>
 
     <template slot="settings-body">
         <modal name="Add new department" :show="onAdd" @hide="onCancel">

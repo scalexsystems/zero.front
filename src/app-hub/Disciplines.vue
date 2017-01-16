@@ -20,20 +20,18 @@
 
         <template slot="settings-body">
             <modal name="Add new disciplines" :show="onAdd">
-                <div class="discipline-modal-header">
-                    <div class="header-wrapper">
-                        <div class="discipline-modal-title"> Add New Discipline </div>
-                    </div>
-                </div>
-                <div class="discipline-modal-body">
+                <div class="card">
+                  <h4 class="card-header bg-white">Add New Discipline</h4>
+
+                  <div class="card-block">
                     <input-text title="Name of the discipline" required v-model="discipline.name" :feedback="errors.name"></input-text>
                     <input-text title="Discipline Acronym" v-model="discipline.short_name" :feedback="errors.acronym"></input-text>
-                </div>
 
-
-                <div class="card-footer bg-white pt-2 pb-1">
-                    <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
-                    <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                    <div class="float-xs-right mt-1">
+                      <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
+                      <a role="button" class="btn btn-primary" tabindex @click="onSubmit">Save</a>
+                    </div>
+                  </div>
                 </div>
             </modal>
             <div class="container py-2">

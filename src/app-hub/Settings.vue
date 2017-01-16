@@ -5,7 +5,9 @@
               @close="$router.go(-1)">
 
     <template slot="icon">
-        <img src="../assets/settings/icon-settings.svg">
+      <a class="activity-box-dismiss" role="button">
+          <img src="../assets/settings/icon-settings.svg">
+      </a>
     </template>
 
 
@@ -62,13 +64,13 @@ export default {
           path: 'semesters',
         },
         {
-          title: 'Course Management/Administrator',
+          title: 'Course Management',
           text: 'Click here to assign',
           path: 'course-management',
         },
         {
           title: 'Institute webmail domain',
-          text: '',
+          text: 'Set intitute website',
           path: '/webmail-domain',
         },
         {

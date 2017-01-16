@@ -1,7 +1,6 @@
 <template>
-
     <activity-box class="settings-box"
-                  v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }">
+                  v-bind="{ title, subtitle, show: true, disableFooter: true }">
 
         <template slot="icon">
             <slot name="icon">

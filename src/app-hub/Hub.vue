@@ -2,11 +2,11 @@
 <div class="container hub-container">
   <div class="row hub-body">
     <div class="col-xs-12 col-lg-2 hub-sidebar-left fl fl-ver py-1" ref="sidebarLeft" @click="closeSidebar">
-      <router-link class="btn btn-text text-xs-left" :to="{ name: 'acad' }">
-        <i class="fa fa-fw fa-book"></i> Manage Courses
+      <router-link v-if="user.permissions && user.permissions.courses" class="btn btn-text text-xs-left" :to="{ name: 'acad' }">
+        <i class="fa fa-fw fa-book" /> Manage Courses
       </router-link>
 
-      <course-list></course-list>
+      <course-list />
 
       <div class="btn-group my-1 d-block tab-buttons">
         <a class="btn btn-outline-secondary" :class="{active: !browseUsers}" role="button" @click.stop.prevent="browseUsers = false">
@@ -17,11 +17,11 @@
         </a>
       </div>
 
-      <group-list v-show="!browseUsers"></group-list>
-      <user-list v-show="browseUsers"></user-list>
+      <group-list v-show="!browseUsers" />
+      <user-list v-show="browseUsers" />
     </div>
     <div class="col-xs-12 col-lg-10 hub-content">
-      <router-view></router-view>
+      <router-view />
     </div>
   </div>
 </div>

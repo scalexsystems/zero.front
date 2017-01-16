@@ -78,5 +78,6 @@ $activity-box-subtitle-color: #9b9b9b !default;
   white-space: nowrap;
   color: $activity-box-subtitle-color;
   font-size: 0.85714rem;
+  min-height: rem(17px);
 }
 </style>

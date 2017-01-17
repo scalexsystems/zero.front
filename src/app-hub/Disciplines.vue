@@ -98,7 +98,6 @@ export default{
     addNewDiscipline() {
       this.$http.post('disciplines', this.discipline)
       .then(() => {
-        debugger;
         const discipline = clone(this.discipline);
         this.onAdd = false;
         this.addDiscipline(discipline);

@@ -225,13 +225,13 @@ export default {
       return null;
     },
     addDepartment({ commit }, department) {
-      commit('ADD_DEPARTMENT', { department });
+      commit('ADD_DEPARTMENT', { ...department });
     },
     addDiscipline({ commit }, discipline) {
-      commit('ADD_DISCIPLINE', { discipline });
+      commit('ADD_DISCIPLINE', { ...discipline });
     },
     addSemester({ commit }, semester) {
-      commit('ADD_SEMESTER', { semester });
+      commit('ADD_SEMESTER', { ...semester });
     },
   },
 };

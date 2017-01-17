@@ -111,7 +111,7 @@ export default{
       department: {
         name: '',
         short_name: '',
-        hod: '',
+        head: '',
         academic: '',
       },
       editReference: {
@@ -137,7 +137,7 @@ export default{
       return this.departmentsByType.nonAcademic;
     },
     title() {
-      return this.editReference.id ? 'Edit Department' : 'Add Department';
+      return this.editReference.id ? 'Edit Department' : 'Add New Department';
     },
     ...mapGetters({
       departmentsByType: getters.departmentsByType,
@@ -166,14 +166,22 @@ export default{
     }, 400),
     search() {},
     onSelect(teacher) {
-      this.department.hod = teacher;
+      this.department.head = teacher;
+      this.department.head_id = teacher.id;
+      this.query = teacher.name;
     },
     addNewDepartment(type) {
       this.$http.post('departments', this.department)
       .then(() => {
         this.onAdd = false;
-        this.departmentsByType[type].push(this.department);
-        this.addDepartment(this.department);
+        const department = clone(this.department);
+        this.departmentsByType[type].push(department);
+        department.stats = {
+          employee: 0,
+          student: 0,
+          teacher: 0,
+        };
+        this.addDepartment(department);
         this.resetReference();
       })
        .catch(() => {});
@@ -187,7 +195,7 @@ export default{
         });
     },
     getText(department) {
-      const hod = department.head.length ? department.head.name : 'Not assigned';
+      const hod = department.head && Object.keys(department.head).length ? department.head.name : 'Not assigned';
       return `HOD: ${hod}`;
     },
     departmentClicked(index, context) {
@@ -197,12 +205,15 @@ export default{
         index,
       };
       this.department = clone(department);
+      this.department.academic = this.department.academic ? 'academic' : 'nonAcademic';
+      this.query = department.head.name || '';
       this.onAdd = true;
     },
     resetReference() {
       Object.keys(this.department).forEach((key) => {
         this.department[key] = '';
       });
+      this.query = '';
       this.editReference = {
         id: false,
         index: false,

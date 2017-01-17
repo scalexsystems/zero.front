@@ -190,7 +190,9 @@ export default{
       this.$http.put(`departments/${this.editReference.id}`, this.department)
         .then(() => {
           this.onAdd = false;
-          this.departmentsByType[type][this.editReference.index] = clone(this.department);
+          const department = clone(this.department);
+          this.departmentsByType[type][this.editReference.index] = department;
+          this.updateDepartmentAction(department);
           this.resetReference();
         });
     },
@@ -222,6 +224,7 @@ export default{
     ...mapActions({
       getDepartments: actions.getDepartments,
       addDepartment: actions.addDepartment,
+      updateDepartmentAction: actions.updateDepartment,
       getTeachers: actions.getTeachers,
     }),
   },

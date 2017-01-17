@@ -98,9 +98,9 @@ export default{
     addNewSemester() {
       this.$http.post('semesters', this.semester)
       .then(() => {
+        const semester = clone(this.semester);
         this.onAdd = false;
-        this.semesters.push(this.semester);
-        this.addSemester(this.semester);
+        this.addSemester(semester);
         this.resetReference();
       })
       .catch(() => {});
@@ -109,7 +109,9 @@ export default{
       this.$http.put(`semesters/${this.editReference.id}`, this.semester)
       .then(() => {
         this.onAdd = false;
-        this.semesters[this.editReference.index] = clone(this.semester);
+        const semester = clone(this.semester);
+        this.semesters[this.editReference.index] = semester;
+        this.updateSemesterAction(semester);
         this.resetReference();
       });
     },
@@ -134,6 +136,7 @@ export default{
     ...mapActions({
       getSemesters: actions.getSemesters,
       addSemester: actions.addSemester,
+      updateSemesterAction: actions.updateSemester,
     }),
 
   },

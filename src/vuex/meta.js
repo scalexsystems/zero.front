@@ -11,8 +11,11 @@ export const types = {
   SET_DEPARTMENTS: 'school/SET_DEPARTMENTS',
   SET_SEMESTERS: 'school/SET_SEMESTERS',
   ADD_DEPARTMENT: 'school/ADD_DEPARTMENT',
+  UPDATE_DEPARTMENT: 'school/UPDATE_DEPARTMENT',
   ADD_DISCIPLINE: 'school/ADD_DISCIPLINE',
+  UPDATE_DISCIPLINE: 'school/UPDATE_DISCIPLINE',
   ADD_SEMESTER: 'school/ADD_SEMESTER',
+  UPDATE_SEMESTER: 'school/UPDATE_SEMESTER',
 
   SET_USER: 'SET_USER',
 };
@@ -29,7 +32,11 @@ export const actions = {
   getCourses: 'school/getCourses',
   findStudent: 'school/findStudent',
   addDepartment: 'school/addDepartment',
+  updateDepartment: 'school/updateDepartment',
   addDiscipline: 'school/addDiscipline',
+  updateDiscipline: 'school/updateDiscipline',
+  addSemester: 'school/addSemester',
+  updateSemester: 'school/updateSemester',
   getUser: 'getUser',
 };
 

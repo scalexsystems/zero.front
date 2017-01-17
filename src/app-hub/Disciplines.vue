@@ -2,7 +2,7 @@
     <settings-box title="Disciplines">
 
         <template slot="actions">
-            <div role="button" class="btn btn-primary" @click="showAddDiscipline"> Add new disciplines </div>
+            <div role="button" class="btn btn-primary" @click="showAddDiscipline"> {{ title }} </div>
         </template>
 
 
@@ -75,6 +75,9 @@ export default{
     };
   },
   computed: {
+    title() {
+      return this.editReference.id ? 'Edit Discipline' : 'Add New Discipline';
+    },
     ...mapGetters({
       disciplines: getters.disciplines,
     }),
@@ -91,17 +94,14 @@ export default{
     onSubmit() {
       const call = this.editReference.id ? 'updateDiscipline' : 'addNewDiscipline';
       this[call]();
-      this.editReference = {
-        id: false,
-        index: false,
-      };
     },
     addNewDiscipline() {
       this.$http.post('disciplines', this.discipline)
       .then(() => {
+        debugger;
+        const discipline = clone(this.discipline);
         this.onAdd = false;
-        this.disciplines.push(this.discipline);
-        this.addDiscipline(this.discipline);
+        this.addDiscipline(discipline);
         this.resetReference();
       })
       .catch(() => {});
@@ -110,7 +110,9 @@ export default{
       this.$http.put(`disciplines/${this.editReference.id}`, this.discipline)
       .then(() => {
         this.onAdd = false;
-        this.disciplines[this.editReference.index] = clone(this.discipline);
+        const discipline = clone(this.discipline);
+        this.disciplines[this.editReference.index] = discipline;
+        this.updateDisciplineAction(discipline);
         this.resetReference();
       });
     },
@@ -134,6 +136,8 @@ export default{
     },
     ...mapActions({
       getDisciplines: actions.getDisciplines,
+      addDiscipline: actions.addDiscipline,
+      updateDisciplineAction: actions.updateDiscipline,
     }),
   },
 };

@@ -106,6 +106,7 @@ export default{
     }, 400),
     onSelect(person) {
       if (this.managers.indexOf(person.id) < 0) {
+        this.query = person.name;
         this.addedManagers.push(person);
       }
     },

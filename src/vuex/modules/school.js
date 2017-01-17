@@ -114,11 +114,23 @@ export default {
     ADD_DEPARTMENT(state, departments) {
       pushIf(state.departments, departments, { }, []);
     },
+    UPDATE_DEPARTMENT(state, { departmentId, department }) {
+      const index = state.departments.findIndex(dep => dep.id === departmentId);
+      state.departments[index] = department;
+    },
     ADD_DISCIPLINE(state, disciplines) {
       pushIf(state.disciplines, disciplines, { }, []);
     },
+    UPDATE_DISCIPLINE(state, { disciplineId, discipline }) {
+      const index = state.disciplines.findIndex(discp => discp.id === disciplineId);
+      state.disciplines[index] = discipline;
+    },
     ADD_SEMESTER(state, semesters) {
       pushIf(state.semesters, semesters, { }, []);
+    },
+    UPDATE_SEMESTER(state, { semesterId, semester }) {
+      const index = state.semesters.findIndex(sem => sem.id === semesterId);
+      state.semesters[index] = semester;
     },
   },
   actions: {
@@ -225,13 +237,22 @@ export default {
       return null;
     },
     addDepartment({ commit }, department) {
-      commit('ADD_DEPARTMENT', { department });
+      commit('ADD_DEPARTMENT', { ...department });
+    },
+    updateDepartment({ commit }, department) {
+      commit('UPDATE_DEPARTMENT', { departmentId: department.id, department });
     },
     addDiscipline({ commit }, discipline) {
-      commit('ADD_DISCIPLINE', { discipline });
+      commit('ADD_DISCIPLINE', { ...discipline });
+    },
+    updateDiscipline({ commit }, discipline) {
+      commit('UPDATE_DISCIPLINE', { disciplineId: discipline.id, discipline });
     },
     addSemester({ commit }, semester) {
-      commit('ADD_SEMESTER', { semester });
+      commit('ADD_SEMESTER', { ...semester });
+    },
+    updateSemester({ commit }, semester) {
+      commit('UPDATE_SEMESTER', { semesterId: semester.id, semester });
     },
   },
 };

@@ -2,7 +2,7 @@
     <settings-box title="Semesters">
 
         <template slot="actions">
-            <div role="button" class="btn btn-primary" @click="showAddSemester"> Add new semester </div>
+            <div role="button" class="btn btn-primary" @click="showAddSemester"> {{ title }} </div>
         </template>
 
 
@@ -24,7 +24,7 @@
                   <h4 class="card-header bg-white">Add New Semester</h4>
 
                   <div class="card-block">
-                    <input-text title="Name of the discipline" required v-model="semester.name" :feedback="errors.name" />
+                    <input-text title="Name of the semester" required v-model="semester.name" :feedback="errors.name" />
 
                     <div class="float-xs-right">
                       <a role="button" class="btn btn-secondary btn-cancel" tabindex @click="onCancel">Cancel</a>
@@ -38,6 +38,7 @@
                     <settings-card v-for="(semester, index) in semesters"
                                    class="col-xs-12 col-lg-6"
                                    :title="semester.name"
+                                   :index="index"
                                    @cardClicked="semesterClicked" />
                 </div>
             </div>
@@ -47,6 +48,7 @@
 </template>
 <script lang="babel">
 import { mapActions, mapGetters } from 'vuex';
+import { clone } from 'lodash';
 import SettingsBox from './SettingsBox.vue';
 import SettingsCard from './SettingsCard.vue';
 import Modal from '../components/Modal.vue';
@@ -73,6 +75,9 @@ export default{
     };
   },
   computed: {
+    title() {
+      return this.editReference.id ? 'Edit Semester' : 'Add New Semester';
+    },
     ...mapGetters({
       semesters: getters.semesters,
     }),
@@ -84,21 +89,19 @@ export default{
     },
     onCancel() {
       this.onAdd = false;
+      this.resetReference();
     },
     onSubmit() {
       const call = this.editReference.id ? 'updateSemester' : 'addNewSemester';
       this[call]();
-      this.editReference = {
-        id: false,
-        index: false,
-      };
     },
     addNewSemester() {
       this.$http.post('semesters', this.semester)
       .then(() => {
+        const semester = clone(this.semester);
         this.onAdd = false;
-        this.semesters.push(this.semester);
-        this.addSemester(this.semester);
+        this.addSemester(semester);
+        this.resetReference();
       })
       .catch(() => {});
     },
@@ -106,7 +109,10 @@ export default{
       this.$http.put(`semesters/${this.editReference.id}`, this.semester)
       .then(() => {
         this.onAdd = false;
-        this.semesters[this.editReference.index] = this.semester;
+        const semester = clone(this.semester);
+        this.semesters[this.editReference.index] = semester;
+        this.updateSemesterAction(semester);
+        this.resetReference();
       });
     },
     semesterClicked(index) {
@@ -115,13 +121,24 @@ export default{
         id: semester.id,
         index,
       };
-      this.semester = semester;
+      this.semester = clone(semester);
       this.onAdd = true;
+    },
+    resetReference() {
+      Object.keys(this.semester).forEach((key) => {
+        this.semester[key] = '';
+      });
+      this.editReference = {
+        id: false,
+        index: false,
+      };
     },
     ...mapActions({
       getSemesters: actions.getSemesters,
       addSemester: actions.addSemester,
+      updateSemesterAction: actions.updateSemester,
     }),
+
   },
 };
 </script>

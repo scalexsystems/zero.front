@@ -27,7 +27,8 @@
 
 
                         <div class="invite-input input-group input-group-lg">
-                        <input class="form-control" type="text" v-model="students">
+                        <input class="form-control" type="text" placeholder="enter alias address e.g. students@domain.com"
+                               v-model="students">
                     </div>
 
                 <div class="row">
@@ -40,7 +41,7 @@
                   </div>
                 </div>
                     <div class="invite-actions">
-                        <div class="btn btn-default" role="button"> Cancel </div>
+                        <div class="btn btn-default" role="button" @click="cancel('students')"> Cancel </div>
                         <div class="btn btn-primary" role="button" @click="sendStudentsInvite"> Send Invite  </div>
                     </div>
                   </div>
@@ -56,7 +57,8 @@
                         </div>
 
                         <div class="invite-input input-group input-group-lg">
-                        <input class="form-control" type="text" v-model="teachers">
+                        <input class="form-control" type="text" v-model="teachers"
+                               placeholder="enter alias address e.g. teachers@domain.com">
                     </div>
 
                 <div class="row">
@@ -69,7 +71,7 @@
                   </div>
                 </div>
                     <div class="invite-actions">
-                        <div class="btn btn-default" role="button"> Cancel </div>
+                        <div class="btn btn-default" role="button" @click="cancel('teachers')"> Cancel </div>
                         <div class="btn btn-primary" role="button" @click="sendTeachersInvite"> Send Invite  </div>
                     </div>
                   </div>
@@ -85,7 +87,8 @@
                         </div>
 
                         <div class="invite-input input-group input-group-lg">
-                        <input class="form-control" type="text" v-model="employees">
+                        <input class="form-control" type="text" v-model="employees"
+                               placeholder="enter alias address e.g. employees@domain.com">
                     </div>
 
                 <div class="row">
@@ -98,7 +101,7 @@
                   </div>
                 </div>
                     <div class="invite-actions">
-                        <div class="btn btn-default" role="button"> Cancel </div>
+                        <div class="btn btn-default" role="button" @click="cancel('employees')"> Cancel </div>
                         <div class="btn btn-primary" role="button" @click="sendEmployeesInvite"> Send Invite  </div>
                     </div>
                   </div>
@@ -147,17 +150,26 @@ export default{
     sendInvite(type) {
       const emails = this[type];
       if (emails) {
-        const entries = this.getArrayFromString(this[type]);
-        this.$http.post(`people/${type}/invite`, { [type]: entries })
-         .then(() => {
-           this.invited[type] += entries.length;
-           this[type] = '';
-         });
+        const entries = this.validateEmails(this.getArrayFromString(this[type]));
+        if (entries.length) {
+          this.$http.post(`people/${type}/invite`, { [type]: entries })
+           .then(() => {
+             this.invited[type] += entries.length;
+             this[type] = '';
+           });
+        }
       }
     },
 
     getArrayFromString(string) {
       return string.split(new RegExp([' ', '///,', ';'].join('|'), 'g')).filter(email => email !== '');
+    },
+    cancel(type) {
+      this[type] = '';
+    },
+    validateEmails(emails) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return emails.filter(email => re.test(email));
     },
   },
   components: { SettingsBox },

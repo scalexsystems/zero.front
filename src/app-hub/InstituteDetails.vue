@@ -1,5 +1,5 @@
 <template>
-<settings-box title="Institute Details" :withHeader="false">
+<settings-box title="Institute Details" subtitle="About the institute, Contact info, logo" :withHeader="false">
 
     <template slot="settings-body">
         <div class="container py-1">

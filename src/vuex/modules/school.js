@@ -66,6 +66,9 @@ export default {
       }
       return {};
     },
+    departmentCount(state) {
+      return state.departments.length;
+    },
     semesters(state) {
       return state.semesters;
     },
@@ -138,7 +141,6 @@ export default {
     },
     SET_SCHOOL(state, { school }) {
       state.school = school;
-      debugger;
     },
   },
   actions: {

@@ -52,7 +52,6 @@ import AppsMenu from './AppsMenu.vue';
 
 export default {
   created() {
-    debugger;
     if (Object.keys(this.school).length === 0) {
       this.getSchool();
     }

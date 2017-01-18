@@ -54,6 +54,7 @@ export const getters = {
   disciplines: 'school/disciplines',
   semesters: 'school/semesters',
   departmentsByType: 'school/departmentsByType',
+  departmentCount: 'school/departmentCount',
   user: 'user',
   school: 'school/school',
 };

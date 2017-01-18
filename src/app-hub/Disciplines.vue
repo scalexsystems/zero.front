@@ -1,5 +1,5 @@
 <template>
-    <settings-box title="Disciplines">
+    <settings-box title="Disciplines" subtitle="Add/remove institute disciplines">
 
         <template slot="actions">
             <div role="button" class="btn btn-primary" @click="showAddDiscipline"> {{ title }} </div>

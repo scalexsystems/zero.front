@@ -1,5 +1,5 @@
     <template>
-<settings-box title="Departments">
+<settings-box title="Departments" :subtitle="subtitle">
 
   <template slot="actions">
     <div role="button" class="btn btn-primary" @click="showAddDepartment"> Add new department </div>
@@ -139,9 +139,13 @@ export default{
     title() {
       return this.editReference.id ? 'Edit Department' : 'Add New Department';
     },
+    subtitle() {
+      return `Add/remove Departments. ${this.departmentCount} departments added`;
+    },
     ...mapGetters({
       departmentsByType: getters.departmentsByType,
       suggestions: getters.teachers,
+      departmentCount: getters.departmentCount,
 
     }),
   },

@@ -3,7 +3,7 @@
   <label class="form-control-label" :for="id" v-if="is(title)">{{ title }}</label>
 
   <input :type="type" :id="id" class="form-control" :class="[formControlState]"
-         :described-by="helpId" :name="identifier" :value="value"
+         :described-by="helpId" :name="identifier" :value="value" :placeholder="placeholder"
          @input="$emit('input', $event.target.value)">
 
   <div class="form-control-feedback" v-if="is(feedback)">{{ feedback }}</div>
@@ -19,6 +19,10 @@ export default {
     type: {
       type: String,
       default: 'text',
+    },
+    placeholder: {
+      type: String,
+      default: '',
     },
   },
   mixins: [input],

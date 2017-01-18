@@ -81,6 +81,9 @@ export default {
     },
     ...mapActions('hub', ['onNewMessageToUser']),
   },
+  watch: {
+    $route: 'redirect',
+  },
   mounted() {
     this.$nextTick(() => {
       scrollbar.initialize(this.$refs.sidebarLeft, {

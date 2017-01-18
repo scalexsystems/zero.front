@@ -16,10 +16,3 @@ dependencies:
 test:
   override:
     - yarn run lint && yarn run unit
-
-deployment:
-  release:
-    tag: /v.*/
-    commands:
-      - "npm login <<EOF\n${NPM_USERNAME}\n${NPM_PASSWORD}\n${NPM_EMAIL}\nEOF\n"
-      - npm publish

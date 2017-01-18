@@ -170,17 +170,11 @@ export default{
       this.department.head_id = teacher.id;
       this.query = teacher.name;
     },
-    addNewDepartment(type) {
+    addNewDepartment() {
       this.$http.post('departments', this.department)
-      .then(() => {
+      .then(response => response.json())
+      .then((department) => {
         this.onAdd = false;
-        const department = clone(this.department);
-        this.departmentsByType[type].push(department);
-        department.stats = {
-          employee: 0,
-          student: 0,
-          teacher: 0,
-        };
         this.addDepartment(department);
         this.resetReference();
       })

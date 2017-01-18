@@ -44,16 +44,22 @@
 </template>
 
 <script lang="babel">
-import { mapGetters } from 'vuex';
-import { getters } from '../vuex/meta';
+import { mapGetters, mapActions } from 'vuex';
+import { getters, actions } from '../vuex/meta';
 
 import GlobalSearch from './GlobalSearch.vue';
 import AppsMenu from './AppsMenu.vue';
 
 export default {
+  created() {
+    debugger;
+    if (Object.keys(this.school).length === 0) {
+      this.getSchool();
+    }
+  },
   computed: {
     schoolName() {
-      return 'Name of the School';
+      return this.school.name;
     },
     name() {
       const user = this.user;
@@ -65,7 +71,15 @@ export default {
     token() {
       return window.Laravel.csrfToken;
     },
-    ...mapGetters({ user: getters.user }),
+    ...mapGetters({
+      user: getters.user,
+      school: getters.school,
+    }),
+  },
+  methods: {
+    ...mapActions({
+      getSchool: actions.getSchool,
+    }),
   },
   components: { AppsMenu, GlobalSearch },
 };

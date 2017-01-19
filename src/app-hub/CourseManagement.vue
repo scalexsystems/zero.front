@@ -1,5 +1,5 @@
 <template>
-  <settings-box title="Course Manager" subtitle="Add manager">
+  <settings-box title="Course Manager" subtitle="Assign Course Manager/Administrator">
 
       <template slot="actions" v-if="addedManagers.length">
           <div role="button" class="btn btn-default" @click="onCancel"> Cancel </div>

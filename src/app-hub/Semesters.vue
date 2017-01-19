@@ -1,5 +1,5 @@
 <template>
-    <settings-box title="Semesters">
+    <settings-box title="Semesters" subtitle="Add/remove institute subtitles">
 
         <template slot="actions">
             <div role="button" class="btn btn-primary" @click="showAddSemester"> {{ title }} </div>

@@ -1,5 +1,5 @@
     <template>
-<settings-box title="Departments">
+<settings-box title="Departments" :subtitle="subtitle">
 
   <template slot="actions">
     <div role="button" class="btn btn-primary" @click="showAddDepartment"> Add new department </div>
@@ -139,9 +139,13 @@ export default{
     title() {
       return this.editReference.id ? 'Edit Department' : 'Add New Department';
     },
+    subtitle() {
+      return `Add/remove Departments. ${this.departmentCount} departments added`;
+    },
     ...mapGetters({
       departmentsByType: getters.departmentsByType,
       suggestions: getters.teachers,
+      departmentCount: getters.departmentCount,
 
     }),
   },
@@ -170,17 +174,11 @@ export default{
       this.department.head_id = teacher.id;
       this.query = teacher.name;
     },
-    addNewDepartment(type) {
+    addNewDepartment() {
       this.$http.post('departments', this.department)
-      .then(() => {
+      .then(response => response.json())
+      .then((department) => {
         this.onAdd = false;
-        const department = clone(this.department);
-        this.departmentsByType[type].push(department);
-        department.stats = {
-          employee: 0,
-          student: 0,
-          teacher: 0,
-        };
         this.addDepartment(department);
         this.resetReference();
       })

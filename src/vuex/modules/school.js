@@ -14,6 +14,7 @@ const commitUsers = (result, commit) => {
 export default {
   namespaced: true,
   state: {
+    school: {},
     employees: [],
     employeeMap: {},
     groups: [],
@@ -65,11 +66,17 @@ export default {
       }
       return {};
     },
+    departmentCount(state) {
+      return state.departments.length;
+    },
     semesters(state) {
       return state.semesters;
     },
     courses(state) {
       return state.courses;
+    },
+    school(state) {
+      return state.school;
     },
   },
   mutations: {
@@ -131,6 +138,9 @@ export default {
     UPDATE_SEMESTER(state, { semesterId, semester }) {
       const index = state.semesters.findIndex(sem => sem.id === semesterId);
       state.semesters[index] = semester;
+    },
+    SET_SCHOOL(state, { school }) {
+      state.school = school;
     },
   },
   actions: {
@@ -253,6 +263,13 @@ export default {
     },
     updateSemester({ commit }, semester) {
       commit('UPDATE_SEMESTER', { semesterId: semester.id, semester });
+    },
+    getSchool({ commit }) {
+      return Vue.http.get('school')
+        .then(response => response.json())
+        .then((school) => {
+          commit('SET_SCHOOL', { school });
+        });
     },
   },
 };

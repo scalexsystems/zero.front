@@ -1,5 +1,5 @@
 <template>
-<settings-box title="Institute Details" :withHeader="false">
+<settings-box title="Institute Details" subtitle="About the institute, Contact info, logo" :withHeader="false">
 
     <template slot="settings-body">
         <div class="container py-1">
@@ -7,7 +7,7 @@
              <photo-holder class="group-preview-photo" name="file"
                       :dest="`school/logo`"
                       @uploaded="logoUpdated">
-            <img :src="institute.photo" class="group-preview-photo">
+            <img :src="institute.logo" class="group-preview-photo">
             </photo-holder>
             </div>
             <div class="institute-details-about">

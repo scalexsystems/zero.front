@@ -1,5 +1,5 @@
 <template>
-    <settings-box title="Invites">
+    <settings-box title="Invites" subtitle="Invite students, teachers and employees of the institiute">
 
         <template slot="header-image">
             <img src="../assets/settings/invites.svg">

@@ -16,6 +16,7 @@ export const types = {
   UPDATE_DISCIPLINE: 'school/UPDATE_DISCIPLINE',
   ADD_SEMESTER: 'school/ADD_SEMESTER',
   UPDATE_SEMESTER: 'school/UPDATE_SEMESTER',
+  SET_SCHOOL: 'school/SET_SCHOOL',
 
   SET_USER: 'SET_USER',
 };
@@ -38,6 +39,7 @@ export const actions = {
   addSemester: 'school/addSemester',
   updateSemester: 'school/updateSemester',
   getUser: 'getUser',
+  getSchool: 'school/getSchool',
 };
 
 export const getters = {
@@ -52,5 +54,7 @@ export const getters = {
   disciplines: 'school/disciplines',
   semesters: 'school/semesters',
   departmentsByType: 'school/departmentsByType',
+  departmentCount: 'school/departmentCount',
   user: 'user',
+  school: 'school/school',
 };

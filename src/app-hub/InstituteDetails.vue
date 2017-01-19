@@ -7,7 +7,7 @@
              <photo-holder class="group-preview-photo" name="file"
                       :dest="`school/logo`"
                       @uploaded="logoUpdated">
-            <img :src="institute.photo" class="group-preview-photo">
+            <img :src="institute.logo" class="group-preview-photo">
             </photo-holder>
             </div>
             <div class="institute-details-about">

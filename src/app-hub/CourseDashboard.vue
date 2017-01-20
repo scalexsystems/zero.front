@@ -24,6 +24,7 @@
               <div class="card card-block" @click="openCourse(course)" role="button">
                 <h6>{{ course.name }} <small>({{ course.code }})</small></h6>
                 <small v-for="instructor in course.instructors.data" class="text-muted d-block">{{ instructor.name }}</small>
+                <small v-if="!course.instructors.data.length" class="text-muted d-block"> Instructor not assigned </small>
               </div>
             </div>
           </div>

@@ -57,7 +57,7 @@
                          @open="openMemberProfile(member, index)"></item-card>
             </div>
 
-            <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" ref="infinite"></infinite-scroll>
+            <infinite-scroll class="col-xs-12" :on-infinite="onInfinite" no-results:="" ref="infinite"></infinite-scroll>
         </div>
       </div>
     </div>
@@ -127,11 +127,7 @@ export default {
               .then((result) => {
                 pushIf(this.members, result.data, this.ids);
                 this.page = result._meta.pagination.current_page;
-                if (this.page < result._meta.pagination.total_pages) {
-                  this.$refs.infinite.$emit('$InfiniteLoading:loaded');
-                } else {
-                  this.$refs.infinite.$emit('$InfiniteLoading:complete');
-                }
+                this.$refs.infinite.$emit('$InfiniteLoading:loaded');
               })
               .catch(() => this.$refs.infinite.$emit('$InfiniteLoading:loaded'));
     },

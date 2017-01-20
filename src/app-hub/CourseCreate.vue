@@ -11,11 +11,11 @@
         <div class="col-xs-12 col-lg-8 offset-lg-2">
           <div class="row">
             <div class="col-xs-12">
-              <input-text title="Course Name" required v-model="course.name" :feedback="errors.name"></input-text>
+              <input-text title="Course Name" required placeholder="enter course name" v-model="course.name" :feedback="errors.name"></input-text>
             </div>
 
             <div class="col-xs-12 col-lg-6">
-              <input-text title="Course code" required v-model="course.code" :feedback="errors.code"></input-text>
+              <input-text title="Course code" required placeholder="enter course code" v-model="course.code" :feedback="errors.code"></input-text>
             </div>
             <div class="col-xs-12 col-lg-6">
               <input-select title="Department" required v-model.number="course.department_id" :feedback="errors.department_id" :options="departments"></input-select>

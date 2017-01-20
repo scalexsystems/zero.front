@@ -87,7 +87,7 @@
                   <small class="text-muted">{{ course.code }}</small>
                 </div>
                 <a class="text-muted" href="#" v-tooltip="'Remove'"
-                   @click.stop.prevent="removePreRequisiteCourse(courses)"
+                   @click.stop.prevent="removePreRequisiteCourse(course)"
                 ><i class="fa fa-fw fa-trash-o"></i></a>
               </div>
             </div>

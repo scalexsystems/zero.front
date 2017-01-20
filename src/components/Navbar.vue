@@ -7,7 +7,7 @@
     <router-link to="/" class="navbar-brand nav-zero">
       <img src="../assets/logo.svg" alt="Zero">
     </router-link>
-    <global-search class="fl-auto"></global-search>
+    <div class="fl fl-auto navbar-text"> Zero </div>
     <div class="navbar-user">
       <div class="dropdown">
         <a class="user-menu-toggler text-white"
@@ -150,6 +150,12 @@ $navbar-height: 46px !default;
   margin: 0;
   background: transparent;
   cursor: pointer;
+}
+
+.navbar-text {
+ padding: 0;
+ color: white;
+ align-items: center;
 }
 </style>
 

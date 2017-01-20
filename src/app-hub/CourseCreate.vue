@@ -169,7 +169,6 @@ export default {
       this.prerequisites.push(course);
     },
     removePreRequisiteCourse(course) {
-      debugger;
       const index = this.prerequisites.indexOf(course);
       if (index > -1) {
         this.prerequisites.splice(index, 1);

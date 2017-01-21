@@ -18,7 +18,7 @@
            <div class="fl">
              <div class="hidden-md-down fl-auto navbar-user-info">
                <div class="name">{{ name }}</div>
-               <div class="school text-capitalize">{{ user.type }}</div>
+               <div class="school text-capitalize"> {{ userType }} </div>
              </div>
             <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
            </div>
@@ -69,6 +69,9 @@ export default {
     },
     token() {
       return window.Laravel.csrfToken;
+    },
+    userType() {
+      return (this.user.permissions && this.user.permissions.settings) ? 'administrator' : this.user.type;
     },
     ...mapGetters({
       user: getters.user,

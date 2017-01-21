@@ -33,7 +33,7 @@ export const actions = {
   onNewMessageToUser: 'hub/onNewMessageToUser',
   joinGroup: 'hub/joinGroup',
   leaveGroup: 'hub/leaveGroup',
-  updateGroupPhoto: 'hub/UpdateGroupPhoto',
+  updateGroupPhoto: 'hub/updateGroupPhoto',
 };
 
 export const getters = {

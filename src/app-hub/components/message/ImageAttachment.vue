@@ -179,4 +179,8 @@ export default{
   width: 100vw;
   transform: translateX(-50%);
 }
+
+.card-img {
+  position: static;
+}
 </style>

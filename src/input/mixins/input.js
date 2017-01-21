@@ -8,6 +8,10 @@ export default {
     value: {
       default: false,
     },
+    required: {
+      type: Boolean,
+      default: false,
+    },
     feedback: null,
     feedbackType: {
       default: 'danger',

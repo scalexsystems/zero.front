@@ -1,7 +1,7 @@
 <template>
 <activity-box v-if="group" class="hub-group-preview"
               v-bind="{ title, subtitle, show: true, actions: [], disableFooter: true }"
-              @close="$router.push({ name: 'hub.group', params: { group: group.id } })">
+              @close="$router.go(-1)" >
   <template slot="actions">
     <router-link v-if="group.is_admin" :to="{ name: 'hub.group-edit', params: { group: group.id } }"
                  class="btn btn-primary">Edit</router-link>

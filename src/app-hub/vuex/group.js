@@ -182,7 +182,7 @@ export default {
           });
     },
     sendMessageReadReceiptForGroup({ commit, rootState }, { groupId, message }) {
-      if (message.sender_id === rootState.user.user.id) {
+      if (message.sender_id === rootState.user.id) {
         commit('READ_GROUP_MESSAGE', { groupId, message });
 
         return;

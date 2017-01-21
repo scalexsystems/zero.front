@@ -148,21 +148,21 @@ export default{
     },
 
     sendInvite(type) {
-      const emails = this[type];
+      const emails = this.getArrayFromString(this[type]);
       if (emails) {
-        const entries = this.validateEmails(this.getArrayFromString(this[type]));
+        const entries = this.validateEmails(emails);
         if (entries.length) {
           this.$http.post(`people/${type}/invite`, { [type]: entries })
            .then(() => {
              this.invited[type] += entries.length;
-             this[type] = '';
+             this[type] = emails.filter(email => entries.indexOf(email) < 0).join(', ');
            });
         }
       }
     },
 
     getArrayFromString(string) {
-      return string.split(new RegExp([' ', '///,', ';'].join('|'), 'g')).filter(email => email !== '');
+      return string.split(/[;,\s\r\n\t]+/g);
     },
     cancel(type) {
       this[type] = '';

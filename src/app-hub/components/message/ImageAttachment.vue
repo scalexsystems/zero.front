@@ -108,7 +108,7 @@ export default{
 
   .card-img-overlay {
     z-index: 2;
-    &:befimfore {
+    &:before {
       position: absolute;
       top: 0;
       bottom: 0;

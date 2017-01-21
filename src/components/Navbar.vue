@@ -16,8 +16,9 @@
            aria-haspopup="true"
            aria-expanded="false">
            <div class="fl">
-             <div class="hidden-md-down fl fl-auto navbar-user-info">
+             <div class="hidden-md-down fl-auto navbar-user-info">
                <div class="name">{{ name }}</div>
+               <div class="school text-capitalize">{{ user.type }}</div>
              </div>
             <img class="navbar-user-photo" width="28" height="28" src="../assets/person.jpg">
            </div>
@@ -122,9 +123,7 @@ $navbar-height: 46px !default;
 
 .navbar-user-info {
   line-height: 1.3;
-  align-items: center;
-
-    .name {
+  .name {
     font-size: rem(12px)
   }
   .school {

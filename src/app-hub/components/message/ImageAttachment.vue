@@ -108,7 +108,7 @@ export default{
 
   .card-img-overlay {
     z-index: 2;
-    &:before {
+    &:befimfore {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -178,5 +178,9 @@ export default{
   margin-bottom: 2rem;
   width: 100vw;
   transform: translateX(-50%);
+}
+
+.card-img {
+  position: static;
 }
 </style>

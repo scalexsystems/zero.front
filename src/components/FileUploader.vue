@@ -235,7 +235,7 @@ export default{
         case 'odp':
         case 'keynote':
         case 'ppt':
-        case 'pptx': return 'fa-file-powerpoint';
+        case 'pptx': return 'fa-file-powerpoint-o';
         case 'eps':
         case 'ps':
         case 'pdf': return 'fa-file-pdf-o';

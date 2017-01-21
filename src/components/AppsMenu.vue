@@ -33,7 +33,7 @@
 import { mapGetters } from 'vuex';
 import people from '../assets/apps/people.svg';
 import hub from '../assets/apps/hub.svg';
-import settings from '../assets/apps/settings.svg';
+import settings from '../assets/apps/menu-settings.svg';
 import academics from '../assets/apps/academics.svg';
 import finances from '../assets/apps/finance.svg';
 

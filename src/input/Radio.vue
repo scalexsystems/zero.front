@@ -1,6 +1,8 @@
 <template>
 <div class="form-group" :class="[feedbackState]">
-  <label class="form-control-label" :for="id" v-if="is(title)">{{ title }}</label>
+  <label class="form-control-label" :for="id" v-if="is(title)">{{ title }}
+      <span class="text-danger" v-if="required"> * </span>
+  </label>
 
   <div class="input-group" :id="id" :described-by="helpId" role="form">
     <div :class="{'c-inputs-stacked': stacked}">

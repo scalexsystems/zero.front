@@ -1,6 +1,8 @@
 <template>
 <div class="form-group" :class="[feedbackState]">
-  <label class="form-control-label" :for="id" v-if="is(title)">{{ title }}</label>
+  <label class="form-control-label" :for="id" v-if="is(title)">{{ title }}
+       <span class="text-danger" v-if="required"> * </span>
+  </label>
 
   <input :type="type" :id="id" class="form-control" :class="[formControlState]"
          :described-by="helpId" :name="identifier" :value="value" :placeholder="placeholder"

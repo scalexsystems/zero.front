@@ -25,13 +25,13 @@
               </div>
 
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Discipline" required v-model.number="course.discipline_id" :feedback="errors.discipline_id" :options="disciplines" />
+                <input-select title="Discipline" v-model.number="course.discipline_id" :feedback="errors.discipline_id" :options="disciplines" />
               </div>
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Year" required v-model.number="course.year_id" :feedback="errors.year_id" :options="years" />
+                <input-select title="Year" v-model.number="course.year_id" :feedback="errors.year_id" :options="years" />
               </div>
               <div class="col-xs-12 col-lg-4">
-                <input-select title="Semester" required v-model.number="course.semester_id" :feedback="errors.semester_id" :options="semesters" />
+                <input-select title="Semester" v-model.number="course.semester_id" :feedback="errors.semester_id" :options="semesters" />
               </div>
             </div>
           </div>

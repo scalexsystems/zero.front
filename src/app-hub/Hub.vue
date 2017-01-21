@@ -95,7 +95,7 @@ export default {
   created() {
     if (this.user.channel) {
       this.$echo.private(this.user.channel)
-        .listen('NewMessage', message => this.onMessage({ message }));
+        .listen('NewMessage', message => this.onNewMessageToUser({ message }));
     }
     this.$root.$on('sidebar', () => this.toggleSidebar());
   },

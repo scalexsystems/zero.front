@@ -6,7 +6,7 @@
       <div class="person-card-name">{{ item.name }}</div>
       <div class="person-card-meta-container fl">
         <slot>
-          <div class="person-card-bio">{{ item.bio }}</div>
+          <div class="person-card-bio text-capitalize"> {{ item.type }} &centerdot; {{ item.department }}  </div>
         </slot>
       </div>
     </div>
@@ -23,6 +23,8 @@ export default {
     item: {
       required: true,
     },
+  },
+  computed: {
   },
 };
 </script>
